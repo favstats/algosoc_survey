@@ -1,0 +1,148 @@
+---
+title: Spending
+description-meta: "How do political parties chase your vote, what do they want to keep hidden, and how much money do they spend on it? In the lead-up to the elections, we monitor political microtargeting."
+---
+
+```{r setup, include=FALSE}
+# here::i_am("wtm_gb.Rproj")
+
+
+## Global options
+knitr::opts_chunk$set(
+    cache = F,
+    echo = F,
+    warning = F,
+    message = F,
+    cache.lazy = FALSE
+)
+
+
+pacman::p_load(htmltools, tidyverse, highcharter, gt, gtExtras, rvest, haven)
+
+options(scipen = 999)
+# print(getwd())
+# here::here("")
+# prCint(getwd())
+# hcoptslang <- getOption("highcharter.lang")
+# 
+# hcoptslang$shortMonths <- c("Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec")
+# 
+# options(highcharter.lang = hcoptslang)
+
+data <- read_sav("../L_AlgoSoc_wave1_1.0p.sav")
+
+var_labels <- c(
+  "People from the general population",
+  "Members of Parliament",
+  "Judges",
+  "Journalists",
+  "Police officers",
+  "Doctors",
+  "Friends/family",
+  "Yourself"
+)
+
+confidence <- data %>% 
+  select(CONF1:CONF8) %>% 
+  gather() %>% 
+  group_by(key) %>% 
+  summarize(mean_val = mean(value, na.rm =T),
+            sd_val = sd(value, na.rm =T)) %>% 
+  ungroup() %>% 
+  mutate(varlabs = var_labels)
+
+```
+
+How confident are you that the following groups can tell the difference between content created by AI and content created by people?
+
+```{r}
+
+hchart(
+  confidence, 
+  "column",
+  hcaes(x = varlabs, y = mean_val)#,
+  # hcaes(x = key, y = mean_val, group = Type),
+  # id = c("a", "b", "c")
+  ) %>%
+  
+  hc_add_series(
+    confidence,
+    "errorbar", 
+    hcaes(y = mean_val, 
+          x = varlabs, low = mean_val - sd_val, 
+          high = mean_val + sd_val),
+    # hcaes(y = mean_val, x = key, low = mean_val - sd_val, high = mean_val + sd_val, group = Type),
+    # linkedTo = c("a", "b", "c"),
+    enableMouseTracking = TRUE,
+    showInLegend = FALSE
+    ) %>% 
+  highcharter::hc_plotOptions(
+    errorbar = list(
+      color = "black", 
+      # whiskerLength = 1,
+      stemWidth = 1
+    ) 
+  ) 
+```
+
+
+
+
+```{r}
+
+confidence_ages <- data %>% #table()
+  mutate(age_groups = case_when(
+    leeftijd %in% 16:17 ~ "<18",
+    leeftijd %in% 18:24 ~ "18-24",
+    leeftijd %in% 25:34 ~ "25-34",
+    leeftijd %in% 35:44 ~ "35-44",
+    leeftijd %in% 45:54 ~ "45-54",
+    leeftijd %in% 55:64 ~ "55-64",
+    leeftijd %in% 65:150 ~ "65+",
+  )) %>% 
+  select(CONF1:CONF8, age_groups) %>% 
+  gather(key, value, -age_groups) %>% 
+  group_by(key, age_groups) %>% 
+  summarize(mean_val = mean(value, na.rm =T),
+            sd_val = sd(value, na.rm =T)) %>% 
+  ungroup() %>% 
+  mutate(varlabs = case_when(
+    key  == "CONF1" ~ var_labels[1],
+    key  == "CONF2" ~ var_labels[2],
+    key  == "CONF3" ~ var_labels[3],
+    key  == "CONF4" ~ var_labels[4],
+    key  == "CONF5" ~ var_labels[5],
+    key  == "CONF6" ~ var_labels[6],
+    key  == "CONF7" ~ var_labels[7],
+    key  == "CONF8" ~ var_labels[8]
+  ))
+  # mutate(varlabs = var_labels)
+
+hchart(
+  confidence_ages, 
+  "column",
+  # hcaes(x = varlabs, y = mean_val),
+  hcaes(x = varlabs, y = mean_val, group = age_groups),
+  id = c("a", "b", "c", "d", "e", "f", "g")
+  ) %>%
+  
+  hc_add_series(
+    confidence_ages,
+    "errorbar", 
+    hcaes(y = mean_val, 
+          x = varlabs, low = mean_val - sd_val, 
+          high = mean_val + sd_val,
+          group = age_groups),
+    # hcaes(y = mean_val, x = key, low = mean_val - sd_val, high = mean_val + sd_val, group = Type),
+    linkedTo = c("a", "b", "c", "d", "e", "f", "g"),
+    enableMouseTracking = TRUE,
+    showInLegend = FALSE
+    ) %>% 
+  highcharter::hc_plotOptions(
+    errorbar = list(
+      color = "black", 
+      # whiskerLength = 1,
+      stemWidth = 1
+    ) 
+  ) 
+```

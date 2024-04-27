@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="How do political parties chase your vote, what do they want to keep hidden, and how much money do they spend on it? In the lead-up to the elections, we monitor political microtargeting.">
+
+<title>AlgoSoc Survey - Spending</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./algosoclogo.jpg" rel="icon" type="image/jpeg">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/iconify-1.0.8/iconify-icon.min.js"></script>
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<script src="site_libs/proj4js-2.3.15/proj4.js"></script>
+<link href="site_libs/highcharts-9.3.1/css/motion.css" rel="stylesheet">
+<script src="site_libs/highcharts-9.3.1/highcharts.js"></script>
+<script src="site_libs/highcharts-9.3.1/highcharts-3d.js"></script>
+<script src="site_libs/highcharts-9.3.1/highcharts-more.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/stock.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/map.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/data.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/exporting.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/offline-exporting.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/drilldown.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/item-series.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/overlapping-datalabels.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/annotations.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/export-data.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/funnel.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/heatmap.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/treemap.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/sankey.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/dependency-wheel.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/organization.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/solid-gauge.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/streamgraph.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/sunburst.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/vector.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/wordcloud.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/xrange.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/tilemap.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/venn.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/gantt.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/timeline.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/parallel-coordinates.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/bullet.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/coloraxis.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/dumbbell.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/lollipop.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/series-label.js"></script>
+<script src="site_libs/highcharts-9.3.1/plugins/motion.js"></script>
+<script src="site_libs/highcharts-9.3.1/custom/reset.js"></script>
+<script src="site_libs/highcharts-9.3.1/modules/boost.js"></script>
+<script src="site_libs/highchart-binding-0.9.4/highchart.js"></script>
+
+
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./algosoclogo.jpg" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">AlgoSoc Survey</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" rel="" target="" aria-current="page">
+ <span class="menu-text"><iconify-icon inline="" icon="ph:coins"></iconify-icon> Spending</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html" rel="" target="">
+ <span class="menu-text"><iconify-icon inline="" icon="ph:info-thin"></iconify-icon> About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/favstats/algosoc_survey" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Spending</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>How confident are you that the following groups can tell the difference between content created by AI and content created by people?</p>
+<div class="cell">
+<div class="cell-output-display">
+
+<div class="highchart html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-358d046688d9e7c64663" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-358d046688d9e7c64663">{"x":{"hc_opts":{"chart":{"reflow":true},"title":{"text":null},"yAxis":{"title":{"text":"mean_val"},"type":"linear"},"credits":{"enabled":false},"exporting":{"enabled":false},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0,"showInLegend":false},"treemap":{"layoutAlgorithm":"squarified"},"scatter":{"marker":{"symbol":"circle"}},"errorbar":{"color":"black","stemWidth":1}},"series":[{"group":"group","data":[{"key":"CONF1","mean_val":2.35886380928227,"sd_val":1.2616989534267,"varlabs":"People from the general population","y":2.35886380928227,"name":"People from the general population"},{"key":"CONF2","mean_val":2.86482373827035,"sd_val":1.45270012706776,"varlabs":"Members of Parliament","y":2.86482373827035,"name":"Members of Parliament"},{"key":"CONF3","mean_val":3.21734719756531,"sd_val":1.6221398708028,"varlabs":"Judges","y":3.21734719756531,"name":"Judges"},{"key":"CONF4","mean_val":3.41897032716206,"sd_val":1.64274005267161,"varlabs":"Journalists","y":3.41897032716206,"name":"Journalists"},{"key":"CONF5","mean_val":3.15394369769211,"sd_val":1.58422879232723,"varlabs":"Police officers","y":3.15394369769211,"name":"Police officers"},{"key":"CONF6","mean_val":3.13162566573675,"sd_val":1.55490470289317,"varlabs":"Doctors","y":3.13162566573675,"name":"Doctors"},{"key":"CONF7","mean_val":2.61653563276693,"sd_val":1.42299391729959,"varlabs":"Friends/family","y":2.61653563276693,"name":"Friends/family"},{"key":"CONF8","mean_val":2.5882800608828,"sd_val":1.62406872491471,"varlabs":"Yourself","y":2.5882800608828,"name":"Yourself"}],"type":"column"},{"group":"group","data":[{"key":"CONF1","mean_val":2.35886380928227,"sd_val":1.2616989534267,"varlabs":"People from the general population","y":2.35886380928227,"low":1.09716485585557,"high":3.62056276270897,"name":"People from the general population"},{"key":"CONF2","mean_val":2.86482373827035,"sd_val":1.45270012706776,"varlabs":"Members of Parliament","y":2.86482373827035,"low":1.4121236112026,"high":4.31752386533811,"name":"Members of Parliament"},{"key":"CONF3","mean_val":3.21734719756531,"sd_val":1.6221398708028,"varlabs":"Judges","y":3.21734719756531,"low":1.5952073267625,"high":4.83948706836811,"name":"Judges"},{"key":"CONF4","mean_val":3.41897032716206,"sd_val":1.64274005267161,"varlabs":"Journalists","y":3.41897032716206,"low":1.77623027449045,"high":5.06171037983367,"name":"Journalists"},{"key":"CONF5","mean_val":3.15394369769211,"sd_val":1.58422879232723,"varlabs":"Police officers","y":3.15394369769211,"low":1.56971490536489,"high":4.73817249001934,"name":"Police officers"},{"key":"CONF6","mean_val":3.13162566573675,"sd_val":1.55490470289317,"varlabs":"Doctors","y":3.13162566573675,"low":1.57672096284358,"high":4.68653036862992,"name":"Doctors"},{"key":"CONF7","mean_val":2.61653563276693,"sd_val":1.42299391729959,"varlabs":"Friends/family","y":2.61653563276693,"low":1.19354171546734,"high":4.03952955006652,"name":"Friends/family"},{"key":"CONF8","mean_val":2.5882800608828,"sd_val":1.62406872491471,"varlabs":"Yourself","y":2.5882800608828,"low":0.964211335968095,"high":4.21234878579751,"name":"Yourself"}],"type":"errorbar","enableMouseTracking":true,"showInLegend":false}],"xAxis":{"type":"category","title":{"text":"varlabs"},"categories":null}},"theme":{"chart":{"backgroundColor":"transparent"},"colors":["#7cb5ec","#434348","#90ed7d","#f7a35c","#8085e9","#f15c80","#e4d354","#2b908f","#f45b5b","#91e8e1"]},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"chart","fonts":[],"debug":false},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+
+<div class="highchart html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-f4e9c36f1cce8fa7b9d6" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-f4e9c36f1cce8fa7b9d6">{"x":{"hc_opts":{"chart":{"reflow":true},"title":{"text":null},"yAxis":{"title":{"text":"mean_val"},"type":"linear"},"credits":{"enabled":false},"exporting":{"enabled":false},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0,"showInLegend":true},"treemap":{"layoutAlgorithm":"squarified"},"scatter":{"marker":{"symbol":"circle"}},"errorbar":{"color":"black","stemWidth":1}},"series":[{"name":"18-24","data":[{"key":"CONF1","age_groups":"18-24","mean_val":2.98947368421053,"sd_val":1.24041170620466,"varlabs":"People from the general population","y":2.98947368421053,"name":"People from the general population"},{"key":"CONF2","age_groups":"18-24","mean_val":3.28070175438596,"sd_val":1.36807649955098,"varlabs":"Members of Parliament","y":3.28070175438596,"name":"Members of Parliament"},{"key":"CONF3","age_groups":"18-24","mean_val":3.63508771929825,"sd_val":1.52911776415174,"varlabs":"Judges","y":3.63508771929825,"name":"Judges"},{"key":"CONF4","age_groups":"18-24","mean_val":3.94385964912281,"sd_val":1.555433179085,"varlabs":"Journalists","y":3.94385964912281,"name":"Journalists"},{"key":"CONF5","age_groups":"18-24","mean_val":3.5719298245614,"sd_val":1.49385529989685,"varlabs":"Police officers","y":3.5719298245614,"name":"Police officers"},{"key":"CONF6","age_groups":"18-24","mean_val":3.63859649122807,"sd_val":1.51492043973274,"varlabs":"Doctors","y":3.63859649122807,"name":"Doctors"},{"key":"CONF7","age_groups":"18-24","mean_val":3.38245614035088,"sd_val":1.46714281194435,"varlabs":"Friends/family","y":3.38245614035088,"name":"Friends/family"},{"key":"CONF8","age_groups":"18-24","mean_val":3.66666666666667,"sd_val":1.66078775358,"varlabs":"Yourself","y":3.66666666666667,"name":"Yourself"}],"type":"column","id":"a"},{"name":"25-34","data":[{"key":"CONF1","age_groups":"25-34","mean_val":2.56766917293233,"sd_val":1.2611565476247,"varlabs":"People from the general population","y":2.56766917293233,"name":"People from the general population"},{"key":"CONF2","age_groups":"25-34","mean_val":3.08834586466165,"sd_val":1.406768508082,"varlabs":"Members of Parliament","y":3.08834586466165,"name":"Members of Parliament"},{"key":"CONF3","age_groups":"25-34","mean_val":3.40789473684211,"sd_val":1.53581648730703,"varlabs":"Judges","y":3.40789473684211,"name":"Judges"},{"key":"CONF4","age_groups":"25-34","mean_val":3.6484962406015,"sd_val":1.55699551142086,"varlabs":"Journalists","y":3.6484962406015,"name":"Journalists"},{"key":"CONF5","age_groups":"25-34","mean_val":3.38157894736842,"sd_val":1.4584899665257,"varlabs":"Police officers","y":3.38157894736842,"name":"Police officers"},{"key":"CONF6","age_groups":"25-34","mean_val":3.3703007518797,"sd_val":1.5095744351609,"varlabs":"Doctors","y":3.3703007518797,"name":"Doctors"},{"key":"CONF7","age_groups":"25-34","mean_val":2.9906015037594,"sd_val":1.41218333951527,"varlabs":"Friends/family","y":2.9906015037594,"name":"Friends/family"},{"key":"CONF8","age_groups":"25-34","mean_val":3.27067669172932,"sd_val":1.65988595596214,"varlabs":"Yourself","y":3.27067669172932,"name":"Yourself"}],"type":"column","id":"b"},{"name":"35-44","data":[{"key":"CONF1","age_groups":"35-44","mean_val":2.71506352087114,"sd_val":1.34046462282623,"varlabs":"People from the general population","y":2.71506352087114,"name":"People from the general population"},{"key":"CONF2","age_groups":"35-44","mean_val":2.99818511796733,"sd_val":1.41870503380433,"varlabs":"Members of Parliament","y":2.99818511796733,"name":"Members of Parliament"},{"key":"CONF3","age_groups":"35-44","mean_val":3.32486388384755,"sd_val":1.57759849990207,"varlabs":"Judges","y":3.32486388384755,"name":"Judges"},{"key":"CONF4","age_groups":"35-44","mean_val":3.52087114337568,"sd_val":1.61780433801281,"varlabs":"Journalists","y":3.52087114337568,"name":"Journalists"},{"key":"CONF5","age_groups":"35-44","mean_val":3.28856624319419,"sd_val":1.57544681531196,"varlabs":"Police officers","y":3.28856624319419,"name":"Police officers"},{"key":"CONF6","age_groups":"35-44","mean_val":3.23230490018149,"sd_val":1.5089219347099,"varlabs":"Doctors","y":3.23230490018149,"name":"Doctors"},{"key":"CONF7","age_groups":"35-44","mean_val":2.88747731397459,"sd_val":1.43655116889307,"varlabs":"Friends/family","y":2.88747731397459,"name":"Friends/family"},{"key":"CONF8","age_groups":"35-44","mean_val":3.01088929219601,"sd_val":1.61466836687731,"varlabs":"Yourself","y":3.01088929219601,"name":"Yourself"}],"type":"column","id":"c"},{"name":"45-54","data":[{"key":"CONF1","age_groups":"45-54","mean_val":2.5017793594306,"sd_val":1.28649797595645,"varlabs":"People from the general population","y":2.5017793594306,"name":"People from the general population"},{"key":"CONF2","age_groups":"45-54","mean_val":2.84341637010676,"sd_val":1.41938491898852,"varlabs":"Members of Parliament","y":2.84341637010676,"name":"Members of Parliament"},{"key":"CONF3","age_groups":"45-54","mean_val":3.16548042704626,"sd_val":1.58176457810356,"varlabs":"Judges","y":3.16548042704626,"name":"Judges"},{"key":"CONF4","age_groups":"45-54","mean_val":3.32740213523132,"sd_val":1.61309149889585,"varlabs":"Journalists","y":3.32740213523132,"name":"Journalists"},{"key":"CONF5","age_groups":"45-54","mean_val":3.19750889679715,"sd_val":1.57128676247798,"varlabs":"Police officers","y":3.19750889679715,"name":"Police officers"},{"key":"CONF6","age_groups":"45-54","mean_val":3.06405693950178,"sd_val":1.4635767667563,"varlabs":"Doctors","y":3.06405693950178,"name":"Doctors"},{"key":"CONF7","age_groups":"45-54","mean_val":2.63701067615658,"sd_val":1.37195631555568,"varlabs":"Friends/family","y":2.63701067615658,"name":"Friends/family"},{"key":"CONF8","age_groups":"45-54","mean_val":2.64768683274021,"sd_val":1.55025269223209,"varlabs":"Yourself","y":2.64768683274021,"name":"Yourself"}],"type":"column","id":"d"},{"name":"55-64","data":[{"key":"CONF1","age_groups":"55-64","mean_val":2.17150760719225,"sd_val":1.16429633303525,"varlabs":"People from the general population","y":2.17150760719225,"name":"People from the general population"},{"key":"CONF2","age_groups":"55-64","mean_val":2.70124481327801,"sd_val":1.44591739689853,"varlabs":"Members of Parliament","y":2.70124481327801,"name":"Members of Parliament"},{"key":"CONF3","age_groups":"55-64","mean_val":3.02627939142462,"sd_val":1.62242794169339,"varlabs":"Judges","y":3.02627939142462,"name":"Judges"},{"key":"CONF4","age_groups":"55-64","mean_val":3.25864453665284,"sd_val":1.67043439522828,"varlabs":"Journalists","y":3.25864453665284,"name":"Journalists"},{"key":"CONF5","age_groups":"55-64","mean_val":2.98478561549101,"sd_val":1.57139978610494,"varlabs":"Police officers","y":2.98478561549101,"name":"Police officers"},{"key":"CONF6","age_groups":"55-64","mean_val":2.95020746887967,"sd_val":1.55873353524756,"varlabs":"Doctors","y":2.95020746887967,"name":"Doctors"},{"key":"CONF7","age_groups":"55-64","mean_val":2.42600276625173,"sd_val":1.34637666419022,"varlabs":"Friends/family","y":2.42600276625173,"name":"Friends/family"},{"key":"CONF8","age_groups":"55-64","mean_val":2.27562326869806,"sd_val":1.47665653448755,"varlabs":"Yourself","y":2.27562326869806,"name":"Yourself"}],"type":"column","id":"e"},{"name":"65+","data":[{"key":"CONF1","age_groups":"65+","mean_val":1.96381578947368,"sd_val":1.11422079463959,"varlabs":"People from the general population","y":1.96381578947368,"name":"People from the general population"},{"key":"CONF2","age_groups":"65+","mean_val":2.68174342105263,"sd_val":1.48624272977483,"varlabs":"Members of Parliament","y":2.68174342105263,"name":"Members of Parliament"},{"key":"CONF3","age_groups":"65+","mean_val":3.078125,"sd_val":1.68253632886259,"varlabs":"Judges","y":3.078125,"name":"Judges"},{"key":"CONF4","age_groups":"65+","mean_val":3.25493421052632,"sd_val":1.66220895091178,"varlabs":"Journalists","y":3.25493421052632,"name":"Journalists"},{"key":"CONF5","age_groups":"65+","mean_val":2.92763157894737,"sd_val":1.63088291343154,"varlabs":"Police officers","y":2.92763157894737,"name":"Police officers"},{"key":"CONF6","age_groups":"65+","mean_val":2.95641447368421,"sd_val":1.59440636607138,"varlabs":"Doctors","y":2.95641447368421,"name":"Doctors"},{"key":"CONF7","age_groups":"65+","mean_val":2.21217105263158,"sd_val":1.31445269977091,"varlabs":"Friends/family","y":2.21217105263158,"name":"Friends/family"},{"key":"CONF8","age_groups":"65+","mean_val":1.93092105263158,"sd_val":1.34200800609102,"varlabs":"Yourself","y":1.93092105263158,"name":"Yourself"}],"type":"column","id":"f"},{"name":"<18","data":[{"key":"CONF1","age_groups":"<18","mean_val":3.01351351351351,"sd_val":1.30848907160122,"varlabs":"People from the general population","y":3.01351351351351,"name":"People from the general population"},{"key":"CONF2","age_groups":"<18","mean_val":3.43243243243243,"sd_val":1.36573610119664,"varlabs":"Members of Parliament","y":3.43243243243243,"name":"Members of Parliament"},{"key":"CONF3","age_groups":"<18","mean_val":3.98648648648649,"sd_val":1.53937581411271,"varlabs":"Judges","y":3.98648648648649,"name":"Judges"},{"key":"CONF4","age_groups":"<18","mean_val":3.94594594594595,"sd_val":1.67079582294476,"varlabs":"Journalists","y":3.94594594594595,"name":"Journalists"},{"key":"CONF5","age_groups":"<18","mean_val":3.94594594594595,"sd_val":1.42282655102384,"varlabs":"Police officers","y":3.94594594594595,"name":"Police officers"},{"key":"CONF6","age_groups":"<18","mean_val":3.87837837837838,"sd_val":1.47074394279886,"varlabs":"Doctors","y":3.87837837837838,"name":"Doctors"},{"key":"CONF7","age_groups":"<18","mean_val":3.31081081081081,"sd_val":1.52536252754205,"varlabs":"Friends/family","y":3.31081081081081,"name":"Friends/family"},{"key":"CONF8","age_groups":"<18","mean_val":3.78378378378378,"sd_val":1.75382376983089,"varlabs":"Yourself","y":3.78378378378378,"name":"Yourself"}],"type":"column","id":"g"},{"name":"18-24","data":[{"key":"CONF1","age_groups":"18-24","mean_val":2.98947368421053,"sd_val":1.24041170620466,"varlabs":"People from the general population","y":2.98947368421053,"low":1.74906197800587,"high":4.22988539041518,"name":"People from the general population"},{"key":"CONF2","age_groups":"18-24","mean_val":3.28070175438596,"sd_val":1.36807649955098,"varlabs":"Members of Parliament","y":3.28070175438596,"low":1.91262525483498,"high":4.64877825393695,"name":"Members of Parliament"},{"key":"CONF3","age_groups":"18-24","mean_val":3.63508771929825,"sd_val":1.52911776415174,"varlabs":"Judges","y":3.63508771929825,"low":2.1059699551465,"high":5.16420548344999,"name":"Judges"},{"key":"CONF4","age_groups":"18-24","mean_val":3.94385964912281,"sd_val":1.555433179085,"varlabs":"Journalists","y":3.94385964912281,"low":2.38842647003781,"high":5.49929282820781,"name":"Journalists"},{"key":"CONF5","age_groups":"18-24","mean_val":3.5719298245614,"sd_val":1.49385529989685,"varlabs":"Police officers","y":3.5719298245614,"low":2.07807452466456,"high":5.06578512445825,"name":"Police officers"},{"key":"CONF6","age_groups":"18-24","mean_val":3.63859649122807,"sd_val":1.51492043973274,"varlabs":"Doctors","y":3.63859649122807,"low":2.12367605149533,"high":5.15351693096081,"name":"Doctors"},{"key":"CONF7","age_groups":"18-24","mean_val":3.38245614035088,"sd_val":1.46714281194435,"varlabs":"Friends/family","y":3.38245614035088,"low":1.91531332840652,"high":4.84959895229523,"name":"Friends/family"},{"key":"CONF8","age_groups":"18-24","mean_val":3.66666666666667,"sd_val":1.66078775358,"varlabs":"Yourself","y":3.66666666666667,"low":2.00587891308666,"high":5.32745442024667,"name":"Yourself"}],"type":"errorbar","linkedTo":"a","enableMouseTracking":true,"showInLegend":false},{"name":"25-34","data":[{"key":"CONF1","age_groups":"25-34","mean_val":2.56766917293233,"sd_val":1.2611565476247,"varlabs":"People from the general population","y":2.56766917293233,"low":1.30651262530764,"high":3.82882572055703,"name":"People from the general population"},{"key":"CONF2","age_groups":"25-34","mean_val":3.08834586466165,"sd_val":1.406768508082,"varlabs":"Members of Parliament","y":3.08834586466165,"low":1.68157735657965,"high":4.49511437274366,"name":"Members of Parliament"},{"key":"CONF3","age_groups":"25-34","mean_val":3.40789473684211,"sd_val":1.53581648730703,"varlabs":"Judges","y":3.40789473684211,"low":1.87207824953507,"high":4.94371122414914,"name":"Judges"},{"key":"CONF4","age_groups":"25-34","mean_val":3.6484962406015,"sd_val":1.55699551142086,"varlabs":"Journalists","y":3.6484962406015,"low":2.09150072918064,"high":5.20549175202237,"name":"Journalists"},{"key":"CONF5","age_groups":"25-34","mean_val":3.38157894736842,"sd_val":1.4584899665257,"varlabs":"Police officers","y":3.38157894736842,"low":1.92308898084272,"high":4.84006891389412,"name":"Police officers"},{"key":"CONF6","age_groups":"25-34","mean_val":3.3703007518797,"sd_val":1.5095744351609,"varlabs":"Doctors","y":3.3703007518797,"low":1.8607263167188,"high":4.87987518704059,"name":"Doctors"},{"key":"CONF7","age_groups":"25-34","mean_val":2.9906015037594,"sd_val":1.41218333951527,"varlabs":"Friends/family","y":2.9906015037594,"low":1.57841816424412,"high":4.40278484327467,"name":"Friends/family"},{"key":"CONF8","age_groups":"25-34","mean_val":3.27067669172932,"sd_val":1.65988595596214,"varlabs":"Yourself","y":3.27067669172932,"low":1.61079073576719,"high":4.93056264769146,"name":"Yourself"}],"type":"errorbar","linkedTo":"b","enableMouseTracking":true,"showInLegend":false},{"name":"35-44","data":[{"key":"CONF1","age_groups":"35-44","mean_val":2.71506352087114,"sd_val":1.34046462282623,"varlabs":"People from the general population","y":2.71506352087114,"low":1.37459889804491,"high":4.05552814369737,"name":"People from the general population"},{"key":"CONF2","age_groups":"35-44","mean_val":2.99818511796733,"sd_val":1.41870503380433,"varlabs":"Members of Parliament","y":2.99818511796733,"low":1.579480084163,"high":4.41689015177167,"name":"Members of Parliament"},{"key":"CONF3","age_groups":"35-44","mean_val":3.32486388384755,"sd_val":1.57759849990207,"varlabs":"Judges","y":3.32486388384755,"low":1.74726538394548,"high":4.90246238374962,"name":"Judges"},{"key":"CONF4","age_groups":"35-44","mean_val":3.52087114337568,"sd_val":1.61780433801281,"varlabs":"Journalists","y":3.52087114337568,"low":1.90306680536287,"high":5.13867548138849,"name":"Journalists"},{"key":"CONF5","age_groups":"35-44","mean_val":3.28856624319419,"sd_val":1.57544681531196,"varlabs":"Police officers","y":3.28856624319419,"low":1.71311942788224,"high":4.86401305850615,"name":"Police officers"},{"key":"CONF6","age_groups":"35-44","mean_val":3.23230490018149,"sd_val":1.5089219347099,"varlabs":"Doctors","y":3.23230490018149,"low":1.72338296547159,"high":4.74122683489139,"name":"Doctors"},{"key":"CONF7","age_groups":"35-44","mean_val":2.88747731397459,"sd_val":1.43655116889307,"varlabs":"Friends/family","y":2.88747731397459,"low":1.45092614508152,"high":4.32402848286766,"name":"Friends/family"},{"key":"CONF8","age_groups":"35-44","mean_val":3.01088929219601,"sd_val":1.61466836687731,"varlabs":"Yourself","y":3.01088929219601,"low":1.3962209253187,"high":4.62555765907331,"name":"Yourself"}],"type":"errorbar","linkedTo":"c","enableMouseTracking":true,"showInLegend":false},{"name":"45-54","data":[{"key":"CONF1","age_groups":"45-54","mean_val":2.5017793594306,"sd_val":1.28649797595645,"varlabs":"People from the general population","y":2.5017793594306,"low":1.21528138347415,"high":3.78827733538706,"name":"People from the general population"},{"key":"CONF2","age_groups":"45-54","mean_val":2.84341637010676,"sd_val":1.41938491898852,"varlabs":"Members of Parliament","y":2.84341637010676,"low":1.42403145111824,"high":4.26280128909528,"name":"Members of Parliament"},{"key":"CONF3","age_groups":"45-54","mean_val":3.16548042704626,"sd_val":1.58176457810356,"varlabs":"Judges","y":3.16548042704626,"low":1.5837158489427,"high":4.74724500514982,"name":"Judges"},{"key":"CONF4","age_groups":"45-54","mean_val":3.32740213523132,"sd_val":1.61309149889585,"varlabs":"Journalists","y":3.32740213523132,"low":1.71431063633547,"high":4.94049363412716,"name":"Journalists"},{"key":"CONF5","age_groups":"45-54","mean_val":3.19750889679715,"sd_val":1.57128676247798,"varlabs":"Police officers","y":3.19750889679715,"low":1.62622213431917,"high":4.76879565927513,"name":"Police officers"},{"key":"CONF6","age_groups":"45-54","mean_val":3.06405693950178,"sd_val":1.4635767667563,"varlabs":"Doctors","y":3.06405693950178,"low":1.60048017274548,"high":4.52763370625808,"name":"Doctors"},{"key":"CONF7","age_groups":"45-54","mean_val":2.63701067615658,"sd_val":1.37195631555568,"varlabs":"Friends/family","y":2.63701067615658,"low":1.2650543606009,"high":4.00896699171227,"name":"Friends/family"},{"key":"CONF8","age_groups":"45-54","mean_val":2.64768683274021,"sd_val":1.55025269223209,"varlabs":"Yourself","y":2.64768683274021,"low":1.09743414050812,"high":4.1979395249723,"name":"Yourself"}],"type":"errorbar","linkedTo":"d","enableMouseTracking":true,"showInLegend":false},{"name":"55-64","data":[{"key":"CONF1","age_groups":"55-64","mean_val":2.17150760719225,"sd_val":1.16429633303525,"varlabs":"People from the general population","y":2.17150760719225,"low":1.007211274157,"high":3.33580394022751,"name":"People from the general population"},{"key":"CONF2","age_groups":"55-64","mean_val":2.70124481327801,"sd_val":1.44591739689853,"varlabs":"Members of Parliament","y":2.70124481327801,"low":1.25532741637948,"high":4.14716221017653,"name":"Members of Parliament"},{"key":"CONF3","age_groups":"55-64","mean_val":3.02627939142462,"sd_val":1.62242794169339,"varlabs":"Judges","y":3.02627939142462,"low":1.40385144973123,"high":4.64870733311801,"name":"Judges"},{"key":"CONF4","age_groups":"55-64","mean_val":3.25864453665284,"sd_val":1.67043439522828,"varlabs":"Journalists","y":3.25864453665284,"low":1.58821014142456,"high":4.92907893188111,"name":"Journalists"},{"key":"CONF5","age_groups":"55-64","mean_val":2.98478561549101,"sd_val":1.57139978610494,"varlabs":"Police officers","y":2.98478561549101,"low":1.41338582938607,"high":4.55618540159595,"name":"Police officers"},{"key":"CONF6","age_groups":"55-64","mean_val":2.95020746887967,"sd_val":1.55873353524756,"varlabs":"Doctors","y":2.95020746887967,"low":1.39147393363211,"high":4.50894100412723,"name":"Doctors"},{"key":"CONF7","age_groups":"55-64","mean_val":2.42600276625173,"sd_val":1.34637666419022,"varlabs":"Friends/family","y":2.42600276625173,"low":1.07962610206151,"high":3.77237943044195,"name":"Friends/family"},{"key":"CONF8","age_groups":"55-64","mean_val":2.27562326869806,"sd_val":1.47665653448755,"varlabs":"Yourself","y":2.27562326869806,"low":0.798966734210512,"high":3.75227980318561,"name":"Yourself"}],"type":"errorbar","linkedTo":"e","enableMouseTracking":true,"showInLegend":false},{"name":"65+","data":[{"key":"CONF1","age_groups":"65+","mean_val":1.96381578947368,"sd_val":1.11422079463959,"varlabs":"People from the general population","y":1.96381578947368,"low":0.849594994834095,"high":3.07803658411327,"name":"People from the general population"},{"key":"CONF2","age_groups":"65+","mean_val":2.68174342105263,"sd_val":1.48624272977483,"varlabs":"Members of Parliament","y":2.68174342105263,"low":1.1955006912778,"high":4.16798615082746,"name":"Members of Parliament"},{"key":"CONF3","age_groups":"65+","mean_val":3.078125,"sd_val":1.68253632886259,"varlabs":"Judges","y":3.078125,"low":1.39558867113741,"high":4.76066132886259,"name":"Judges"},{"key":"CONF4","age_groups":"65+","mean_val":3.25493421052632,"sd_val":1.66220895091178,"varlabs":"Journalists","y":3.25493421052632,"low":1.59272525961454,"high":4.91714316143809,"name":"Journalists"},{"key":"CONF5","age_groups":"65+","mean_val":2.92763157894737,"sd_val":1.63088291343154,"varlabs":"Police officers","y":2.92763157894737,"low":1.29674866551583,"high":4.55851449237891,"name":"Police officers"},{"key":"CONF6","age_groups":"65+","mean_val":2.95641447368421,"sd_val":1.59440636607138,"varlabs":"Doctors","y":2.95641447368421,"low":1.36200810761283,"high":4.55082083975559,"name":"Doctors"},{"key":"CONF7","age_groups":"65+","mean_val":2.21217105263158,"sd_val":1.31445269977091,"varlabs":"Friends/family","y":2.21217105263158,"low":0.897718352860673,"high":3.52662375240248,"name":"Friends/family"},{"key":"CONF8","age_groups":"65+","mean_val":1.93092105263158,"sd_val":1.34200800609102,"varlabs":"Yourself","y":1.93092105263158,"low":0.588913046540561,"high":3.2729290587226,"name":"Yourself"}],"type":"errorbar","linkedTo":"f","enableMouseTracking":true,"showInLegend":false},{"name":"<18","data":[{"key":"CONF1","age_groups":"<18","mean_val":3.01351351351351,"sd_val":1.30848907160122,"varlabs":"People from the general population","y":3.01351351351351,"low":1.7050244419123,"high":4.32200258511473,"name":"People from the general population"},{"key":"CONF2","age_groups":"<18","mean_val":3.43243243243243,"sd_val":1.36573610119664,"varlabs":"Members of Parliament","y":3.43243243243243,"low":2.06669633123579,"high":4.79816853362908,"name":"Members of Parliament"},{"key":"CONF3","age_groups":"<18","mean_val":3.98648648648649,"sd_val":1.53937581411271,"varlabs":"Judges","y":3.98648648648649,"low":2.44711067237378,"high":5.52586230059919,"name":"Judges"},{"key":"CONF4","age_groups":"<18","mean_val":3.94594594594595,"sd_val":1.67079582294476,"varlabs":"Journalists","y":3.94594594594595,"low":2.27515012300119,"high":5.6167417688907,"name":"Journalists"},{"key":"CONF5","age_groups":"<18","mean_val":3.94594594594595,"sd_val":1.42282655102384,"varlabs":"Police officers","y":3.94594594594595,"low":2.5231193949221,"high":5.36877249696979,"name":"Police officers"},{"key":"CONF6","age_groups":"<18","mean_val":3.87837837837838,"sd_val":1.47074394279886,"varlabs":"Doctors","y":3.87837837837838,"low":2.40763443557952,"high":5.34912232117724,"name":"Doctors"},{"key":"CONF7","age_groups":"<18","mean_val":3.31081081081081,"sd_val":1.52536252754205,"varlabs":"Friends/family","y":3.31081081081081,"low":1.78544828326876,"high":4.83617333835286,"name":"Friends/family"},{"key":"CONF8","age_groups":"<18","mean_val":3.78378378378378,"sd_val":1.75382376983089,"varlabs":"Yourself","y":3.78378378378378,"low":2.02996001395289,"high":5.53760755361468,"name":"Yourself"}],"type":"errorbar","linkedTo":"g","enableMouseTracking":true,"showInLegend":false}],"xAxis":{"type":"category","title":{"text":"varlabs"},"categories":null}},"theme":{"chart":{"backgroundColor":"transparent"},"colors":["#7cb5ec","#434348","#90ed7d","#f7a35c","#8085e9","#f15c80","#e4d354","#2b908f","#f45b5b","#91e8e1"]},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"chart","fonts":[],"debug":false},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
