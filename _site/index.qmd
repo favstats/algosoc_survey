@@ -1,9 +1,11 @@
 ---
-title: Spending
-description-meta: "How do political parties chase your vote, what do they want to keep hidden, and how much money do they spend on it? In the lead-up to the elections, we monitor political microtargeting."
+title: Ability to Detect AI Content
+description-meta: "How confident are you that the following groups can tell the difference between content created by AI and content created by people?"
 format: 
   html:
-    page-layout: custom
+    page-layout: full
+execute:
+  echo: false
 ---
 
 ```{r setup, include=FALSE}
@@ -92,53 +94,7 @@ function off() {
 
 ```
 
-# {.sidebar}
 
-```{=html}
-<!-- Sidebar -->
-<div id="sidebar" style="width: 250px; height: 100%; background: #f4f4f4; position: fixed; left: -250px; top: 0; transition: 0.3s;">
-  <a href="javascript:void(0)" onclick="toggleSidebar()" style="padding: 10px; text-align: right; display: block; color: black;">Close &times;</a>
-  <h3>Sidebar Content</h3>
-  <p>This is your sidebar content. Add links, text, or images here.</p>
-</div>
-
-<!-- Page Content -->
-<div style="margin-left: 25px; transition: margin-left 0.3s;">
-  <button onclick="toggleSidebar()">Open Sidebar</button>
-  <h2>Main Content</h2>
-  <p>This is the main content of your page. Add your text, data visualizations, or other elements here.</p>
-</div>
-{=html}
-Copy code
-<!-- JavaScript to Toggle the Sidebar -->
-<script>
-function toggleSidebar() {
-  var sidebar = document.getElementById("sidebar");
-  if (sidebar.style.left === '-250px') {
-    sidebar.style.left = '0';
-    document.body.style.marginLeft = "250px";
-  } else {
-    sidebar.style.left = '-250px';
-    document.body.style.marginLeft = "0";
-  }
-}
-</script>
-```
-
-```{ojs, include = F}
-viewof bill_length_min = Inputs.range(
-  [32, 50], 
-  {value: 35, step: 1, label: "Bill length (min):"}
-)
-viewof islands = Inputs.checkbox(
-  ["Torgersen", "Biscoe", "Dream"], 
-  { value: ["Torgersen", "Biscoe"], 
-    label: "Islands:"
-  }
-)
-```
-
-# Graphs    
 
 
 ```{r include=FALSE}
@@ -152,6 +108,7 @@ viewof islands = Inputs.checkbox(
 # options(highcharter.lang = hcoptslang)
 
 data <- read_sav("../L_AlgoSoc_wave1_1.0p.sav")
+
 
 var_labels <- c(
   "People from the general population",
@@ -174,9 +131,59 @@ confidence <- data %>%
   ungroup() %>% 
   mutate(varlabs = var_labels)
 
+
+# data %>% 
+#   write_csv("../L_AlgoSoc_wave1_1.0p.csv")
 ```
 
-How confident are you that the following groups can tell the difference between content created by AI and content created by people?
+> How confident are you that the following groups can tell the difference between content created by AI and content created by people?
+
+
+```{=html}
+<!-- Updated styling for tabs -->
+<style>
+  .tab {
+    display: none;
+  }
+  .tab-header {
+    display: flex;
+    margin: 10px 0;
+    overflow: hidden;
+    background-color: #f1f1f1;
+  }
+  .tab-button {
+    flex: 1;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 10px 16px;
+    transition: 0.3s;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+  }
+  .tab-button:hover, .tab-button.active {
+    background-color: #0056b3;
+  }
+  .tab-content {
+    padding: 10px;
+    margin-top: -1px;
+  }
+</style>
+
+<div class="tab-header">
+  <button class="tab-button" onclick="openTab(event, 'Tab1')">Overall</button>
+  <button class="tab-button" onclick="openTab(event, 'Tab2')">By Age</button>
+  <button class="tab-button" onclick="openTab(event, 'Tab3')">By Gender   </button>
+</div>
+
+```
+
+
+
+
+
+<div id="Tab1" class="tab tab-content">
 
 ```{r}
 
@@ -207,7 +214,9 @@ hchart(
     ) 
   ) 
 ```
+</div>
 
+<div id="Tab2" class="tab tab-content">
 
 
 
@@ -269,3 +278,98 @@ hchart(
     ) 
   ) 
 ```
+
+
+
+</div>
+
+
+<div id="Tab3" class="tab tab-content">
+
+
+```{r}
+
+confidence_genders <- data %>% 
+  # count(geslacht) %>% 
+  mutate(geslacht = sjmisc::to_label(geslacht)) %>% 
+  select(CONF1:CONF8, geslacht) %>% 
+  gather(key, value, -geslacht) %>% 
+  group_by(key, geslacht) %>% 
+  summarize(mean_val = mean(value, na.rm =T),
+            sd_val = std.error(value)) %>% 
+  ungroup() %>% 
+  mutate(varlabs = case_when(
+    key  == "CONF1" ~ var_labels[1],
+    key  == "CONF2" ~ var_labels[2],
+    key  == "CONF3" ~ var_labels[3],
+    key  == "CONF4" ~ var_labels[4],
+    key  == "CONF5" ~ var_labels[5],
+    key  == "CONF6" ~ var_labels[6],
+    key  == "CONF7" ~ var_labels[7],
+    key  == "CONF8" ~ var_labels[8]
+  ))
+  # mutate(varlabs = var_labels)
+
+hchart(
+  confidence_genders, 
+  "column",
+  # hcaes(x = varlabs, y = mean_val),
+  hcaes(x = varlabs, y = mean_val, group = geslacht),
+  id = c("a", "b", "c")
+  ) %>%
+  
+  hc_add_series(
+    confidence_genders,
+    "errorbar", 
+    hcaes(y = mean_val, 
+          x = varlabs, low = mean_val - sd_val, 
+          high = mean_val + sd_val,
+          group = geslacht),
+    # hcaes(y = mean_val, x = key, low = mean_val - sd_val, high = mean_val + sd_val, group = Type),
+    linkedTo = c("a", "b", "c"),
+    enableMouseTracking = TRUE,
+    showInLegend = FALSE
+    ) %>% 
+  highcharter::hc_plotOptions(
+    errorbar = list(
+      color = "black", 
+      # whiskerLength = 1,
+      stemWidth = 1
+    ) 
+  ) 
+```
+
+
+
+</div>
+  
+
+```{=html}
+<!-- JavaScript for Tabs -->
+<script>
+function openTab(evt, tabName) {
+  var i, tabcontent, tabbuttons;
+  tabcontent = document.getElementsByClassName("tab");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tabbuttons = document.getElementsByClassName("tab-button");
+  for (i = 0; i < tabbuttons.length; i++) {
+    tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
+  }
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+// Open the first tab by default
+document.addEventListener("DOMContentLoaded", function() {
+  document.getElementsByClassName("tab-button")[0].click();
+});
+</script>
+```
+
+
+
+
+
+
