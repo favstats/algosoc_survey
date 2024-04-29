@@ -1,6 +1,9 @@
 ---
 title: Spending
 description-meta: "How do political parties chase your vote, what do they want to keep hidden, and how much money do they spend on it? In the lead-up to the elections, we monitor political microtargeting."
+format: 
+  html:
+    page-layout: custom
 ---
 
 ```{r setup, include=FALSE}
@@ -20,6 +23,125 @@ knitr::opts_chunk$set(
 pacman::p_load(htmltools, tidyverse, highcharter, gt, gtExtras, rvest, haven)
 
 options(scipen = 999)
+```
+
+
+```{r echo=FALSE, results='asis'}
+
+shiny::HTML(glue::glue('
+<style>
+#overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 2;
+  cursor: pointer;
+  text-align: center;
+  padding-top: 10%;
+}
+
+#text {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  font-size: 20px;
+  color: black;
+  transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 50%;
+}
+</style>
+
+<div id="overlay" onclick="off()">
+  <div id="text">
+    <img src="algosoclogo.jpg" alt="Logo" style="width:150px;height:150px;">
+    <h2>Welcome to the AlgoSoc Survey Dashboard</h2>
+    <p>This dashboard aggregates data collected via the <a href="https://algosoc.org/" target="_blank">AlgoSoc Consortium</a> to show how citizens think and feel about AI in society.</p>
+    <p>If you want to know more about AlgoSoc and our work on AI, visit us on <a href="https://algosoc.org/" target="_blank">algosoc.org</a>!</p>
+  </div>
+</div>
+
+<script>
+window.onload = function() {
+  var popupLastShown = localStorage.getItem("popupLastShown");
+  var now = new Date().getTime();
+
+  if (!popupLastShown || now - popupLastShown > 60*60*1000) {  // 60*60*1000 milliseconds = 1 hour
+    document.getElementById("overlay").style.display = "block";
+    localStorage.setItem("popupLastShown", now);
+  }
+}
+
+function off() {
+  document.getElementById("overlay").style.display = "none";
+}
+</script>
+', .open = ">>>", .close = "<<<"))
+
+
+
+
+```
+
+# {.sidebar}
+
+```{=html}
+<!-- Sidebar -->
+<div id="sidebar" style="width: 250px; height: 100%; background: #f4f4f4; position: fixed; left: -250px; top: 0; transition: 0.3s;">
+  <a href="javascript:void(0)" onclick="toggleSidebar()" style="padding: 10px; text-align: right; display: block; color: black;">Close &times;</a>
+  <h3>Sidebar Content</h3>
+  <p>This is your sidebar content. Add links, text, or images here.</p>
+</div>
+
+<!-- Page Content -->
+<div style="margin-left: 25px; transition: margin-left 0.3s;">
+  <button onclick="toggleSidebar()">Open Sidebar</button>
+  <h2>Main Content</h2>
+  <p>This is the main content of your page. Add your text, data visualizations, or other elements here.</p>
+</div>
+{=html}
+Copy code
+<!-- JavaScript to Toggle the Sidebar -->
+<script>
+function toggleSidebar() {
+  var sidebar = document.getElementById("sidebar");
+  if (sidebar.style.left === '-250px') {
+    sidebar.style.left = '0';
+    document.body.style.marginLeft = "250px";
+  } else {
+    sidebar.style.left = '-250px';
+    document.body.style.marginLeft = "0";
+  }
+}
+</script>
+```
+
+```{ojs, include = F}
+viewof bill_length_min = Inputs.range(
+  [32, 50], 
+  {value: 35, step: 1, label: "Bill length (min):"}
+)
+viewof islands = Inputs.checkbox(
+  ["Torgersen", "Biscoe", "Dream"], 
+  { value: ["Torgersen", "Biscoe"], 
+    label: "Islands:"
+  }
+)
+```
+
+# Graphs    
+
+
+```{r include=FALSE}
 # print(getwd())
 # here::here("")
 # prCint(getwd())
@@ -41,13 +163,14 @@ var_labels <- c(
   "Friends/family",
   "Yourself"
 )
+std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
 
 confidence <- data %>% 
   select(CONF1:CONF8) %>% 
   gather() %>% 
   group_by(key) %>% 
   summarize(mean_val = mean(value, na.rm =T),
-            sd_val = sd(value, na.rm =T)) %>% 
+            sd_val = std.error(value)) %>% 
   ungroup() %>% 
   mutate(varlabs = var_labels)
 
@@ -104,7 +227,7 @@ confidence_ages <- data %>% #table()
   gather(key, value, -age_groups) %>% 
   group_by(key, age_groups) %>% 
   summarize(mean_val = mean(value, na.rm =T),
-            sd_val = sd(value, na.rm =T)) %>% 
+            sd_val = std.error(value)) %>% 
   ungroup() %>% 
   mutate(varlabs = case_when(
     key  == "CONF1" ~ var_labels[1],

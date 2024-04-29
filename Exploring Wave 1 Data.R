@@ -54,7 +54,7 @@ create_histograms <- function(data, var_names, var_labels) {
 
 # Specify the variable names and corresponding labels
 var_names <- paste0("CONF", 1:8)
-var_labels <- c(
+  var_labels <- c(
   "People from the general population",
   "Members of Parliament",
   "Judges",
