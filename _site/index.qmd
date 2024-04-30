@@ -122,15 +122,6 @@ var_labels <- c(
 )
 std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
 
-confidence <- data %>% 
-  select(CONF1:CONF8) %>% 
-  gather() %>% 
-  group_by(key) %>% 
-  summarize(mean_val = mean(value, na.rm =T),
-            sd_val = std.error(value)) %>% 
-  ungroup() %>% 
-  mutate(varlabs = var_labels)
-
 
 # data %>% 
 #   write_csv("../L_AlgoSoc_wave1_1.0p.csv")
@@ -175,6 +166,7 @@ confidence <- data %>%
   <button class="tab-button" onclick="openTab(event, 'Tab1')">Overall</button>
   <button class="tab-button" onclick="openTab(event, 'Tab2')">By Age</button>
   <button class="tab-button" onclick="openTab(event, 'Tab3')">By Gender   </button>
+  <button class="tab-button" onclick="openTab(event, 'Tab4')">By Education</button>
 </div>
 
 ```
@@ -186,6 +178,19 @@ confidence <- data %>%
 <div id="Tab1" class="tab tab-content">
 
 ```{r}
+
+confidence <- data %>% 
+  select(CONF1:CONF8) %>% 
+  gather() %>% 
+  group_by(key) %>% 
+  summarize(mean_val = mean(value, na.rm =T),
+            sd_val = std.error(value)) %>% 
+  ungroup() %>% 
+  mutate(varlabs = var_labels) %>% 
+  mutate(varlabs = fct_reorder(varlabs, mean_val)) %>% 
+  arrange(desc(varlabs))
+
+theorder <- confidence %>% distinct(varlabs) %>% pull(varlabs) 
 
 hchart(
   confidence, 
@@ -212,7 +217,12 @@ hchart(
       # whiskerLength = 1,
       stemWidth = 1
     ) 
-  ) 
+  ) %>% 
+  highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+    title = list(text = "<- 1: not sure at all    -    7: very sure ->"), 
+    max = 6
+  )
 ```
 </div>
 
@@ -247,9 +257,13 @@ confidence_ages <- data %>% #table()
     key  == "CONF6" ~ var_labels[6],
     key  == "CONF7" ~ var_labels[7],
     key  == "CONF8" ~ var_labels[8]
-  ))
+  )) %>% 
+  mutate(varlabs = factor(varlabs, levels = as.character(theorder))) %>%
+  arrange(varlabs)%>% 
+  mutate(age_groups = fct_relevel(age_groups, "<18")) %>%
+  arrange(age_groups)
   # mutate(varlabs = var_labels)
-
+# as.character(theorder)
 hchart(
   confidence_ages, 
   "column",
@@ -276,7 +290,12 @@ hchart(
       # whiskerLength = 1,
       stemWidth = 1
     ) 
-  ) 
+  ) %>% 
+  highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+    title = list(text = "<- 1: not sure at all    -    7: very sure ->"), 
+    max = 6
+  )
 ```
 
 
@@ -307,8 +326,9 @@ confidence_genders <- data %>%
     key  == "CONF6" ~ var_labels[6],
     key  == "CONF7" ~ var_labels[7],
     key  == "CONF8" ~ var_labels[8]
-  ))
-  # mutate(varlabs = var_labels)
+  )) %>% 
+  mutate(varlabs = factor(varlabs, levels = as.character(theorder))) %>%
+  arrange(varlabs)
 
 hchart(
   confidence_genders, 
@@ -336,13 +356,362 @@ hchart(
       # whiskerLength = 1,
       stemWidth = 1
     ) 
-  ) 
+  ) %>% 
+  highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+    title = list(text = "<- 1: not sure at all    -    7: very sure ->"), 
+    max = 6
+  )
 ```
 
 
 
 </div>
+
+
+<div id="Tab4" class="tab tab-content">
+
+
+```{r}
+
+confidence_edu <- data %>% 
+  drop_na(oplcat) %>% 
+  # count(oplcat) %>% 
+  mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
+  select(CONF1:CONF8, oplcat) %>% 
+  gather(key, value, -oplcat) %>% 
+  group_by(key, oplcat) %>% 
+  summarize(mean_val = mean(value, na.rm =T),
+            sd_val = std.error(value)) %>% 
+  ungroup() %>% 
+  mutate(varlabs = case_when(
+    key  == "CONF1" ~ var_labels[1],
+    key  == "CONF2" ~ var_labels[2],
+    key  == "CONF3" ~ var_labels[3],
+    key  == "CONF4" ~ var_labels[4],
+    key  == "CONF5" ~ var_labels[5],
+    key  == "CONF6" ~ var_labels[6],
+    key  == "CONF7" ~ var_labels[7],
+    key  == "CONF8" ~ var_labels[8]
+  )) %>% 
+  mutate(varlabs = factor(varlabs, levels = as.character(theorder))) %>%
+  arrange(varlabs)
+  # mutate(varlabs = var_labels)
+
+hchart(
+  confidence_edu, 
+  "column",
+  # hcaes(x = varlabs, y = mean_val),
+  hcaes(x = varlabs, y = mean_val, group = oplcat),
+  id = c("a", "b", "c", "d", "e", "f")
+  ) %>%
   
+  hc_add_series(
+    confidence_edu,
+    "errorbar", 
+    hcaes(y = mean_val, 
+          x = varlabs, low = mean_val - sd_val, 
+          high = mean_val + sd_val,
+          group = oplcat),
+    # hcaes(y = mean_val, x = key, low = mean_val - sd_val, high = mean_val + sd_val, group = Type),
+    linkedTo = c("a", "b", "c", "d", "e", "f"),
+    enableMouseTracking = TRUE,
+    showInLegend = FALSE
+    ) %>% 
+  highcharter::hc_plotOptions(
+    errorbar = list(
+      color = "black", 
+      # whiskerLength = 1,
+      stemWidth = 1
+    ) 
+  ) %>% 
+  highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+    title = list(text = "<- 1: not sure at all    -    7: very sure ->"), 
+    max = 6
+  )
+```
+
+
+
+</div>
+
+# Familiarity with AI terms
+
+> How familiar are you with the following terms?
+
+```{r}
+var_labels <- c(
+  "Generative AI",
+  "ChatGPT",
+  "Deepfakes",
+  "Algorithms",
+  "Chatbots"
+)
+```
+
+
+<div class="tab-header">
+  <button class="tab-button" onclick="openTab(event, 'Tab1a')">Overall</button>
+  <button class="tab-button" onclick="openTab(event, 'Tab2a')">By Age</button>
+  <button class="tab-button" onclick="openTab(event, 'Tab3a')">By Gender   </button>
+  <button class="tab-button" onclick="openTab(event, 'Tab4a')">By Education</button>
+</div>
+
+
+
+
+
+<div id="Tab1a" class="tab tab-content">
+
+```{r}
+
+familiar <- data %>% 
+  select(KAI1:KAI5) %>% 
+  gather() %>% 
+  group_by(key) %>% 
+  summarize(mean_val = mean(value, na.rm =T),
+            sd_val = std.error(value)) %>% 
+  ungroup() %>% 
+  mutate(varlabs = var_labels) %>% 
+  mutate(varlabs = fct_reorder(varlabs, mean_val)) %>% 
+  arrange(desc(varlabs))
+
+theorder <- familiar %>% distinct(varlabs) %>% pull(varlabs) 
+
+hchart(
+  familiar, 
+  "column",
+  hcaes(x = varlabs, y = mean_val)#,
+  # hcaes(x = key, y = mean_val, group = Type),
+  # id = c("a", "b", "c")
+  ) %>%
+  
+  hc_add_series(
+    familiar,
+    "errorbar", 
+    hcaes(y = mean_val, 
+          x = varlabs, low = mean_val - sd_val, 
+          high = mean_val + sd_val),
+    # hcaes(y = mean_val, x = key, low = mean_val - sd_val, high = mean_val + sd_val, group = Type),
+    # linkedTo = c("a", "b", "c"),
+    enableMouseTracking = TRUE,
+    showInLegend = FALSE
+    ) %>% 
+  highcharter::hc_plotOptions(
+    errorbar = list(
+      color = "black", 
+      # whiskerLength = 1,
+      stemWidth = 1
+    ) 
+  ) %>% 
+  highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+    title = list(text = "<- 1: not familiar at all    -    7: very familiar ->"), 
+    max = 7
+  )
+```
+</div>
+
+<div id="Tab2a" class="tab tab-content">
+
+
+
+```{r}
+
+familiar_ages <- data %>% #table()
+  mutate(age_groups = case_when(
+    leeftijd %in% 16:17 ~ "<18",
+    leeftijd %in% 18:24 ~ "18-24",
+    leeftijd %in% 25:34 ~ "25-34",
+    leeftijd %in% 35:44 ~ "35-44",
+    leeftijd %in% 45:54 ~ "45-54",
+    leeftijd %in% 55:64 ~ "55-64",
+    leeftijd %in% 65:150 ~ "65+",
+  )) %>% 
+  select(KAI1:KAI5, age_groups) %>% 
+  gather(key, value, -age_groups) %>% 
+  group_by(key, age_groups) %>% 
+  summarize(mean_val = mean(value, na.rm =T),
+            sd_val = std.error(value)) %>% 
+  ungroup() %>% 
+  mutate(varlabs = case_when(
+    key  == "KAI1" ~ var_labels[1],
+    key  == "KAI2" ~ var_labels[2],
+    key  == "KAI3" ~ var_labels[3],
+    key  == "KAI4" ~ var_labels[4],
+    key  == "KAI5" ~ var_labels[5]
+  )) %>% 
+  mutate(varlabs = factor(varlabs, levels = as.character(theorder))) %>%
+  arrange(varlabs)%>% 
+  mutate(age_groups = fct_relevel(age_groups, "<18")) %>%
+  arrange(age_groups)
+  # mutate(varlabs = var_labels)
+# as.character(theorder)
+hchart(
+  familiar_ages, 
+  "column",
+  # hcaes(x = varlabs, y = mean_val),
+  hcaes(x = varlabs, y = mean_val, group = age_groups),
+  id = c("a", "b", "c", "d", "e", "f", "g")
+  ) %>%
+  
+  hc_add_series(
+    familiar_ages,
+    "errorbar", 
+    hcaes(y = mean_val, 
+          x = varlabs, low = mean_val - sd_val, 
+          high = mean_val + sd_val,
+          group = age_groups),
+    # hcaes(y = mean_val, x = key, low = mean_val - sd_val, high = mean_val + sd_val, group = Type),
+    linkedTo = c("a", "b", "c", "d", "e", "f", "g"),
+    enableMouseTracking = TRUE,
+    showInLegend = FALSE
+    ) %>% 
+  highcharter::hc_plotOptions(
+    errorbar = list(
+      color = "black", 
+      # whiskerLength = 1,
+      stemWidth = 1
+    ) 
+  ) %>% 
+  highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+    title = list(text = "<- 1: not familiar at all    -    7: very familiar ->"), 
+    max = 7
+  )
+```
+
+
+
+</div>
+
+
+<div id="Tab3a" class="tab tab-content">
+
+
+```{r}
+
+familiar_genders <- data %>% 
+  # count(geslacht) %>% 
+  mutate(geslacht = sjmisc::to_label(geslacht)) %>% 
+  select(KAI1:KAI5, geslacht) %>% 
+  gather(key, value, -geslacht) %>% 
+  group_by(key, geslacht) %>% 
+  summarize(mean_val = mean(value, na.rm =T),
+            sd_val = std.error(value)) %>% 
+  ungroup() %>% 
+  mutate(varlabs = case_when(
+    key  == "KAI1" ~ var_labels[1],
+    key  == "KAI2" ~ var_labels[2],
+    key  == "KAI3" ~ var_labels[3],
+    key  == "KAI4" ~ var_labels[4],
+    key  == "KAI5" ~ var_labels[5]
+  )) %>% 
+  mutate(varlabs = factor(varlabs, levels = as.character(theorder))) %>%
+  arrange(varlabs)
+
+hchart(
+  familiar_genders, 
+  "column",
+  # hcaes(x = varlabs, y = mean_val),
+  hcaes(x = varlabs, y = mean_val, group = geslacht),
+  id = c("a", "b", "c")
+  ) %>%
+  
+  hc_add_series(
+    familiar_genders,
+    "errorbar", 
+    hcaes(y = mean_val, 
+          x = varlabs, low = mean_val - sd_val, 
+          high = mean_val + sd_val,
+          group = geslacht),
+    # hcaes(y = mean_val, x = key, low = mean_val - sd_val, high = mean_val + sd_val, group = Type),
+    linkedTo = c("a", "b", "c"),
+    enableMouseTracking = TRUE,
+    showInLegend = FALSE
+    ) %>% 
+  highcharter::hc_plotOptions(
+    errorbar = list(
+      color = "black", 
+      # whiskerLength = 1,
+      stemWidth = 1
+    ) 
+  ) %>% 
+  highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+    title = list(text = "<- 1: not familiar at all    -    7: very familiar ->"), 
+    max = 7
+  )
+```
+
+
+
+</div>
+
+
+<div id="Tab4" class="tab tab-content">
+
+
+```{r}
+
+familiar_edu <- data %>% 
+  drop_na(oplcat) %>% 
+  # count(oplcat) %>% 
+  mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
+  select(KAI1:KAI5, oplcat) %>% 
+  gather(key, value, -oplcat) %>% 
+  group_by(key, oplcat) %>% 
+  summarize(mean_val = mean(value, na.rm =T),
+            sd_val = std.error(value)) %>% 
+  ungroup() %>% 
+  mutate(varlabs = case_when(
+    key  == "KAI1" ~ var_labels[1],
+    key  == "KAI2" ~ var_labels[2],
+    key  == "KAI3" ~ var_labels[3],
+    key  == "KAI4" ~ var_labels[4],
+    key  == "KAI5" ~ var_labels[5]
+  )) %>% 
+  mutate(varlabs = factor(varlabs, levels = as.character(theorder))) %>%
+  arrange(varlabs)
+  # mutate(varlabs = var_labels)
+
+hchart(
+  familiar_edu, 
+  "column",
+  # hcaes(x = varlabs, y = mean_val),
+  hcaes(x = varlabs, y = mean_val, group = oplcat),
+  id = c("a", "b", "c", "d", "e", "f")
+  ) %>%
+  
+  hc_add_series(
+    familiar_edu,
+    "errorbar", 
+    hcaes(y = mean_val, 
+          x = varlabs, low = mean_val - sd_val, 
+          high = mean_val + sd_val,
+          group = oplcat),
+    # hcaes(y = mean_val, x = key, low = mean_val - sd_val, high = mean_val + sd_val, group = Type),
+    linkedTo = c("a", "b", "c", "d", "e", "f"),
+    enableMouseTracking = TRUE,
+    showInLegend = FALSE
+    ) %>% 
+  highcharter::hc_plotOptions(
+    errorbar = list(
+      color = "black", 
+      # whiskerLength = 1,
+      stemWidth = 1
+    ) 
+  ) %>% 
+  highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+    title = list(text = "<- 1: not familiar at all    -    7: very familiar ->"), 
+    max = 7
+  )
+```
+
+</div>
+
 
 ```{=html}
 <!-- JavaScript for Tabs -->

@@ -9,7 +9,9 @@ website:
     logo: algosoclogo.jpg
     left:
       - href: index.qmd
-        text: "{{< iconify ph coins >}} Spending"
+        text: "{{< iconify ph share-network >}} Knowledge"
+      - href: exposure.qmd
+        text: "{{< iconify ph approximate-equals >}} Exposure"
       - href: about.qmd
         text: "{{< iconify ph info-thin >}} About"
     right:
