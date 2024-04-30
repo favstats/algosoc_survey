@@ -1,9 +1,6 @@
 ---
 title: Exposure to AI-Generated Content
 description-meta: "How often do you think you have come across the following things on social media in the past year?"
-format: 
-  html:
-    page-layout: full
 execute:
   echo: false
 ---
@@ -42,7 +39,16 @@ options(scipen = 999)
 # 
 # options(highcharter.lang = hcoptslang)
 
-data <- read_sav("../L_AlgoSoc_wave1_1.0p.sav")
+data <- read_sav("../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
+  mutate(age_groups = case_when(
+    leeftijd %in% 16:17 ~ "<18",
+    leeftijd %in% 18:24 ~ "18-24",
+    leeftijd %in% 25:34 ~ "25-34",
+    leeftijd %in% 35:44 ~ "35-44",
+    leeftijd %in% 45:54 ~ "45-54",
+    leeftijd %in% 55:64 ~ "55-64",
+    leeftijd %in% 65:150 ~ "65+",
+  )) 
 
 
 
@@ -166,6 +172,72 @@ hchart(
   )
 ```
 
+
+
+
+
+
+
+
+```{r}
+
+media_rec_edu <- data %>% 
+  drop_na(oplcat) %>% 
+  # count(oplcat) %>% 
+  mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
+  select(EXPO1:EXPO3, oplcat) %>% 
+  gather(key, value, -oplcat) %>% 
+  group_by(key, oplcat) %>% 
+  summarize(mean_val = mean(value, na.rm =T),
+            sd_val = std.error(value)) %>% 
+  ungroup() %>% 
+  mutate(varlabs = case_when(
+    key  == "EXPO1" ~ var_labels[1],
+    key  == "EXPO2" ~ var_labels[2],
+    key  == "EXPO3" ~ var_labels[3]
+  )) %>% 
+  mutate(varlabs = factor(varlabs, levels = as.character(theorder))) %>%
+  arrange(varlabs)
+  # mutate(varlabs = var_labels)
+
+hchart(
+  media_rec_edu, 
+  "column",
+  # hcaes(x = varlabs, y = mean_val),
+  hcaes(x = varlabs, y = mean_val, group = oplcat),
+  id = c("a", "b", "c", "d", "e", "f")
+  ) %>%
+  
+  hc_add_series(
+    media_rec_edu,
+    "errorbar", 
+    hcaes(y = mean_val, 
+          x = varlabs, low = mean_val - sd_val, 
+          high = mean_val + sd_val,
+          group = oplcat),
+    # hcaes(y = mean_val, x = key, low = mean_val - sd_val, high = mean_val + sd_val, group = Type),
+    linkedTo = c("a", "b", "c", "d", "e", "f"),
+    enableMouseTracking = TRUE,
+    showInLegend = FALSE
+    ) %>% 
+  highcharter::hc_plotOptions(
+    errorbar = list(
+      color = "black", 
+      # whiskerLength = 1,
+      stemWidth = 1
+    ) 
+  ) %>% 
+  highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+    title = list(text = "<- 1: not at all    -    7: very often ->"), 
+    max = 7
+  )
+
+
+
+```
+
+
 </div>
 
 <div id="Tab2b" class="tab tab-content">
@@ -206,7 +278,7 @@ hchart(
   "column",
   # hcaes(x = varlabs, y = mean_val),
   hcaes(x = varlabs, y = mean_val, group = age_groups),
-  id = c("a", "b", "c")
+  id = c("a", "b", "c", "d", "e", "f", "g")
   ) %>%
   
   hc_add_series(
@@ -217,7 +289,7 @@ hchart(
           high = mean_val + sd_val,
           group = age_groups),
     # hcaes(y = mean_val, x = key, low = mean_val - sd_val, high = mean_val + sd_val, group = Type),
-    linkedTo = c("a", "b", "c"),
+  id = c("a", "b", "c", "d", "e", "f", "g"),
     enableMouseTracking = TRUE,
     showInLegend = FALSE
     ) %>% 

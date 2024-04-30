@@ -222,6 +222,11 @@ adsv_var_labels <- c(
   "Human oversight"
 )
 
+data %>% 
+  select(ADSVR_1) %>% 
+  mutate(ADSVR_1 = sjmisc::to_label(ADSVR_1)) %>% 
+  count(ADSVR_1, sort = T) %>% View()
+
 #PLOT HERE
 create_histograms_ordered(data, adsv_var_names, adsv_var_labels)
 

@@ -9,9 +9,11 @@ website:
     logo: algosoclogo.jpg
     left:
       - href: index.qmd
-        text: "{{< iconify ph share-network >}} Knowledge"
-      - href: exposure.qmd
-        text: "{{< iconify ph approximate-equals >}} Exposure"
+        text: "{{< iconify ph users-three >}} Engagement"
+      - href: attitudes.qmd
+        text: "{{< iconify ph head-circuit >}} Attitudes"
+      - href: values.qmd
+        text: "{{< iconify ph globe-hemisphere-west >}} Values"
       - href: about.qmd
         text: "{{< iconify ph info-thin >}} About"
     right:
