@@ -139,7 +139,6 @@ mean(data$TADS2, na.rm=T)
 mean(data$TADS3, na.rm=T)
 
 
-
 ###### Risky, Useful, Fairer ###########
 #Media system - 3.62
 mean(data$ADSR1, na.rm = T) #Useful 3.08
@@ -225,7 +224,7 @@ adsv_var_labels <- c(
 data %>% 
   select(ADSVR_1) %>% 
   mutate(ADSVR_1 = sjmisc::to_label(ADSVR_1)) %>% 
-  count(ADSVR_1, sort = T) %>% View()
+  count(ADSVR_1, sort = T)
 
 #PLOT HERE
 create_histograms_ordered(data, adsv_var_names, adsv_var_labels)

@@ -1,8 +1,11 @@
 ---
-title: Exposure to AI-Generated Content
 description-meta: "How often do you think you have come across the following things on social media in the past year?"
 execute:
   echo: false
+format:
+  html:
+    toc: true
+    toc-location: right
 ---
 
 ```{r setup, include=FALSE}
@@ -38,17 +41,24 @@ options(scipen = 999)
 # hcoptslang$shortMonths <- c("Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec")
 # 
 # options(highcharter.lang = hcoptslang)
-
+polvals <- read_sav("../cv23o_EN_1.0p.sav") %>% 
+  mutate(left_right = cv23o101)
 data <- read_sav("../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
   mutate(age_groups = case_when(
-    leeftijd %in% 16:17 ~ "<18",
+    leeftijd %in% 16:17 ~ "16-17",
     leeftijd %in% 18:24 ~ "18-24",
     leeftijd %in% 25:34 ~ "25-34",
     leeftijd %in% 35:44 ~ "35-44",
     leeftijd %in% 45:54 ~ "45-54",
     leeftijd %in% 55:64 ~ "55-64",
     leeftijd %in% 65:150 ~ "65+",
-  )) 
+  )) %>% 
+  left_join(polvals %>% select(nomem_encr, left_right)) %>% 
+  mutate(pol_cat = case_when(
+    left_right %in% 0:4 ~ "left",
+    left_right == 5 ~ "center",
+    left_right %in% 6:10 ~ "right"
+    ))
 
 
 
@@ -57,412 +67,128 @@ std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
 
 # data %>% 
 #   write_csv("../L_AlgoSoc_wave1_1.0p.csv")
+
+
+source("utils.R")
 ```
 
 
 
-```{=html}
-<!-- Updated styling for tabs -->
-<style>
-  .tab {
-    display: none;
-  }
-  .tab-header {
-    display: flex;
-    margin: 10px 0;
-    overflow: hidden;
-    background-color: #f1f1f1;
-  }
-  .tab-button {
-    flex: 1;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 10px 16px;
-    transition: 0.3s;
-    background-color: #007bff;
-    color: white;
-    text-align: center;
-  }
-  .tab-button:hover, .tab-button.active {
-    background-color: #0056b3;
-  }
-  .tab-content {
-    padding: 10px;
-    margin-top: -1px;
-  }
-</style>
-
-```
 
 
+# Ability to Detect AI-Generated Content {.tabset .tabset-fade .tabset-pills .break} 
 
-> Artificial Intelligence (AI) can be used to create artificial content such as text, images and videos.
+> How confident are you that the following groups can tell the difference between content created by AI and content created by people?
 
-> How often do you think you have come across the following things on social media in the past year?
+::: {.panel-tabset}
 
-<div class="tab-header">
-  <button class="tab-button" onclick="openTab(event, 'Tab1b')">Overall</button>
-  <button class="tab-button" onclick="openTab(event, 'Tab2b')">By Age</button>
-  <button class="tab-button" onclick="openTab(event, 'Tab3b')">By Gender   </button>
-  <button class="tab-button" onclick="openTab(event, 'Tab4b')">By Education</button>
-</div>
-
-
-
-  
+## Overall
 
 ```{r}
 var_labels <- c(
-  "Texts made by AI",
-  "Photos or images made by AI",
-  "Videos made by AI"
+  "People from the general population",
+  "Members of Parliament",
+  "Judges",
+  "Journalists",
+  "Police officers",
+  "Doctors",
+  "Friends/family",
+  "Yourself"
 )
+
+data %>% 
+  generate_general("CONF1", "CONF8", var_labels)
 ```
 
-
-
-<div id="Tab1b" class="tab tab-content">
+## By Age
 
 ```{r}
-
-media_rec <- data %>% 
-  select(EXPO1:EXPO3) %>% 
-  gather() %>% 
-  group_by(key) %>% 
-  summarize(mean_val = mean(value, na.rm =T),
-            sd_val = std.error(value)) %>% 
-  ungroup() %>% 
-  mutate(varlabs = var_labels) %>% 
-  mutate(varlabs = fct_reorder(varlabs, mean_val)) %>% 
-  arrange(desc(varlabs))
-
-theorder <- media_rec %>% distinct(varlabs) %>% pull(varlabs) 
-
-hchart(
-  media_rec, 
-  "column",
-  hcaes(x = varlabs, y = mean_val)#,
-  # hcaes(x = key, y = mean_val, group = Type),
-  # id = c("a", "b", "c")
-  ) %>%
-  
-  hc_add_series(
-    media_rec,
-    "errorbar", 
-    hcaes(y = mean_val, 
-          x = varlabs, low = mean_val - sd_val, 
-          high = mean_val + sd_val),
-    # hcaes(y = mean_val, x = key, low = mean_val - sd_val, high = mean_val + sd_val, group = Type),
-    # linkedTo = c("a", "b", "c"),
-    enableMouseTracking = TRUE,
-    showInLegend = FALSE
-    ) %>% 
-  highcharter::hc_plotOptions(
-    errorbar = list(
-      color = "black", 
-      # whiskerLength = 1,
-      stemWidth = 1
-    ) 
-  ) %>% 
-  highcharter::hc_xAxis(title = list(text = "")) %>% 
-    hc_yAxis(
-    title = list(text = "<- 1: not at all    -    7: very often ->"), 
-    max = 7
-  )
+data %>% 
+  by_age("CONF1", "CONF8", var_labels)
 ```
 
 
+## By Gender
+
+```{r}
+data %>% 
+  by_gender("CONF1", "CONF8", var_labels)
+```
 
 
-
+## By Education
 
 
 
 ```{r}
-
-media_rec_edu <- data %>% 
-  drop_na(oplcat) %>% 
-  # count(oplcat) %>% 
-  mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
-  select(EXPO1:EXPO3, oplcat) %>% 
-  gather(key, value, -oplcat) %>% 
-  group_by(key, oplcat) %>% 
-  summarize(mean_val = mean(value, na.rm =T),
-            sd_val = std.error(value)) %>% 
-  ungroup() %>% 
-  mutate(varlabs = case_when(
-    key  == "EXPO1" ~ var_labels[1],
-    key  == "EXPO2" ~ var_labels[2],
-    key  == "EXPO3" ~ var_labels[3]
-  )) %>% 
-  mutate(varlabs = factor(varlabs, levels = as.character(theorder))) %>%
-  arrange(varlabs)
-  # mutate(varlabs = var_labels)
-
-hchart(
-  media_rec_edu, 
-  "column",
-  # hcaes(x = varlabs, y = mean_val),
-  hcaes(x = varlabs, y = mean_val, group = oplcat),
-  id = c("a", "b", "c", "d", "e", "f")
-  ) %>%
-  
-  hc_add_series(
-    media_rec_edu,
-    "errorbar", 
-    hcaes(y = mean_val, 
-          x = varlabs, low = mean_val - sd_val, 
-          high = mean_val + sd_val,
-          group = oplcat),
-    # hcaes(y = mean_val, x = key, low = mean_val - sd_val, high = mean_val + sd_val, group = Type),
-    linkedTo = c("a", "b", "c", "d", "e", "f"),
-    enableMouseTracking = TRUE,
-    showInLegend = FALSE
-    ) %>% 
-  highcharter::hc_plotOptions(
-    errorbar = list(
-      color = "black", 
-      # whiskerLength = 1,
-      stemWidth = 1
-    ) 
-  ) %>% 
-  highcharter::hc_xAxis(title = list(text = "")) %>% 
-    hc_yAxis(
-    title = list(text = "<- 1: not at all    -    7: very often ->"), 
-    max = 7
-  )
-
-
-
+data %>% 
+  by_edu("CONF1", "CONF8", var_labels)
 ```
 
 
-</div>
+## By Politics
 
-<div id="Tab2b" class="tab tab-content">
+```{r}
+data %>% 
+  by_pol("CONF1", "CONF8", var_labels)
+```
+
+:::
+
+# Trust in AI Systems {.tabset .tabset-fade .tabset-pills .break}
+
+> We ask you a number of additional questions about automatic decision-making systems. These are computer programs that make decisions that used to be made by people. These decisions are made automatically by computers based on data. 
+
+> How confident are you that automated decision-making systems can properly determine...
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+var_labels <- c(
+  "Social Welfare",
+  "The News You See",
+  "Cancer Diagnosis"
+)
+
+data %>% 
+  generate_general("TADS1", "TADS3", var_labels)
+```
+
+## By Age
+
+```{r}
+data %>% 
+  by_age("TADS1", "TADS3", var_labels)
+```
+
+
+## By Gender
+
+```{r}
+data %>% 
+  by_gender("TADS1", "TADS3", var_labels)
+```
+
+
+## By Education
 
 
 
 ```{r}
-
-media_rec_ages <- data %>% #table()
-  mutate(age_groups = case_when(
-    leeftijd %in% 16:17 ~ "<18",
-    leeftijd %in% 18:24 ~ "18-24",
-    leeftijd %in% 25:34 ~ "25-34",
-    leeftijd %in% 35:44 ~ "35-44",
-    leeftijd %in% 45:54 ~ "45-54",
-    leeftijd %in% 55:64 ~ "55-64",
-    leeftijd %in% 65:150 ~ "65+",
-  )) %>% 
-  select(EXPO1:EXPO3, age_groups) %>% 
-  gather(key, value, -age_groups) %>% 
-  group_by(key, age_groups) %>% 
-  summarize(mean_val = mean(value, na.rm =T),
-            sd_val = std.error(value)) %>% 
-  ungroup() %>% 
-  mutate(varlabs = case_when(
-    key  == "EXPO1" ~ var_labels[1],
-    key  == "EXPO2" ~ var_labels[2],
-    key  == "EXPO3" ~ var_labels[3]
-  )) %>% 
-  mutate(varlabs = factor(varlabs, levels = as.character(theorder))) %>%
-  arrange(varlabs)%>% 
-  mutate(age_groups = fct_relevel(age_groups, "<18")) %>%
-  arrange(age_groups)
-  # mutate(varlabs = var_labels)
-# as.character(theorder)
-hchart(
-  media_rec_ages, 
-  "column",
-  # hcaes(x = varlabs, y = mean_val),
-  hcaes(x = varlabs, y = mean_val, group = age_groups),
-  id = c("a", "b", "c", "d", "e", "f", "g")
-  ) %>%
-  
-  hc_add_series(
-    media_rec_ages,
-    "errorbar", 
-    hcaes(y = mean_val, 
-          x = varlabs, low = mean_val - sd_val, 
-          high = mean_val + sd_val,
-          group = age_groups),
-    # hcaes(y = mean_val, x = key, low = mean_val - sd_val, high = mean_val + sd_val, group = Type),
-  id = c("a", "b", "c", "d", "e", "f", "g"),
-    enableMouseTracking = TRUE,
-    showInLegend = FALSE
-    ) %>% 
-  highcharter::hc_plotOptions(
-    errorbar = list(
-      color = "black", 
-      # whiskerLength = 1,
-      stemWidth = 1
-    ) 
-  ) %>% 
-  highcharter::hc_xAxis(title = list(text = "")) %>% 
-    hc_yAxis(
-    title = list(text = "<- 1: not at all    -    7: very often ->"), 
-    max = 7
-  )
+data %>% 
+  by_edu("TADS1", "TADS3", var_labels)
 ```
 
 
-
-</div>
-
-
-<div id="Tab3b" class="tab tab-content">
-
+## By Politics
 
 ```{r}
-
-media_rec_genders <- data %>% 
-  # count(geslacht) %>% 
-  mutate(geslacht = sjmisc::to_label(geslacht)) %>% 
-  select(EXPO1:EXPO3, geslacht) %>% 
-  gather(key, value, -geslacht) %>% 
-  group_by(key, geslacht) %>% 
-  summarize(mean_val = mean(value, na.rm =T),
-            sd_val = std.error(value)) %>% 
-  ungroup() %>% 
-  mutate(varlabs = case_when(
-    key  == "EXPO1" ~ var_labels[1],
-    key  == "EXPO2" ~ var_labels[2],
-    key  == "EXPO3" ~ var_labels[3]
-  ))  %>% 
-  mutate(varlabs = factor(varlabs, levels = as.character(theorder))) %>%
-  arrange(varlabs)
-
-hchart(
-  media_rec_genders, 
-  "column",
-  # hcaes(x = varlabs, y = mean_val),
-  hcaes(x = varlabs, y = mean_val, group = geslacht),
-  id = c("a", "b", "c")
-  ) %>%
-  
-  hc_add_series(
-    media_rec_genders,
-    "errorbar", 
-    hcaes(y = mean_val, 
-          x = varlabs, low = mean_val - sd_val, 
-          high = mean_val + sd_val,
-          group = geslacht),
-    # hcaes(y = mean_val, x = key, low = mean_val - sd_val, high = mean_val + sd_val, group = Type),
-    linkedTo = c("a", "b", "c"),
-    enableMouseTracking = TRUE,
-    showInLegend = FALSE
-    ) %>% 
-  highcharter::hc_plotOptions(
-    errorbar = list(
-      color = "black", 
-      # whiskerLength = 1,
-      stemWidth = 1
-    ) 
-  ) %>% 
-  highcharter::hc_xAxis(title = list(text = "")) %>% 
-    hc_yAxis(
-    title = list(text = "<- 1: not at all    -    7: very often ->"), 
-    max = 7
-  )
+data %>% 
+  by_pol("TADS1", "TADS3", var_labels)
 ```
 
-
-
-</div>
-
-
-<div id="Tab4b" class="tab tab-content">
-
-
-```{r}
-
-media_rec_edu <- data %>% 
-  drop_na(oplcat) %>% 
-  # count(oplcat) %>% 
-  mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
-  select(EXPO1:EXPO3, oplcat) %>% 
-  gather(key, value, -oplcat) %>% 
-  group_by(key, oplcat) %>% 
-  summarize(mean_val = mean(value, na.rm =T),
-            sd_val = std.error(value)) %>% 
-  ungroup() %>% 
-  mutate(varlabs = case_when(
-    key  == "EXPO1" ~ var_labels[1],
-    key  == "EXPO2" ~ var_labels[2],
-    key  == "EXPO3" ~ var_labels[3]
-  )) %>% 
-  mutate(varlabs = factor(varlabs, levels = as.character(theorder))) %>%
-  arrange(varlabs)
-  # mutate(varlabs = var_labels)
-
-hchart(
-  media_rec_edu, 
-  "column",
-  # hcaes(x = varlabs, y = mean_val),
-  hcaes(x = varlabs, y = mean_val, group = oplcat),
-  id = c("a", "b", "c", "d", "e", "f")
-  ) %>%
-  
-  hc_add_series(
-    media_rec_edu,
-    "errorbar", 
-    hcaes(y = mean_val, 
-          x = varlabs, low = mean_val - sd_val, 
-          high = mean_val + sd_val,
-          group = oplcat),
-    # hcaes(y = mean_val, x = key, low = mean_val - sd_val, high = mean_val + sd_val, group = Type),
-    linkedTo = c("a", "b", "c", "d", "e", "f"),
-    enableMouseTracking = TRUE,
-    showInLegend = FALSE
-    ) %>% 
-  highcharter::hc_plotOptions(
-    errorbar = list(
-      color = "black", 
-      # whiskerLength = 1,
-      stemWidth = 1
-    ) 
-  ) %>% 
-  highcharter::hc_xAxis(title = list(text = "")) %>% 
-    hc_yAxis(
-    title = list(text = "<- 1: not at all    -    7: very often ->"), 
-    max = 7
-  )
-```
-
-
-
-</div>
-
-
-
-```{=html}
-<!-- JavaScript for Tabs -->
-<script>
-function openTab(evt, tabName) {
-  var i, tabcontent, tabbuttons;
-  tabcontent = document.getElementsByClassName("tab");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tabbuttons = document.getElementsByClassName("tab-button");
-  for (i = 0; i < tabbuttons.length; i++) {
-    tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
-  }
-  document.getElementById(tabName).style.display = "block";
-  evt.currentTarget.className += " active";
-}
-
-// Open the first tab by default
-document.addEventListener("DOMContentLoaded", function() {
-  document.getElementsByClassName("tab-button")[0].click();
-});
-</script>
-```
-
-
-
-
+:::
 
 

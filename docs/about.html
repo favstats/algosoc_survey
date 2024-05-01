@@ -30,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./algosoclogo.jpg" rel="icon" type="image/jpeg">
+<link href="./algosoclogo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -73,7 +73,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./algosoclogo.jpg" alt="" class="navbar-logo">
+    <img src="./algosoclogo.png" alt="" class="navbar-logo">
     </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">AlgoSoc Survey</span>
@@ -87,7 +87,15 @@ ul.task-list li input[type="checkbox"] {
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
     <a class="nav-link" href="./index.html" rel="" target="">
- <span class="menu-text"><iconify-icon inline="" icon="ph:coins"></iconify-icon> Spending</span></a>
+ <span class="menu-text"><iconify-icon inline="" icon="ph:users-three"></iconify-icon> Engagement</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./attitudes.html" rel="" target="">
+ <span class="menu-text"><iconify-icon inline="" icon="ph:head-circuit"></iconify-icon> Attitudes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./values.html" rel="" target="">
+ <span class="menu-text"><iconify-icon inline="" icon="ph:globe-hemisphere-west"></iconify-icon> Values</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./about.html" rel="" target="" aria-current="page">
@@ -117,116 +125,17 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 3
-  cntry ds         tframe      
-  &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;       
-1 LU    2024-03-05 last_30_days</code></pre>
-</div>
-</div>
+<p>
+This dashboard aggregates data collected via the <a href="https://algosoc.org/" target="_blank">AlgoSoc Consortium</a> to show how citizens think and feel about AI in society.
+</p>
+<pre><code>&lt;p&gt;If you want to know more about AlgoSoc and our work on AI, visit us on &lt;a href="https://algosoc.org/" target="_blank"&gt;algosoc.org&lt;/a&gt;!&lt;/p&gt;</code></pre>
 <section id="methodology" class="level3">
 <h3 class="anchored" data-anchor-id="methodology">Methodology</h3>
-<p>In collaboration with <a href="https://whotargets.me/">Who Targets Me</a>, we monitored 904 political advertisers to better understand how campaigns use different targeting methods made available by Meta. To do this, we used data from the <a href="https://www.facebook.com/ads/library/">Meta Ad Library</a>, using the new ‘Audience’ data which gives some detail on how pages target their ads.</p>
-<p>To better understand the election, we kept only advertisers who:</p>
-<ol type="1">
-<li>Advertised in the last 7 days (27 Feb - 4 Mar 2024)</li>
-<li>Advertised in the last 30 days (4 Feb - 4 Mar 2024)</li>
-</ol>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Meta only provides 7, 30 and 90 days windows for the targeting data in their Ad Library. Meta’s data also lags by a few days. Report will be updated as soon as new data is available.</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-caution callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Disclaimer
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The data shown in this dashboard is based on the platform’s respective ad libraries which are known to be sometimes incomplete (<a href="https://ieeexplore.ieee.org/abstract/document/9152626?casa_token=X9SB7c8W9rAAAAAA:ymZr9ynFNTU6Fjzg3dcQpBzZpJ8bsEfj-H0RVTu2EZafKjhcD5Zu_VQ0aJc6qi9OMks3mUdFs-g">Edelson et al.&nbsp;2020</a>; <a href="https://dl.acm.org/doi/abs/10.1145/3366423.3380109?casa_token=ddoyvLl4R5YAAAAA:JqVLRLe6GHlR2o4zZqbEMlReyuTTyQxCGteUkdcFMR0xuCYWgwdl3NKyK05REOZm8vYl_W-bjOEaepM">Silva et al.&nbsp;2020</a>). For this reason the data shown here might not reflect the full picture nor all political ads that were targeted at voters.</p>
-</div>
-</div>
-</section>
-<section id="about-the-creator-of-the-dashboard" class="level3">
-<h3 class="anchored" data-anchor-id="about-the-creator-of-the-dashboard">About the Creator of the Dashboard</h3>
-<div class="cell">
-<div class="cell-output-display">
-<div class="card">
-<div class="row no-gutters align-items-center">
-<div class="col-md-2">
-<div style="display: flex; justify-content: center;">
-<img class="card-img" src="https://pbs.twimg.com/profile_images/1662875733704822784/C4T3VPy0_400x400.jpg" style="max-width: 500px;">
-</div>
-</div>
-<div class="col-md-2">
-<div class="card-body">
-<p class="card-text">Fabio Votta is a Postdoc at the University of Amsterdam who studies (online) political microtargeting and its usage around the world.</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div style="display: flex; justify-content: center; align-items: center;">
-<div>
-<p><img src="wtm_logo_2020.png" class="img-fluid"></p>
-</div>
-<div>
-<p>Want to see how political parties target <em>you</em>? <a href="https://whotargets.me/">Sign up</a> at <strong>Who Targets Me</strong> and download the gratis browser plugin to see how parties on Facebook use your data:</p>
-<p><a href="https://whotargets.me/">https://whotargets.me/</a></p>
-</div>
-</div>
-<div style="display: flex; justify-content: center; align-items: center;">
-<div>
-<p><img src="metatargetr_logo.png" class="img-fluid"></p>
-</div>
-<div>
-<p>Want to retrieve targeting data from the Facebook Ad Library yourself? This dashboard is powered by the R package: <code>metatargetr</code>. Check it out here:</p>
-<p><a href="https://github.com/favstats/metatargetr">https://github.com/favstats/metatargetr</a></p>
-</div>
-</div>
-</section>
-<section id="election-targeting-dashboards" class="level3">
-<h3 class="anchored" data-anchor-id="election-targeting-dashboards">Election Targeting Dashboards</h3>
-<p>A list of election dashboards:</p>
-<ul>
-<li>🇳🇱 <a href="https://favstats.github.io/DutchElectionObservatory/en/index.html">2021 Dutch parliamentary election</a> (15th-17th March 2021)</li>
-<li>🇩🇪 <a href="https://favstats.shinyapps.io/btw21_wtm">2021 German federal election</a> (26 September 2021)</li>
-<li>🇸🇪 <a href="https://favstats.github.io/SwedishElection2022/">2022 Swedish general election</a> (11th September 2022)</li>
-<li>🇺🇸 <a href="https://whotargetsme.shinyapps.io/midterms2022/">2022 United States midterm elections</a> (8th November 2022)</li>
-<li>🇺🇸 <a href="https://whotargetsme.github.io/midterms2022_dashboard/">2022 United States midterm elections - Georgia Runoff</a> (6th December 2022)</li>
-<li>🇮🇹 <a href="https://favstats.github.io/regionali2023/">2023 Lazio &amp; Lombardy regional election</a> (12-13th February 2023)</li>
-<li>🇪🇪 <a href="https://favstats.github.io/EstoniaElection2023/">2023 Estonian parliamentary election</a> (5th March 2023)</li>
-<li>🇳🇱 <a href="https://favstats.github.io/ProvincialeStatenverkiezingen2023/">2023 Dutch provincial elections</a> (15th March 2023)</li>
-<li>🇲🇪 <a href="https://favstats.github.io/MontenegroPresidentialElection2023/">2023 Montenegrin presidential elections</a> (19th March 2023) - 1st round</li>
-<li>🇦🇺 <a href="https://favstats.github.io/NSWAustralianElection2023/">2023 New South Wales state election</a> (25th March 2023)</li>
-<li>🇫🇮 <a href="https://favstats.github.io/FinlandElections2023/">2023 Finnish parliamentary election</a> (2 April 2023)</li>
-<li>🇹🇷 <a href="https://favstats.github.io/TurkishElection2023/round1">2023 Turkish general election</a> (14 May 2023) - Round 1</li>
-<li>🇩🇪 <a href="https://favstats.github.io/BremenStateElection2023/">2023 Bremen State election</a> (14 May 2023)</li>
-<li>🇬🇷 <a href="https://favstats.github.io/BremenStateElection2023/">2023 Greek Legislative election</a> (21 May 2023)</li>
-<li>🇹🇷 <a href="https://favstats.github.io/TurkishElection2023/">2023 Turkish Presidential election</a> (14 May 2023) - Round 2</li>
-<li>🇲🇪 <a href="https://favstats.github.io/2023MontenegrinParliamentaryElection/">2023 Montenegrin parliamentary elections</a> (11 June 2023)</li>
-<li>🇬🇷 <a href="https://favstats.github.io/2ndGreeceElection2023/">2nd 2023 Greek Legislative election</a> (25 May 2023)</li>
-<li>🇸🇰 <a href="https://favstats.github.io/slovakia2023/">2023 Slovak parliamentary election</a> (30 September 2023)</li>
-<li>🇩🇪 <a href="https://favstats.github.io/LTW2023/bavaria">2023 Bavarian state election</a> (8 October 2023)</li>
-<li>🇩🇪 <a href="https://favstats.github.io/LTW2023/hessen">2023 Hessian state election</a> (8 October 2023)</li>
-<li>🇳🇿 <a href="https://favstats.github.io/NZ2023/">2023 New Zealand general election</a> (14 October 2023)</li>
-<li>🇵🇱 <a href="https://favstats.github.io/poland2023/">2023 Polish parliamentary election</a> (15 October 2023)</li>
-<li>🇺🇸 <a href="https://favstats.github.io/USprimaries2024/">US Presidential Primaries</a> (2023-2024)</li>
-</ul>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nisl orci, maximus vitae elementum dictum, vehicula vitae arcu. Pellentesque dui massa, posuere non felis eu, euismod maximus sem. Fusce eros quam, ornare ac luctus quis, accumsan eget diam. Donec vel urna ac nulla tempor efficitur id et nulla. Integer eu vehicula turpis. Maecenas venenatis, purus elementum pellentesque vestibulum, leo tellus volutpat enim, id interdum lectus justo vel lorem. Praesent nec orci mattis, porttitor erat eget, tincidunt ipsum. Pellentesque a elit sed est lobortis dapibus. Nullam auctor ex ac elit tempus lacinia. Aliquam fermentum mi quis dignissim dignissim. Maecenas ac neque eget ipsum tristique venenatis. Morbi laoreet massa lorem, eu consequat quam tempor quis. Fusce at sem id ex eleifend sagittis. Ut ac quam scelerisque, varius ligula et, faucibus nulla. Phasellus auctor risus venenatis blandit venenatis.</p>
+<p>Nulla dictum tincidunt velit in posuere. Integer tempus neque ut lacus semper, et fringilla ex sagittis. Fusce vitae efficitur leo, eu vulputate sapien. Vivamus nec mattis metus, in ullamcorper sapien. Duis feugiat urna nunc, sit amet cursus eros varius consectetur. Nullam luctus, augue efficitur ultricies hendrerit, augue libero condimentum erat, pulvinar pellentesque massa neque sit amet odio. Donec a nisl dictum, ornare ipsum eget, elementum justo. Praesent sed diam dignissim, faucibus felis ac, fermentum turpis. Donec fermentum et nulla vitae euismod. Curabitur fermentum, mauris ac ornare tristique, velit sem mattis arcu, quis interdum lacus eros vitae massa. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+<p>Cras non dolor id leo commodo dapibus in at arcu. Duis blandit, elit vitae dapibus sodales, lectus sapien faucibus massa, id dapibus nisl purus eu dui. Morbi non lacus id purus mattis tempor nec nec tortor. Cras quis quam rutrum, sodales dui vel, molestie lorem. Nullam mattis urna eget neque fermentum, eget semper arcu lobortis. Nam a tempor urna. Pellentesque mi libero, luctus ut enim ut, ultricies rutrum elit. Suspendisse quis vulputate arcu, et pretium sem.</p>
+<p>Suspendisse urna tellus, accumsan ut vulputate a, hendrerit et massa. Integer efficitur molestie tortor, convallis maximus elit efficitur et. Integer id cursus est. Fusce sagittis fringilla augue ac dictum. Suspendisse ut eros et nisi commodo ultrices bibendum eu est. Pellentesque malesuada et lectus condimentum vehicula. Donec nibh velit, finibus ut aliquam non, facilisis non augue. Curabitur id tellus ut ante rutrum euismod. In tempor, ante at tincidunt eleifend, orci neque efficitur tortor, eget interdum enim felis blandit libero. Suspendisse a ante ipsum. Sed accumsan pharetra mi, eget tristique dolor euismod dictum. Pellentesque egestas molestie urna nec consequat.</p>
+<p>Integer lobortis scelerisque mattis. Integer viverra efficitur blandit. Maecenas et mauris vitae dolor pulvinar varius eu vel leo. Mauris est lacus, ullamcorper non mauris sed, auctor tincidunt lorem. Nunc scelerisque felis in nunc hendrerit scelerisque. Quisque ac lectus luctus, porttitor ante eget, efficitur urna. Vestibulum sollicitudin felis dignissim nibh porttitor malesuada. Maecenas mi diam, cursus sit amet rutrum ac, viverra vel nunc. Vestibulum tincidunt a nisi et sagittis. Ut metus ligula, sodales in imperdiet vitae, sollicitudin ut erat.</p>
 
 
 </section>

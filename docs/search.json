@@ -4,13 +4,167 @@
     "href": "index.html",
     "title": "Usage of AI Systems",
     "section": "",
-    "text": "Welcome to the AlgoSoc Survey Dashboard\n    This dashboard aggregates data collected via the AlgoSoc Consortium to show how citizens think and feel about AI in society.\n    If you want to know more about AlgoSoc and our work on AI, visit us on algosoc.org!\n  \n\n\n\n\n\n\n\n\n\n\nUsage of AI Systems\n\nHow often in the past year did you use…\n\n\nOverall By Age By Gender By Education By Politics\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAbility to Detect AI-Generated Content\n\nHow confident are you that the following groups can tell the difference between content created by AI and content created by people?\n\n\nOverall By Age By Gender By Education By Politics\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFamiliarity with AI terms\n\nHow familiar are you with the following terms?\n\n\nOverall By Age By Gender By Education By Politics"
+    "text": "Welcome to the AlgoSoc Survey Dashboard\n    This dashboard aggregates data collected via the AlgoSoc Consortium to show how citizens think and feel about AI in society.\n    If you want to know more about AlgoSoc and our work on AI, visit us on algosoc.org!\n  Close\n\n  \n\n\n\n\n\nUsage of AI Systems\n\nHow often in the past year did you use…\n\n\nOverallBy AgeBy GenderBy EducationBy Politics\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nExposure to AI\n\nArtificial Intelligence (AI) can be used to create artificial content such as text, images and videos.\n\n\nHow often do you think you have come across the following things on social media in the past year?\n\n\nOverallBy AgeBy GenderBy EducationBy Politics\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFamiliarity with AI terms\n\nHow familiar are you with the following terms?\n\n\nOverallBy AgeBy GenderBy EducationBy Politics"
   },
   {
     "objectID": "about.html",
     "href": "about.html",
     "title": "AlgoSoc Survey",
     "section": "",
-    "text": "# A tibble: 1 × 3\n  cntry ds         tframe      \n  &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;       \n1 LU    2024-03-05 last_30_days\n\n\n\nMethodology\nIn collaboration with Who Targets Me, we monitored 904 political advertisers to better understand how campaigns use different targeting methods made available by Meta. To do this, we used data from the Meta Ad Library, using the new ‘Audience’ data which gives some detail on how pages target their ads.\nTo better understand the election, we kept only advertisers who:\n\nAdvertised in the last 7 days (27 Feb - 4 Mar 2024)\nAdvertised in the last 30 days (4 Feb - 4 Mar 2024)\n\n\n\n\n\n\n\nNote\n\n\n\nMeta only provides 7, 30 and 90 days windows for the targeting data in their Ad Library. Meta’s data also lags by a few days. Report will be updated as soon as new data is available.\n\n\n\n\n\n\n\n\nDisclaimer\n\n\n\nThe data shown in this dashboard is based on the platform’s respective ad libraries which are known to be sometimes incomplete (Edelson et al. 2020; Silva et al. 2020). For this reason the data shown here might not reflect the full picture nor all political ads that were targeted at voters.\n\n\n\n\nAbout the Creator of the Dashboard\n\n\n\n\n\n\n\n\n\n\n\nFabio Votta is a Postdoc at the University of Amsterdam who studies (online) political microtargeting and its usage around the world.\n\n\n\n\n\n\n\n\n\n\n\nWant to see how political parties target you? Sign up at Who Targets Me and download the gratis browser plugin to see how parties on Facebook use your data:\nhttps://whotargets.me/\n\n\n\n\n\n\n\nWant to retrieve targeting data from the Facebook Ad Library yourself? This dashboard is powered by the R package: metatargetr. Check it out here:\nhttps://github.com/favstats/metatargetr\n\n\n\n\nElection Targeting Dashboards\nA list of election dashboards:\n\n🇳🇱 2021 Dutch parliamentary election (15th-17th March 2021)\n🇩🇪 2021 German federal election (26 September 2021)\n🇸🇪 2022 Swedish general election (11th September 2022)\n🇺🇸 2022 United States midterm elections (8th November 2022)\n🇺🇸 2022 United States midterm elections - Georgia Runoff (6th December 2022)\n🇮🇹 2023 Lazio & Lombardy regional election (12-13th February 2023)\n🇪🇪 2023 Estonian parliamentary election (5th March 2023)\n🇳🇱 2023 Dutch provincial elections (15th March 2023)\n🇲🇪 2023 Montenegrin presidential elections (19th March 2023) - 1st round\n🇦🇺 2023 New South Wales state election (25th March 2023)\n🇫🇮 2023 Finnish parliamentary election (2 April 2023)\n🇹🇷 2023 Turkish general election (14 May 2023) - Round 1\n🇩🇪 2023 Bremen State election (14 May 2023)\n🇬🇷 2023 Greek Legislative election (21 May 2023)\n🇹🇷 2023 Turkish Presidential election (14 May 2023) - Round 2\n🇲🇪 2023 Montenegrin parliamentary elections (11 June 2023)\n🇬🇷 2nd 2023 Greek Legislative election (25 May 2023)\n🇸🇰 2023 Slovak parliamentary election (30 September 2023)\n🇩🇪 2023 Bavarian state election (8 October 2023)\n🇩🇪 2023 Hessian state election (8 October 2023)\n🇳🇿 2023 New Zealand general election (14 October 2023)\n🇵🇱 2023 Polish parliamentary election (15 October 2023)\n🇺🇸 US Presidential Primaries (2023-2024)"
+    "text": "This dashboard aggregates data collected via the AlgoSoc Consortium to show how citizens think and feel about AI in society.\n\n&lt;p&gt;If you want to know more about AlgoSoc and our work on AI, visit us on &lt;a href=\"https://algosoc.org/\" target=\"_blank\"&gt;algosoc.org&lt;/a&gt;!&lt;/p&gt;\n\nMethodology\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nisl orci, maximus vitae elementum dictum, vehicula vitae arcu. Pellentesque dui massa, posuere non felis eu, euismod maximus sem. Fusce eros quam, ornare ac luctus quis, accumsan eget diam. Donec vel urna ac nulla tempor efficitur id et nulla. Integer eu vehicula turpis. Maecenas venenatis, purus elementum pellentesque vestibulum, leo tellus volutpat enim, id interdum lectus justo vel lorem. Praesent nec orci mattis, porttitor erat eget, tincidunt ipsum. Pellentesque a elit sed est lobortis dapibus. Nullam auctor ex ac elit tempus lacinia. Aliquam fermentum mi quis dignissim dignissim. Maecenas ac neque eget ipsum tristique venenatis. Morbi laoreet massa lorem, eu consequat quam tempor quis. Fusce at sem id ex eleifend sagittis. Ut ac quam scelerisque, varius ligula et, faucibus nulla. Phasellus auctor risus venenatis blandit venenatis.\nNulla dictum tincidunt velit in posuere. Integer tempus neque ut lacus semper, et fringilla ex sagittis. Fusce vitae efficitur leo, eu vulputate sapien. Vivamus nec mattis metus, in ullamcorper sapien. Duis feugiat urna nunc, sit amet cursus eros varius consectetur. Nullam luctus, augue efficitur ultricies hendrerit, augue libero condimentum erat, pulvinar pellentesque massa neque sit amet odio. Donec a nisl dictum, ornare ipsum eget, elementum justo. Praesent sed diam dignissim, faucibus felis ac, fermentum turpis. Donec fermentum et nulla vitae euismod. Curabitur fermentum, mauris ac ornare tristique, velit sem mattis arcu, quis interdum lacus eros vitae massa. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.\nCras non dolor id leo commodo dapibus in at arcu. Duis blandit, elit vitae dapibus sodales, lectus sapien faucibus massa, id dapibus nisl purus eu dui. Morbi non lacus id purus mattis tempor nec nec tortor. Cras quis quam rutrum, sodales dui vel, molestie lorem. Nullam mattis urna eget neque fermentum, eget semper arcu lobortis. Nam a tempor urna. Pellentesque mi libero, luctus ut enim ut, ultricies rutrum elit. Suspendisse quis vulputate arcu, et pretium sem.\nSuspendisse urna tellus, accumsan ut vulputate a, hendrerit et massa. Integer efficitur molestie tortor, convallis maximus elit efficitur et. Integer id cursus est. Fusce sagittis fringilla augue ac dictum. Suspendisse ut eros et nisi commodo ultrices bibendum eu est. Pellentesque malesuada et lectus condimentum vehicula. Donec nibh velit, finibus ut aliquam non, facilisis non augue. Curabitur id tellus ut ante rutrum euismod. In tempor, ante at tincidunt eleifend, orci neque efficitur tortor, eget interdum enim felis blandit libero. Suspendisse a ante ipsum. Sed accumsan pharetra mi, eget tristique dolor euismod dictum. Pellentesque egestas molestie urna nec consequat.\nInteger lobortis scelerisque mattis. Integer viverra efficitur blandit. Maecenas et mauris vitae dolor pulvinar varius eu vel leo. Mauris est lacus, ullamcorper non mauris sed, auctor tincidunt lorem. Nunc scelerisque felis in nunc hendrerit scelerisque. Quisque ac lectus luctus, porttitor ante eget, efficitur urna. Vestibulum sollicitudin felis dignissim nibh porttitor malesuada. Maecenas mi diam, cursus sit amet rutrum ac, viverra vel nunc. Vestibulum tincidunt a nisi et sagittis. Ut metus ligula, sodales in imperdiet vitae, sollicitudin ut erat."
+  },
+  {
+    "objectID": "index.html#overall",
+    "href": "index.html#overall",
+    "title": "Usage of AI Systems",
+    "section": "Overall",
+    "text": "Overall"
+  },
+  {
+    "objectID": "index.html#by-age",
+    "href": "index.html#by-age",
+    "title": "Usage of AI Systems",
+    "section": "By Age",
+    "text": "By Age"
+  },
+  {
+    "objectID": "index.html#by-gender",
+    "href": "index.html#by-gender",
+    "title": "Usage of AI Systems",
+    "section": "By Gender",
+    "text": "By Gender"
+  },
+  {
+    "objectID": "index.html#by-education",
+    "href": "index.html#by-education",
+    "title": "Usage of AI Systems",
+    "section": "By Education",
+    "text": "By Education"
+  },
+  {
+    "objectID": "index.html#by-politics",
+    "href": "index.html#by-politics",
+    "title": "Usage of AI Systems",
+    "section": "By Politics",
+    "text": "By Politics"
+  },
+  {
+    "objectID": "index.html#overall-1",
+    "href": "index.html#overall-1",
+    "title": "Usage of AI Systems",
+    "section": "Overall",
+    "text": "Overall"
+  },
+  {
+    "objectID": "index.html#by-age-1",
+    "href": "index.html#by-age-1",
+    "title": "Usage of AI Systems",
+    "section": "By Age",
+    "text": "By Age"
+  },
+  {
+    "objectID": "index.html#by-gender-1",
+    "href": "index.html#by-gender-1",
+    "title": "Usage of AI Systems",
+    "section": "By Gender",
+    "text": "By Gender"
+  },
+  {
+    "objectID": "index.html#by-education-1",
+    "href": "index.html#by-education-1",
+    "title": "Usage of AI Systems",
+    "section": "By Education",
+    "text": "By Education"
+  },
+  {
+    "objectID": "index.html#by-politics-1",
+    "href": "index.html#by-politics-1",
+    "title": "Usage of AI Systems",
+    "section": "By Politics",
+    "text": "By Politics"
+  },
+  {
+    "objectID": "index.html#overall-2",
+    "href": "index.html#overall-2",
+    "title": "Usage of AI Systems",
+    "section": "Overall",
+    "text": "Overall"
+  },
+  {
+    "objectID": "index.html#by-age-2",
+    "href": "index.html#by-age-2",
+    "title": "Usage of AI Systems",
+    "section": "By Age",
+    "text": "By Age"
+  },
+  {
+    "objectID": "index.html#by-gender-2",
+    "href": "index.html#by-gender-2",
+    "title": "Usage of AI Systems",
+    "section": "By Gender",
+    "text": "By Gender"
+  },
+  {
+    "objectID": "index.html#by-education-2",
+    "href": "index.html#by-education-2",
+    "title": "Usage of AI Systems",
+    "section": "By Education",
+    "text": "By Education"
+  },
+  {
+    "objectID": "index.html#by-politics-2",
+    "href": "index.html#by-politics-2",
+    "title": "Usage of AI Systems",
+    "section": "By Politics",
+    "text": "By Politics"
+  },
+  {
+    "objectID": "attitudes.html",
+    "href": "attitudes.html",
+    "title": "Ability to Detect AI-Generated Content",
+    "section": "",
+    "text": "Ability to Detect AI-Generated Content\n\nHow confident are you that the following groups can tell the difference between content created by AI and content created by people?\n\n\nOverallBy AgeBy GenderBy EducationBy Politics\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTrust in AI Systems\n\nWe ask you a number of additional questions about automatic decision-making systems. These are computer programs that make decisions that used to be made by people. These decisions are made automatically by computers based on data.\n\n\nHow confident are you that automated decision-making systems can properly determine…\n\n\nOverallBy AgeBy GenderBy EducationBy Politics"
+  },
+  {
+    "objectID": "values.html",
+    "href": "values.html",
+    "title": "Most Important Values",
+    "section": "",
+    "text": "Most Important Values\n\nWhat do you consider the 5 most important values for automated decision-making systems? [only top important value shown]\n\n\nOverallBy AgeBy GenderBy EducationBy Politics\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nUsefulness of AI\nIn most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:\n\nMore automatic decision-making in news media/the legal system/healthcare will be useful.\n\n\nOverallBy AgeBy GenderBy EducationBy Politics\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nRiskiness of AI\nIn most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:\n\nMore automatic decision-making in news media/the legal system/healthcare will be risky.\n\n\nOverallBy AgeBy GenderBy EducationBy Politics\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFairness of AI\nIn most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:\n\nMore automatic decision-making in news media/the legal system/healthcare will be more fair.\n\n\nOverallBy AgeBy GenderBy EducationBy Politics"
+  },
+  {
+    "objectID": "values.html#overall",
+    "href": "values.html#overall",
+    "title": "Exposure to AI-Generated Content",
+    "section": "Overall",
+    "text": "Overall"
+  },
+  {
+    "objectID": "values.html#by-age-1",
+    "href": "values.html#by-age-1",
+    "title": "Exposure to AI-Generated Content",
+    "section": "By Age",
+    "text": "By Age"
+  },
+  {
+    "objectID": "values.html#by-gender-1",
+    "href": "values.html#by-gender-1",
+    "title": "Exposure to AI-Generated Content",
+    "section": "By Gender",
+    "text": "By Gender"
+  },
+  {
+    "objectID": "values.html#by-education-1",
+    "href": "values.html#by-education-1",
+    "title": "Exposure to AI-Generated Content",
+    "section": "By Education",
+    "text": "By Education"
+  },
+  {
+    "objectID": "values.html#by-politics-1",
+    "href": "values.html#by-politics-1",
+    "title": "Exposure to AI-Generated Content",
+    "section": "By Politics",
+    "text": "By Politics"
   }
 ]

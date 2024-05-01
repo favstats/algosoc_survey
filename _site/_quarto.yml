@@ -3,10 +3,10 @@ project:
   output-dir: ../docs
 
 website:
-  favicon: algosoclogo.jpg
+  favicon: algosoclogo.png
   title: "AlgoSoc Survey"
   navbar:
-    logo: algosoclogo.jpg
+    logo: algosoclogo.png
     left:
       - href: index.qmd
         text: "{{< iconify ph users-three >}} Engagement"
