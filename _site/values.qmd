@@ -56,12 +56,16 @@ data <- read_sav("../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
   # select(ADSVR_1) %>% 
   mutate(important1 = sjmisc::to_label(ADSVR_1)) %>% 
   left_join(polvals %>% select(nomem_encr, left_right)) %>% 
+  # mutate(pol_cat = case_when(
+  #   left_right %in% 0:4 ~ "left",
+  #   left_right == 5 ~ "center",
+  #   left_right %in% 6:10 ~ "right"
+  #   )) %>% 
   mutate(pol_cat = case_when(
-    left_right %in% 0:4 ~ "left",
-    left_right == 5 ~ "center",
-    left_right %in% 6:10 ~ "right"
+    left_right %in% 0:3 ~ "left",
+    left_right %in% 4:6 ~ "center",
+    left_right %in% 7:10 ~ "right"
     ))
-
 
 
 
