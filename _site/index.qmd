@@ -118,7 +118,8 @@ function off() {
 # options(highcharter.lang = hcoptslang)
 
 polvals <- read_sav("../cv23o_EN_1.0p.sav") %>% 
-  mutate(left_right = cv23o101)
+  mutate(left_right = cv23o101) #%>% 
+  # mutate(left_right = ifelse(is.na(left_right), "99", left_right))
 
 data <- read_sav("../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
   mutate(age_groups = case_when(
@@ -147,7 +148,12 @@ data <- read_sav("../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
 
 std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
 
-
+# data %>% 
+#   count(left_right)
+# 
+# polvals %>% 
+#   count(cv23o101) %>% 
+#   mutate(lab = sjmisc::to_label(cv23o101))
 # data %>% 
 #   write_csv("../L_AlgoSoc_wave1_1.0p.csv")
 ```
@@ -163,7 +169,6 @@ std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
 
 > How often in the past year did you use...
 
-
 ::: {.panel-tabset}
 
 
@@ -174,7 +179,9 @@ std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
 
 
 data %>% 
-  generate_general("ADM1", "ADM2", c("ChatGPT", "Midjourney"))
+  generate_general("ADM1", "ADM2", 
+                  c("...text generators like ChatGPT?", 
+                    "...image generators like Midjourney?"))
 
 
 ```
@@ -192,7 +199,9 @@ data %>%
 
 
 data %>% 
-  by_age("ADM1", "ADM2", c("ChatGPT", "Midjourney"))
+  by_age("ADM1", "ADM2", 
+                  c("...text generators like ChatGPT?", 
+                    "...image generators like Midjourney?"))
 ```
 
 <!-- </div> -->
@@ -206,7 +215,9 @@ data %>%
 
 
 data %>% 
-  by_gender("ADM1", "ADM2", c("ChatGPT", "Midjourney"))
+  by_gender("ADM1", "ADM2", 
+                  c("...text generators like ChatGPT?", 
+                    "...image generators like Midjourney?"))
 ```
 
 
@@ -220,7 +231,9 @@ data %>%
 
 
 data %>% 
-  by_edu("ADM1", "ADM2", c("ChatGPT", "Midjourney"))
+  by_edu("ADM1", "ADM2", 
+                  c("...text generators like ChatGPT?", 
+                    "...image generators like Midjourney?"))
 ```
 
 <!-- </div> -->
@@ -233,7 +246,9 @@ data %>%
 
 
 data %>% 
-  by_pol("ADM1", "ADM2", c("ChatGPT", "Midjourney"))
+  by_pol("ADM1", "ADM2", 
+                  c("...text generators like ChatGPT?", 
+                    "...image generators like Midjourney?"))
 ```
 
 <!-- </div> -->
@@ -264,7 +279,8 @@ var_labels <- c(
 
 ```{r}
 data %>% 
-  generate_general("EXPO1", "EXPO3", var_labels)
+  generate_general("EXPO1", "EXPO3", var_labels,
+                   thelabel = "<- 1: not at all    -    7: very often ->")
 ```
 
 ## By Age
@@ -272,7 +288,8 @@ data %>%
 
 ```{r}
 data %>% 
-  by_age("EXPO1", "EXPO3", var_labels)
+  by_age("EXPO1", "EXPO3", var_labels,
+                   thelabel = "<- 1: not at all    -    7: very often ->")
 ```
 
 
@@ -280,7 +297,8 @@ data %>%
 
 ```{r}
 data %>% 
-  by_gender("EXPO1", "EXPO3", var_labels)
+  by_gender("EXPO1", "EXPO3", var_labels,
+                   thelabel = "<- 1: not at all    -    7: very often ->")
 ```
 
 
@@ -289,14 +307,16 @@ data %>%
 
 ```{r}
 data %>% 
-  by_edu("EXPO1", "EXPO3", var_labels)
+  by_edu("EXPO1", "EXPO3", var_labels,
+                   thelabel = "<- 1: not at all    -    7: very often ->")
 ```
 
 ## By Politics
 
 ```{r}
 data %>% 
-  by_pol("EXPO1", "EXPO3", var_labels)
+  by_pol("EXPO1", "EXPO3", var_labels,
+                   thelabel = "<- 1: not at all    -    7: very often ->")
 ```
 
 :::
@@ -323,7 +343,8 @@ var_labels <- c(
 
 ```{r}
 data %>% 
-  generate_general("KAI1", "KAI5", var_labels)
+  generate_general("KAI1", "KAI5", var_labels,
+                   "<- 1: not familiar with it at all    -    7: very familiar with it ->")
 ```
 
 
@@ -331,7 +352,8 @@ data %>%
 
 ```{r}
 data %>% 
-  by_age("KAI1", "KAI5", var_labels)
+  by_age("KAI1", "KAI5", var_labels,
+                   "<- 1: not familiar with it at all    -    7: very familiar with it ->")
 ```
 
 
@@ -340,7 +362,8 @@ data %>%
 
 ```{r}
 data %>% 
-  by_gender("KAI1", "KAI5", var_labels)
+  by_gender("KAI1", "KAI5", var_labels,
+                   "<- 1: not familiar with it at all    -    7: very familiar with it ->")
 ```
 
 
@@ -349,7 +372,8 @@ data %>%
 
 ```{r}
 data %>% 
-  by_edu("KAI1", "KAI5", var_labels)
+  by_edu("KAI1", "KAI5", var_labels,
+                   "<- 1: not familiar with it at all    -    7: very familiar with it ->")
 ```
 
 
@@ -357,7 +381,8 @@ data %>%
 
 ```{r}
 data %>% 
-  by_pol("KAI1", "KAI5", var_labels)
+  by_pol("KAI1", "KAI5", var_labels,
+                   "<- 1: not familiar with it at all    -    7: very familiar with it ->")
 ```
 
 

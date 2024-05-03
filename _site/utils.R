@@ -1,4 +1,4 @@
-generate_general <- function(data, var1, var2, thevarlabs) {
+generate_general <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -    7: very often ->") {
   
   media_rec <- data %>% 
     select(var1:var2) %>% 
@@ -35,7 +35,7 @@ generate_general <- function(data, var1, var2, thevarlabs) {
     ) %>% 
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
-      title = list(text = "<- 1: never    -    7: very often ->"), 
+      title = list(text = thelabel), 
       max = 7, min = 1
     ) 
   
@@ -43,7 +43,7 @@ generate_general <- function(data, var1, var2, thevarlabs) {
 
 
 
-by_age <- function(data, var1, var2, thevarlabs) {
+by_age <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -    7: very often ->") {
   
   varlabdat <- data %>% 
     select(var1:var2) %>% 
@@ -95,7 +95,7 @@ by_age <- function(data, var1, var2, thevarlabs) {
     ) %>% 
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
-      title = list(text = "<- 1: not at all    -    7: very often ->"), 
+      title = list(text = thelabel), 
       max = 7, min = 1
     ) %>% 
     hc_legend(
@@ -109,7 +109,7 @@ by_age <- function(data, var1, var2, thevarlabs) {
 }
 
 
-by_gender <- function(data, var1, var2, thevarlabs) {
+by_gender <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -    7: very often ->") {
   
   varlabdat <- data %>% 
     select(var1:var2) %>% 
@@ -158,7 +158,7 @@ by_gender <- function(data, var1, var2, thevarlabs) {
     ) %>% 
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
-      title = list(text = "<- 1: not at all    -    7: very often ->"), 
+      title = list(text = thelabel), 
       max = 7, min = 1
     ) %>% 
     hc_legend(
@@ -172,7 +172,7 @@ by_gender <- function(data, var1, var2, thevarlabs) {
 }
 
 
-by_edu <- function(data, var1, var2, thevarlabs) {
+by_edu <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -    7: very often ->") {
   
   varlabdat <- data %>% 
     select(var1:var2) %>% 
@@ -224,7 +224,7 @@ by_edu <- function(data, var1, var2, thevarlabs) {
     ) %>% 
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
-      title = list(text = "<- 1: not at all    -    7: very often ->"), 
+      title = list(text = thelabel), 
       max = 7, min = 1
     ) %>% 
     hc_legend(
@@ -237,7 +237,7 @@ by_edu <- function(data, var1, var2, thevarlabs) {
 }
 
 
-by_pol <- function(data, var1, var2, thevarlabs) {
+by_pol <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -    7: very often ->") {
   
   varlabdat <- data %>% 
     select(var1:var2) %>% 
@@ -290,7 +290,7 @@ by_pol <- function(data, var1, var2, thevarlabs) {
     ) %>% 
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
-      title = list(text = "<- 1: not at all    -    7: very often ->"), 
+      title = list(text = thelabel), 
       max = 7, min = 1
     ) %>% 
     hc_legend(
@@ -306,7 +306,7 @@ by_pol <- function(data, var1, var2, thevarlabs) {
 
 
 
-generate_general2 <- function(data, var1, var2, var3, thevarlabs) {
+generate_general2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<- 1: never    -    7: very often ->") {
   
   media_rec <- data %>% 
     select(var1,var2,var3) %>% 
@@ -319,7 +319,7 @@ generate_general2 <- function(data, var1, var2, var3, thevarlabs) {
     mutate(varlabs = fct_reorder(varlabs, mean_val)) %>% 
     arrange(desc(varlabs))
   
-  theorder <<- media_rec %>% distinct(varlabs) %>% pull(varlabs) 
+  # theorder <<- media_rec %>% distinct(varlabs) %>% pull(varlabs) 
   
   hchart(
     media_rec, 
@@ -343,7 +343,7 @@ generate_general2 <- function(data, var1, var2, var3, thevarlabs) {
     ) %>% 
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
-      title = list(text = "<- 1: never    -    7: very often ->"), 
+      title = list(text = thelabel), 
       max = 7, min = 1
     ) 
   
@@ -351,7 +351,7 @@ generate_general2 <- function(data, var1, var2, var3, thevarlabs) {
 
 
 
-by_age2 <- function(data, var1, var2, var3, thevarlabs) {
+by_age2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<- 1: never    -    7: very often ->") {
   
   varlabdat <- data %>% 
     select(var1,var2,var3) %>% 
@@ -403,7 +403,7 @@ by_age2 <- function(data, var1, var2, var3, thevarlabs) {
     ) %>% 
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
-      title = list(text = "<- 1: not at all    -    7: very often ->"), 
+      title = list(text = thelabel), 
       max = 7, min = 1
     ) %>% 
     hc_legend(
@@ -417,7 +417,7 @@ by_age2 <- function(data, var1, var2, var3, thevarlabs) {
 }
 
 
-by_gender2 <- function(data, var1, var2, var3, thevarlabs) {
+by_gender2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<- 1: never    -    7: very often ->") {
   
   varlabdat <- data %>% 
     select(var1,var2,var3) %>% 
@@ -466,7 +466,7 @@ by_gender2 <- function(data, var1, var2, var3, thevarlabs) {
     ) %>% 
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
-      title = list(text = "<- 1: not at all    -    7: very often ->"), 
+      title = list(text = thelabel), 
       max = 7, min = 1
     ) %>% 
     hc_legend(
@@ -480,7 +480,7 @@ by_gender2 <- function(data, var1, var2, var3, thevarlabs) {
 }
 
 
-by_edu2 <- function(data, var1, var2, var3, thevarlabs) {
+by_edu2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<- 1: never    -    7: very often ->") {
   
   varlabdat <- data %>% 
     select(var1,var2,var3) %>% 
@@ -532,7 +532,7 @@ by_edu2 <- function(data, var1, var2, var3, thevarlabs) {
     ) %>% 
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
-      title = list(text = "<- 1: not at all    -    7: very often ->"), 
+      title = list(text = thelabel), 
       max = 7, min = 1
     ) %>% 
     hc_legend(
@@ -545,7 +545,7 @@ by_edu2 <- function(data, var1, var2, var3, thevarlabs) {
 }
 
 
-by_pol2 <- function(data, var1, var2, var3, thevarlabs) {
+by_pol2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<- 1: never    -    7: very often ->") {
   
   varlabdat <- data %>% 
     select(var1,var2,var3) %>% 
@@ -598,7 +598,7 @@ by_pol2 <- function(data, var1, var2, var3, thevarlabs) {
     ) %>% 
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
-      title = list(text = "<- 1: not at all    -    7: very often ->"), 
+      title = list(text = thelabel), 
       max = 7, min = 1
     ) %>% 
     hc_legend(

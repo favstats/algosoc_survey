@@ -98,12 +98,27 @@ adsv_var_labels <- c(
   "Human oversight"
 )
 
+dutchlabs <- c("Respect voor privacy van gebruikers", 
+  "Gebruiksvriendelijkheid", 
+"Politiek neutraal", 
+"Vrijheid om te kiezen welke informatie je krijgt", 
+"Niet-discriminerend", 
+"Toegankelijkheid (voor bijv. voor mensen met een beperking of minderheden)", 
+"Transparantie over hoe beslissingen worden genomen", 
+"Menselijk toezicht op deze systemen"
+)
+
+thelabs <- tibble(adsv_var_labels, dutchlabs)
+
 important_issue <- data %>% 
   # select(ADSVR_1) %>% 
   mutate(important1 = sjmisc::to_label(ADSVR_1)) %>% 
   count(important1, sort = T) %>% 
   mutate(perc = n/sum(n)*100) %>% 
-  drop_na()
+  drop_na() %>% 
+  left_join(thelabs %>% 
+              rename(important1 = dutchlabs)) %>% 
+  mutate(important1 =adsv_var_labels)
 
    hchart(
     important_issue, 
@@ -123,6 +138,12 @@ important_issue <- data %>%
     #   floating = TRUE,
     #   y = 6
     # )
+   
+data %>% 
+  # select(ADSVR_1) %>% 
+  mutate(important1 = sjmisc::to_label(ADSVR_1)) %>% 
+  select(important1) %>% pull(important1) %>% levels() %>% 
+  dput()
 ```
 ## By Age
 
@@ -132,7 +153,10 @@ important_issue_age <- data  %>%
   group_by(age_groups) %>% 
   mutate(perc = n/sum(n)*100) %>% 
   ungroup() %>% 
-  drop_na()
+  drop_na()  %>% 
+  left_join(thelabs %>% 
+              rename(important1 = dutchlabs)) %>% 
+  mutate(important1 =adsv_var_labels)
 
 
    
@@ -165,7 +189,10 @@ important_issue_gender <- data  %>%
   group_by(geslacht) %>% 
   mutate(perc = n/sum(n)*100) %>% 
   ungroup() %>% 
-  drop_na()
+  drop_na()  %>% 
+  left_join(thelabs %>% 
+              rename(important1 = dutchlabs)) %>% 
+  mutate(important1 =adsv_var_labels)
 
 
    
@@ -199,7 +226,10 @@ important_issue_edu <- data  %>%
   group_by(oplcat) %>% 
   mutate(perc = n/sum(n)*100) %>% 
   ungroup() %>% 
-  drop_na()
+  drop_na()  %>% 
+  left_join(thelabs %>% 
+              rename(important1 = dutchlabs)) %>% 
+  mutate(important1 =adsv_var_labels)
 
 
    
@@ -233,7 +263,10 @@ important_issue_pol <- data  %>%
   group_by(pol_cat) %>% 
   mutate(perc = n/sum(n)*100) %>% 
   ungroup() %>% 
-  drop_na()
+  drop_na() %>% 
+  left_join(thelabs %>% 
+              rename(important1 = dutchlabs)) %>% 
+  mutate(important1 =adsv_var_labels)
 
 
    
@@ -273,9 +306,12 @@ In most predictions, automated decision-making will become more common in the fu
 ## Overall
 
 ```{r}
+theorder <<- readRDS("data/theorder.rds")
+
 data %>% 
   generate_general2("ADSR1", "ADSRt2_1", "ADSRt3_1",
-                   c("News Media", "Legal System", "Healthcare"))
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
 ```
 
 ## By Age
@@ -283,7 +319,8 @@ data %>%
 ```{r}
 data %>% 
   by_age2("ADSR1", "ADSRt2_1", "ADSRt3_1",
-         c("News Media", "Legal System", "Healthcare"))
+         c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
 ```
 
 ## By Gender
@@ -291,7 +328,8 @@ data %>%
 ```{r}
 data %>% 
   by_gender2("ADSR1", "ADSRt2_1", "ADSRt3_1",
-                   c("News Media", "Legal System", "Healthcare"))
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
 ```
 
 ## By Education
@@ -299,7 +337,8 @@ data %>%
 ```{r}
 data %>% 
   by_edu2("ADSR1", "ADSRt2_1", "ADSRt3_1",
-                   c("News Media", "Legal System", "Healthcare"))
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
 ```
 
 ## By Politics
@@ -307,7 +346,8 @@ data %>%
 ```{r}
 data %>% 
   by_pol2("ADSR1", "ADSRt2_1", "ADSRt3_1",
-                   c("News Media", "Legal System", "Healthcare"))
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
 ```
 
 
@@ -327,7 +367,8 @@ In most predictions, automated decision-making will become more common in the fu
 ```{r}
 data %>% 
   generate_general2("ADSR2", "ADSRt2_2", "ADSRt3_2",
-                   c("News Media", "Legal System", "Healthcare"))
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
 ```
 
 ## By Age
@@ -335,7 +376,8 @@ data %>%
 ```{r}
 data %>% 
   by_age2("ADSR2", "ADSRt2_2", "ADSRt3_2",
-         c("News Media", "Legal System", "Healthcare"))
+         c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
 ```
 
 ## By Gender
@@ -343,7 +385,8 @@ data %>%
 ```{r}
 data %>% 
   by_gender2("ADSR2", "ADSRt2_2", "ADSRt3_2",
-                   c("News Media", "Legal System", "Healthcare"))
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
 ```
 
 ## By Education
@@ -351,7 +394,8 @@ data %>%
 ```{r}
 data %>% 
   by_edu2("ADSR2", "ADSRt2_2", "ADSRt3_2",
-                   c("News Media", "Legal System", "Healthcare"))
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
 ```
 
 ## By Politics
@@ -359,7 +403,8 @@ data %>%
 ```{r}
 data %>% 
   by_pol2("ADSR2", "ADSRt2_2", "ADSRt3_2",
-                   c("News Media", "Legal System", "Healthcare"))
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
 ```
 
 ::: 
@@ -378,9 +423,12 @@ In most predictions, automated decision-making will become more common in the fu
 ## Overall
 
 ```{r}
+theorderold <- theorder 
 data %>% 
   generate_general2("ADSR3", "ADSRt2_3", "ADSRt3_3",
-                   c("News Media", "Legal System", "Healthcare"))
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
+theorder <<- theorderold
 ```
 
 ## By Age
@@ -388,7 +436,8 @@ data %>%
 ```{r}
 data %>% 
   by_age2("ADSR3", "ADSRt2_3", "ADSRt3_3",
-         c("News Media", "Legal System", "Healthcare"))
+         c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
 ```
 
 ## By Gender
@@ -396,7 +445,8 @@ data %>%
 ```{r}
 data %>% 
   by_gender2("ADSR3", "ADSRt2_3", "ADSRt3_3",
-                   c("News Media", "Legal System", "Healthcare"))
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
 ```
 
 ## By Education
@@ -404,7 +454,8 @@ data %>%
 ```{r}
 data %>% 
   by_edu2("ADSR3", "ADSRt2_3", "ADSRt3_3",
-                   c("News Media", "Legal System", "Healthcare"))
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
 ```
 
 ## By Politics
@@ -412,7 +463,8 @@ data %>%
 ```{r}
 data %>% 
   by_pol2("ADSR3", "ADSRt2_3", "ADSRt3_3",
-                   c("News Media", "Legal System", "Healthcare"))
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
 ```
 
 ::: 
