@@ -1,5 +1,5 @@
 ---
-description-meta: "How confident are you that the following groups can tell the difference between content created by AI and content created by people?"
+description-meta: ""
 execute:
   echo: false
 format:
@@ -7,6 +7,43 @@ format:
     toc: true
     toc-location: right
 ---
+
+
+> Welcome to the AlgoSoc Survey Dashboard, providing insights into public perceptions and experiences with artificial intelligence (AI) in society!
+
+The page is divided into three main sections: 
+
+```{=html}
+<div style="text-align: center;">
+    <div style="display: inline-block; text-align: left;">
+```
+
+
+
+    
+<a href="#iconify-material-symbols-light-interactive-space-outline-rounded-usage-of-ai-systems-like-iconify-arcticons-openai-chatgpt-or-iconify-logos-midjourney
+"> {{< iconify material-symbols-light interactive-space-outline-rounded >}} Usage of AI Systems </a> </br>
+
+
+{{< iconify lets-icons view-light >}} Exposure to AI </br>
+
+
+{{< iconify carbon ibm-watson-knowledge-studio >}} Familiarity with AI terms
+
+
+```{=html}
+
+    </div>
+</div>
+```
+
+
+
+
+
+
+
+Each section allows you to examine overall trends as well as breakdowns by age, gender, education level, and political leaning.  
 
 ```{r setup, include=FALSE}
 # here::i_am("wtm_gb.Rproj")
@@ -165,7 +202,7 @@ std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
 
 
 
-# Usage of AI Systems {.tabset .tabset-fade .tabset-pills .break}
+# {{< iconify material-symbols-light interactive-space-outline-rounded >}} Usage of AI Systems (like {{< iconify arcticons openai-chatgpt >}} or {{< iconify logos midjourney >}}) {.tabset .tabset-fade .tabset-pills .break}
 
 > How often in the past year did you use...
 
