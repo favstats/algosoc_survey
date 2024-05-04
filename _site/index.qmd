@@ -13,34 +13,60 @@ format:
 
 The page is divided into three main sections: 
 
-```{=html}
-<div style="text-align: center;">
-    <div style="display: inline-block; text-align: left;">
+
+
+```{css}
+<style>
+.button-container {
+  text-align: center;
+}
+
+.buttontop {
+  display: inline-block;
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+..buttontop:hover {
+  background-color: #45a049;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+
+</style>
 ```
 
 
+```{=html}
+<div class="button-container">
+```
 
+
+  <a href="#usage-of-ai-systems" class="buttontop">
+    {{< iconify material-symbols-light interactive-space-outline-rounded >}} Usage of AI Systems
+  </a>
+  <a href="#exposure-to-ai" class="buttontop">
+    {{< iconify lets-icons view-light >}} Exposure to AI
+  </a>
+  <a href="#familiarity-with-ai-terms" class="buttontop">
+    {{< iconify carbon ibm-watson-knowledge-studio >}} Familiarity with AI terms
+  </a>
     
-<a href="#iconify-material-symbols-light-interactive-space-outline-rounded-usage-of-ai-systems-like-iconify-arcticons-openai-chatgpt-or-iconify-logos-midjourney
-"> {{< iconify material-symbols-light interactive-space-outline-rounded >}} Usage of AI Systems </a> </br>
-
-
-{{< iconify lets-icons view-light >}} Exposure to AI </br>
-
-
-{{< iconify carbon ibm-watson-knowledge-studio >}} Familiarity with AI terms
-
 
 ```{=html}
-
-    </div>
 </div>
 ```
-
-
-
-
-
 
 
 Each section allows you to examine overall trends as well as breakdowns by age, gender, education level, and political leaning.  
