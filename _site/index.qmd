@@ -9,9 +9,9 @@ format:
 ---
 
 
-> Welcome to the AlgoSoc Survey Dashboard, providing insights into public perceptions and experiences with artificial intelligence (AI) in society!
+> Welkom bij het AlgoSoc Survey Dashboard, dat inzicht biedt in de publieke percepties en ervaringen met kunstmatige intelligentie (AI) in de samenleving!
 
-The page is divided into three main sections: 
+De pagina is verdeeld in drie hoofdsecties:
 
 
 
@@ -54,7 +54,7 @@ The page is divided into three main sections:
 
 
   <a href="#usage-of-ai-systems" class="buttontop">
-    {{< iconify material-symbols-light interactive-space-outline-rounded >}} Usage of AI Systems
+    {{< iconify material-symbols-light interactive-space-outline-rounded >}} Usage of AI Systems 
   </a>
   <a href="#exposure-to-ai" class="buttontop">
     {{< iconify lets-icons view-light >}} Exposure to AI
@@ -69,7 +69,8 @@ The page is divided into three main sections:
 ```
 
 
-Each section allows you to examine overall trends as well as breakdowns by age, gender, education level, and political leaning.  
+In elke sectie kunt u algemene trends onderzoeken, evenals uitsplitsingen naar leeftijd, geslacht, opleidingsniveau en politieke voorkeur.
+
 
 ```{r setup, include=FALSE}
 # here::i_am("wtm_gb.Rproj")
@@ -228,7 +229,7 @@ std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
 
 
 
-# {{< iconify material-symbols-light interactive-space-outline-rounded >}} Usage of AI Systems (like {{< iconify arcticons openai-chatgpt >}} or {{< iconify logos midjourney >}}) {.tabset .tabset-fade .tabset-pills .break}
+# {{< iconify material-symbols-light interactive-space-outline-rounded >}} Usage of AI Systems {.tabset .tabset-fade .tabset-pills .break}
 
 > How often in the past year did you use...
 

@@ -1,0 +1,209 @@
+---
+description-meta: "How often do you think you have come across the following things on social media in the past year?"
+execute:
+  echo: false
+format:
+  html:
+    toc: true
+    toc-location: right
+---
+
+```{r setup, include=FALSE}
+# here::i_am("wtm_gb.Rproj")
+
+
+## Global options
+knitr::opts_chunk$set(
+    cache = F,
+    echo = F,
+    warning = F,
+    message = F,
+    cache.lazy = FALSE
+)
+
+
+pacman::p_load(htmltools, tidyverse, highcharter, gt, gtExtras, rvest, haven)
+
+options(scipen = 999)
+```
+
+
+
+
+
+
+```{r include=FALSE}
+# print(getwd())
+# here::here("")
+# prCint(getwd())
+# hcoptslang <- getOption("highcharter.lang")
+# 
+# hcoptslang$shortMonths <- c("Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec")
+# 
+# options(highcharter.lang = hcoptslang)
+polvals <- read_sav("../../cv23o_EN_1.0p.sav") %>% 
+  mutate(left_right = cv23o101)
+data <- read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
+  mutate(age_groups = case_when(
+    leeftijd %in% 16:17 ~ "16-17",
+    leeftijd %in% 18:24 ~ "18-24",
+    leeftijd %in% 25:34 ~ "25-34",
+    leeftijd %in% 35:44 ~ "35-44",
+    leeftijd %in% 45:54 ~ "45-54",
+    leeftijd %in% 55:64 ~ "55-64",
+    leeftijd %in% 65:150 ~ "65+",
+  )) %>% 
+  left_join(polvals %>% select(nomem_encr, left_right)) %>% 
+  # mutate(pol_cat = case_when(
+  #   left_right %in% 0:4 ~ "left",
+  #   left_right == 5 ~ "center",
+  #   left_right %in% 6:10 ~ "right"
+  #   )) %>% 
+  mutate(pol_cat = case_when(
+    left_right %in% 0:3 ~ "left",
+    left_right %in% 4:6 ~ "center",
+    left_right %in% 7:10 ~ "right"
+    ))
+
+
+
+std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
+
+
+# data %>% 
+#   write_csv("../../L_AlgoSoc_wave1_1.0p.csv")
+
+
+source("utils.R")
+```
+
+
+
+
+
+# Ability to Detect AI-Generated Content {.tabset .tabset-fade .tabset-pills .break} 
+
+> How confident are you that the following groups can tell the difference between content created by AI and content created by people?
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+var_labels <- c(
+  "People from the general population",
+  "Members of Parliament",
+  "Judges",
+  "Journalists",
+  "Police officers",
+  "Doctors",
+  "Friends/family",
+  "Yourself"
+)
+
+data %>% 
+  generate_general("CONF1", "CONF8", var_labels,
+                   "<- 1: not sure at all   -    7: very sure ->")
+```
+
+## By Age
+
+```{r}
+data %>% 
+  by_age("CONF1", "CONF8", var_labels,
+                   "<- 1: not sure at all   -    7: very sure ->")
+```
+
+
+## By Gender
+
+```{r}
+data %>% 
+  by_gender("CONF1", "CONF8", var_labels,
+                   "<- 1: not sure at all   -    7: very sure ->")
+```
+
+
+## By Education
+
+
+
+```{r}
+data %>% 
+  by_edu("CONF1", "CONF8", var_labels,
+                   "<- 1: not sure at all   -    7: very sure ->")
+```
+
+
+## By Politics
+
+```{r}
+data %>% 
+  by_pol("CONF1", "CONF8", var_labels,
+                   "<- 1: not sure at all   -    7: very sure ->")
+```
+
+:::
+
+# Trust in AI Systems {.tabset .tabset-fade .tabset-pills .break}
+
+> We ask you a number of additional questions about automatic decision-making systems. These are computer programs that make decisions that used to be made by people. These decisions are made automatically by computers based on data. 
+
+> How confident are you that automated decision-making systems can properly determine...
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+var_labels <- c(
+  "Social Welfare",
+  "The News You See",
+  "Cancer Diagnosis"
+)
+
+data %>% 
+  generate_general("TADS1", "TADS3", var_labels,
+                   "<- 1: no trust   -    7: complete trust ->")
+```
+
+## By Age
+
+```{r}
+data %>% 
+  by_age("TADS1", "TADS3", var_labels,
+                   "<- 1: no trust   -    7: complete trust ->")
+```
+
+
+## By Gender
+
+```{r}
+data %>% 
+  by_gender("TADS1", "TADS3", var_labels,
+                   "<- 1: no trust   -    7: complete trust ->")
+```
+
+
+## By Education
+
+
+
+```{r}
+data %>% 
+  by_edu("TADS1", "TADS3", var_labels,
+                   "<- 1: no trust   -    7: complete trust ->")
+```
+
+
+## By Politics
+
+```{r}
+data %>% 
+  by_pol("TADS1", "TADS3", var_labels,
+                   "<- 1: no trust   -    7: complete trust ->")
+```
+
+:::
+
+

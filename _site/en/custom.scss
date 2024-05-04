@@ -1,0 +1,165 @@
+/*-- scss:defaults --*/
+$body-color: #000;
+$navbar-bg: #fff;
+$navbar-hl: #ed1c24;
+$link-color: #ed1c24;
+$link-hover-color: #000;
+$nav-tabs-link-active-color: #000;
+
+/*-- scss:rules --*/
+table {
+  font-family: acumin-pro-semi-condensed, helvetica, arial, sans-serif !important;
+}
+
+.navbar {
+  border-bottom: 1px solid #ccc;
+}
+
+.navbar-logo {
+  max-height: 50px;
+  height: 50px;
+  border-radius: 100%;
+}
+
+h1, h2, h3 {
+  font-family: "Miller Text", georgia, serif;
+}
+
+h1 {
+  font-size: 1.8rem;
+}
+
+h2 {
+  font-size: 1.4rem;
+}
+
+div.sidebar-item-container .active {
+  color: #ed1c24;
+}
+
+div.sidebar-item-container .sidebar-link:hover {
+  color: #ed1c24;
+}
+
+.panel-tabset .nav-link {
+  font-size: 0.9rem;
+}
+
+.gt_table a {
+  color: $link-hover-color;
+  text-decoration: none;
+  display: inline-block;
+  transition: 0.3s;
+}
+
+.gt_table a:hover {
+  text-decoration: underline;
+}
+
+.quarto-title-block div.description {
+  max-width: 72ch;
+  margin-bottom: 40px;
+  font-size: 21px;
+  font-weight: 500;
+}
+
+
+.button {
+  background-color: #144F7C; /* Blue background */
+  border: none;
+  color: white;
+  padding: 10px 20px; /* Size of the padding around the text */
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px; /* Size of the font */
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px; /* Rounded corners */
+  transition-duration: 0.4s; /* Smooth transition effect for hover state */
+}
+
+/* Darker background on mouse-over */
+button:hover {
+  background-color: #17616A;
+}
+
+
+
+
+
+/* General Styles for All Tabs */
+.panel-tabset .nav-tabs {
+  display: flex; /* Ensures all tabs are in one row */
+  justify-content: center; /* Centers tabs in the tabset */
+  width: 100%; /* Full width to contain all tabs equally */
+  flex-wrap: wrap; /* Allows tabs to wrap onto the next line on smaller screens */
+  list-style: none; /* Removes default list styling */
+  padding: 0; /* Removes default padding */
+}
+
+.panel-tabset .nav-item {
+  color: #000; /* Color of the text in the tabs */
+  background-color: #eee; /* Default background color of the tabs */
+  border-radius: 5px; /* Rounded corners for the tabs */
+  transition: background-color 0.4s ease; /* Smooth transition for background color */
+  margin: 2px; /* Adds a small space between tabs */
+}
+
+.panel-tabset .nav-item a {
+  display: block; /* Makes the link fill the tab */
+  padding: 8px 16px; /* Padding inside the tabs */
+  text-decoration: none; /* Removes underline from links */
+  color: inherit; /* Inherits color from .nav-item */
+  background-color: inherit; /* Inherits background-color from .nav-item */
+}
+
+.panel-tabset .nav-item:hover {
+  background-color: #eee; /* Light grey background on hover */
+}
+
+
+
+.panel-tabset .break .nav-tabs, .break .nav-item .active {
+  color: #fff; /* White text for active and hover states */
+  background-color: #f39917; /* Orange background for active tab */
+}
+
+/* Responsive Adjustment for Mobile Devices */
+@media (max-width: 768px) {
+  .panel-tabset .nav-tabs {
+    justify-content: space-around; /* Adjusts spacing for smaller screens */
+  }
+}
+
+.panel-tabset {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid #ccc; /* Adds a top border to the whole set for continuity */
+
+}
+
+.nav-tabs {
+  order: 2; /* Ensures that the tabs are at the bottom */
+  border-bottom: 1px solid #ccc; /* Removes bottom border */
+  border-left: 1px solid #ccc; /* Removes the left border or bar */
+  border-right: 1px solid #ccc; /* Removes the left border or bar */
+
+}
+
+.tab-content {
+  order: 1; /* Ensures that the content is at the top */
+  border-top: 1px solid #ccc; /* Adds a subtle top border */
+  border-bottom: none; /* Adds a subtle top border */
+}
+
+
+blockquote {
+  border-left: none; /* Removes the left border or bar */
+  color: #159957; /* Sets the text color to black */
+  margin-left: 0; /* Adjusts the left margin if necessary */
+  padding-left: 0; /* Removes padding on the left if it exists */
+}
+
+
+

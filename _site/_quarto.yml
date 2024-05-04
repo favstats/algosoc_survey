@@ -9,16 +9,18 @@ website:
     logo: algosoclogo.png
     left:
       - href: index.qmd
-        text: "{{< iconify ph users-three >}} Engagement"
+        text: "{{< iconify ph users-three >}} Betrokkenheid"
       - href: attitudes.qmd
-        text: "{{< iconify ph head-circuit >}} Attitudes"
+        text: "{{< iconify ph head-circuit >}} Houdingen"
       - href: values.qmd
-        text: "{{< iconify ph globe-hemisphere-west >}} Values"
+        text: "{{< iconify ph globe-hemisphere-west >}} Waarden"
       - href: about.qmd
-        text: "{{< iconify ph info-thin >}} About"
+        text: "{{< iconify ph info-thin >}} Over"
     right:
-      - icon: github
-        href: https://github.com/favstats/algosoc_survey
+      - text: "en {{< iconify emojione flag-for-united-states >}}"
+        href: "https://favstats.github.io/algosoc_survey/en"
+      - text: "nl {{< iconify emojione flag-for-netherlands >}}"
+        href: "https://favstats.github.io/algosoc_survey/"
 
 format:
   html:

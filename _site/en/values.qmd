@@ -1,0 +1,471 @@
+---
+description-meta: "How often do you think you have come across the following things on social media in the past year?"
+execute:
+  echo: false
+format:
+  html:
+    toc: true
+    toc-location: right
+---
+
+```{r setup, include=FALSE}
+# here::i_am("wtm_gb.Rproj")
+
+
+## Global options
+knitr::opts_chunk$set(
+    cache = F,
+    echo = F,
+    warning = F,
+    message = F,
+    cache.lazy = FALSE
+)
+
+
+pacman::p_load(htmltools, tidyverse, highcharter, gt, gtExtras, rvest, haven)
+
+options(scipen = 999)
+```
+
+
+
+
+
+
+```{r include=FALSE}
+# print(getwd())
+# here::here("")
+# prCint(getwd())
+# hcoptslang <- getOption("highcharter.lang")
+# 
+# hcoptslang$shortMonths <- c("Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec")
+# 
+# options(highcharter.lang = hcoptslang)
+polvals <- read_sav("../../cv23o_EN_1.0p.sav") %>% 
+  mutate(left_right = cv23o101)
+data <- read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
+  mutate(age_groups = case_when(
+    leeftijd %in% 16:17 ~ "16-17",
+    leeftijd %in% 18:24 ~ "18-24",
+    leeftijd %in% 25:34 ~ "25-34",
+    leeftijd %in% 35:44 ~ "35-44",
+    leeftijd %in% 45:54 ~ "45-54",
+    leeftijd %in% 55:64 ~ "55-64",
+    leeftijd %in% 65:150 ~ "65+",
+  )) %>% 
+  # select(ADSVR_1) %>% 
+  mutate(important1 = sjmisc::to_label(ADSVR_1)) %>% 
+  left_join(polvals %>% select(nomem_encr, left_right)) %>% 
+  # mutate(pol_cat = case_when(
+  #   left_right %in% 0:4 ~ "left",
+  #   left_right == 5 ~ "center",
+  #   left_right %in% 6:10 ~ "right"
+  #   )) %>% 
+  mutate(pol_cat = case_when(
+    left_right %in% 0:3 ~ "left",
+    left_right %in% 4:6 ~ "center",
+    left_right %in% 7:10 ~ "right"
+    ))
+
+
+
+std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
+
+source("utils.R")
+# data %>% 
+#   write_csv("../../L_AlgoSoc_wave1_1.0p.csv")
+```
+
+# Most Important Values {.tabset .tabset-fade .tabset-pills .break}
+
+> What do you consider the 5 most important values for automated decision-making systems? [only top important value shown]
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+adsv_var_names <- c("ADSV1", "ADSV2", "ADSV3", "ADSV4", "ADSV5", "ADSV6", "ADSV7", "ADSV8")
+adsv_var_labels <- c(
+  "Respect for user privacy",
+  "Ease of use",
+  "Politically neutral",
+  "Freedom to choose information",
+  "Non-discriminatory",
+  "Accessibility",
+  "Transparency about decision making",
+  "Human oversight"
+)
+
+dutchlabs <- c("Respect voor privacy van gebruikers", 
+  "Gebruiksvriendelijkheid", 
+"Politiek neutraal", 
+"Vrijheid om te kiezen welke informatie je krijgt", 
+"Niet-discriminerend", 
+"Toegankelijkheid (voor bijv. voor mensen met een beperking of minderheden)", 
+"Transparantie over hoe beslissingen worden genomen", 
+"Menselijk toezicht op deze systemen"
+)
+
+thelabs <- tibble(adsv_var_labels, dutchlabs)
+
+important_issue <- data %>% 
+  # select(ADSVR_1) %>% 
+  mutate(important1 = sjmisc::to_label(ADSVR_1)) %>% 
+  count(important1, sort = T) %>% 
+  mutate(perc = n/sum(n)*100) %>% 
+  drop_na() %>% 
+  left_join(thelabs %>% 
+              rename(important1 = dutchlabs)) %>% 
+  mutate(important1 =adsv_var_labels)
+
+   hchart(
+    important_issue, 
+    "column",
+    # hcaes(x = varlabs, y = mean_val),
+    hcaes(x = important1, y = perc)
+  ) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+      title = list(text = "% Naming As Number 1 Important Issue"), 
+      max = 90, min = 0
+    ) #%>% 
+    # hc_legend(
+    #   layout = "vertical",
+    #   align = "right",
+    #   verticalAlign = "top",
+    #   floating = TRUE,
+    #   y = 6
+    # )
+   
+data %>% 
+  # select(ADSVR_1) %>% 
+  mutate(important1 = sjmisc::to_label(ADSVR_1)) %>% 
+  select(important1) %>% pull(important1) %>% levels() %>% 
+  dput()
+```
+## By Age
+
+```{r}
+important_issue_age <- data  %>% 
+  count(important1, age_groups, sort = T) %>% 
+  group_by(age_groups) %>% 
+  mutate(perc = n/sum(n)*100) %>% 
+  ungroup() %>% 
+  drop_na()  %>% 
+  left_join(thelabs %>% 
+              rename(important1 = dutchlabs)) %>% 
+  mutate(important1 =adsv_var_labels)
+
+
+   
+ hchart(
+    important_issue_age, 
+    "column",
+    # hcaes(x = varlabs, y = mean_val),
+    hcaes(x = important1, y = perc, group = age_groups),
+    id = c("a", "b", "c", "d", "e", "f", "g")
+  )  %>% 
+    highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+      title = list(text = "% Naming As Number 1 Important Issue"), 
+      max = 90, min = 0
+    ) %>% 
+    hc_legend(
+      layout = "vertical",
+      align = "right",
+      verticalAlign = "top",
+      floating = TRUE
+    )
+```
+
+## By Gender
+
+```{r}
+important_issue_gender <- data  %>% 
+    mutate(geslacht = sjmisc::to_label(geslacht)) %>%
+  count(important1, geslacht, sort = T) %>% 
+  group_by(geslacht) %>% 
+  mutate(perc = n/sum(n)*100) %>% 
+  ungroup() %>% 
+  drop_na()  %>% 
+  left_join(thelabs %>% 
+              rename(important1 = dutchlabs)) %>% 
+  mutate(important1 =adsv_var_labels)
+
+
+   
+ hchart(
+    important_issue_gender, 
+    "column",
+    # hcaes(x = varlabs, y = mean_val),
+    hcaes(x = important1, y = perc, group = geslacht),
+    id = c("a", "b", "c")
+  )  %>% 
+    highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+      title = list(text = "% Naming As Number 1 Important Issue"), 
+      max = 90, min = 0
+    ) %>% 
+    hc_legend(
+      layout = "vertical",
+      align = "right",
+      verticalAlign = "top",
+      floating = TRUE
+    )
+```
+
+## By Education
+
+
+```{r}
+important_issue_edu <- data  %>% 
+    mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
+  count(important1, oplcat, sort = T) %>% 
+  group_by(oplcat) %>% 
+  mutate(perc = n/sum(n)*100) %>% 
+  ungroup() %>% 
+  drop_na()  %>% 
+  left_join(thelabs %>% 
+              rename(important1 = dutchlabs)) %>% 
+  mutate(important1 =adsv_var_labels)
+
+
+   
+ hchart(
+    important_issue_edu, 
+    "column",
+    # hcaes(x = varlabs, y = mean_val),
+    hcaes(x = important1, y = perc, group = oplcat)#,
+    # id = c("a", "b", "c")
+  )  %>% 
+    highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+      title = list(text = "% Naming As Number 1 Important Issue"), 
+      max = 90, min = 0
+    ) %>% 
+    hc_legend(
+      layout = "vertical",
+      align = "right",
+      verticalAlign = "top",
+      floating = TRUE
+    )
+```
+
+## By Politics
+
+
+```{r}
+important_issue_pol <- data  %>% 
+    mutate(pol_cat = sjmisc::to_label(pol_cat)) %>% 
+  count(important1, pol_cat, sort = T) %>% 
+  group_by(pol_cat) %>% 
+  mutate(perc = n/sum(n)*100) %>% 
+  ungroup() %>% 
+  drop_na() %>% 
+  left_join(thelabs %>% 
+              rename(important1 = dutchlabs)) %>% 
+  mutate(important1 =adsv_var_labels)
+
+
+   
+ hchart(
+    important_issue_pol, 
+    "column",
+    # hcaes(x = varlabs, y = mean_val),
+    hcaes(x = important1, y = perc, group = pol_cat)#,
+    # id = c("a", "b", "c")
+  )  %>% 
+    highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+      title = list(text = "% Naming As Number 1 Important Issue"), 
+      max = 90, min = 0
+    ) %>% 
+    hc_legend(
+      layout = "vertical",
+      align = "right",
+      verticalAlign = "top",
+      floating = TRUE
+    )
+```
+
+
+
+::: 
+
+
+# Usefulness of AI
+
+In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
+
+> More automatic decision-making in news media/the legal system/healthcare will be **useful**.
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+theorder <<- readRDS("data/theorder.rds")
+
+data %>% 
+  generate_general2("ADSR1", "ADSRt2_1", "ADSRt3_1",
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
+```
+
+## By Age
+
+```{r}
+data %>% 
+  by_age2("ADSR1", "ADSRt2_1", "ADSRt3_1",
+         c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
+```
+
+## By Gender
+
+```{r}
+data %>% 
+  by_gender2("ADSR1", "ADSRt2_1", "ADSRt3_1",
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
+```
+
+## By Education
+
+```{r}
+data %>% 
+  by_edu2("ADSR1", "ADSRt2_1", "ADSRt3_1",
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
+```
+
+## By Politics
+
+```{r}
+data %>% 
+  by_pol2("ADSR1", "ADSRt2_1", "ADSRt3_1",
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
+```
+
+
+::: 
+
+
+# Riskiness of AI
+
+In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
+
+> More automatic decision-making in news media/the legal system/healthcare will be **risky**.
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+data %>% 
+  generate_general2("ADSR2", "ADSRt2_2", "ADSRt3_2",
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
+```
+
+## By Age
+
+```{r}
+data %>% 
+  by_age2("ADSR2", "ADSRt2_2", "ADSRt3_2",
+         c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
+```
+
+## By Gender
+
+```{r}
+data %>% 
+  by_gender2("ADSR2", "ADSRt2_2", "ADSRt3_2",
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
+```
+
+## By Education
+
+```{r}
+data %>% 
+  by_edu2("ADSR2", "ADSRt2_2", "ADSRt3_2",
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
+```
+
+## By Politics
+
+```{r}
+data %>% 
+  by_pol2("ADSR2", "ADSRt2_2", "ADSRt3_2",
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
+```
+
+::: 
+
+
+
+
+# Fairness of AI
+
+In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
+
+> More automatic decision-making in news media/the legal system/healthcare will be **more fair**.
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+theorderold <- theorder 
+data %>% 
+  generate_general2("ADSR3", "ADSRt2_3", "ADSRt3_3",
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
+theorder <<- theorderold
+```
+
+## By Age
+
+```{r}
+data %>% 
+  by_age2("ADSR3", "ADSRt2_3", "ADSRt3_3",
+         c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
+```
+
+## By Gender
+
+```{r}
+data %>% 
+  by_gender2("ADSR3", "ADSRt2_3", "ADSRt3_3",
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
+```
+
+## By Education
+
+```{r}
+data %>% 
+  by_edu2("ADSR3", "ADSRt2_3", "ADSRt3_3",
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
+```
+
+## By Politics
+
+```{r}
+data %>% 
+  by_pol2("ADSR3", "ADSRt2_3", "ADSRt3_3",
+                   c("News Media", "Legal System", "Healthcare"),
+                   "<- 1: totally disagree    -    7: totally agree ->")
+```
+
+::: 
+
