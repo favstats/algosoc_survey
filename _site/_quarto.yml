@@ -4,7 +4,7 @@ project:
 
 website:
   favicon: algosoclogo.png
-  title: "AlgoSoc Survey"
+  title: "AlgoSoc AI Monitor"
   navbar:
     logo: algosoclogo.png
     left:
