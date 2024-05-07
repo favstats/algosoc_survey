@@ -13,11 +13,16 @@ generate_general <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: nev
   
   theorder <<- media_rec %>% distinct(varlabs) %>% pull(varlabs) 
   
-  hchart(
-    media_rec, 
-    "column",
-    hcaes(x = varlabs, y = mean_val)
-  ) %>%
+  
+  # color_vector <- c("#F7A35C", "#F8C488", "#F8E4C8", "#F7D1A3", "#E9BB97", "#FFDDAA")
+    
+  colors <- c("#F7A35C", "lightblue", "#E9BB97", "#e4d354" , "lightgreen", "#1F78B4")
+  
+  
+  # colors <- c("darkred", "darkblue", "darkgreen", "#f7a35c", "purple", "#f15c80", "#e4d354")
+  
+  hchart(media_rec, "column", hcaes(x = varlabs, y = mean_val), name = "Mean") %>%
+    hc_colors(colors) %>%
     hc_add_series(
       media_rec,
       "errorbar", 
@@ -25,9 +30,15 @@ generate_general <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: nev
             x = varlabs, low = mean_val - sd_val, 
             high = mean_val + sd_val),
       enableMouseTracking = TRUE,
-      showInLegend = FALSE
+      showInLegend = FALSE, name = ""
     ) %>% 
     highcharter::hc_plotOptions(
+      column = list(
+        colorByPoint = TRUE  # This ensures that each bar gets a different color
+      ),
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      ),
       errorbar = list(
         color = "black", 
         stemWidth = 1
@@ -37,7 +48,8 @@ generate_general <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: nev
     hc_yAxis(
       title = list(text = thelabel), 
       max = 7, min = 1
-    ) 
+    )  %>%
+    hc_legend(enabled = FALSE)  # Disabling the legend to remove "Series 1"
   
 }
 
@@ -87,6 +99,9 @@ by_age <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
       showInLegend = FALSE
     ) %>% 
     highcharter::hc_plotOptions(
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      ),
       errorbar = list(
         color = "black", 
         # whiskerLength = 1,
@@ -150,6 +165,9 @@ by_gender <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -
       showInLegend = FALSE
     ) %>% 
     highcharter::hc_plotOptions(
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      ),
       errorbar = list(
         color = "black", 
         # whiskerLength = 1,
@@ -216,6 +234,9 @@ by_edu <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
       showInLegend = FALSE
     ) %>% 
     highcharter::hc_plotOptions(
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      ),
       errorbar = list(
         color = "black", 
         # whiskerLength = 1,
@@ -282,6 +303,9 @@ by_pol <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
       showInLegend = FALSE
     ) %>% 
     highcharter::hc_plotOptions(
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      ),
       errorbar = list(
         color = "black", 
         # whiskerLength = 1,
@@ -336,6 +360,9 @@ generate_general2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<-
       showInLegend = FALSE
     ) %>% 
     highcharter::hc_plotOptions(
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      ),
       errorbar = list(
         color = "black", 
         stemWidth = 1
@@ -395,6 +422,9 @@ by_age2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<- 1: never 
       showInLegend = FALSE
     ) %>% 
     highcharter::hc_plotOptions(
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      ),
       errorbar = list(
         color = "black", 
         # whiskerLength = 1,
@@ -458,6 +488,9 @@ by_gender2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<- 1: nev
       showInLegend = FALSE
     ) %>% 
     highcharter::hc_plotOptions(
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      ),
       errorbar = list(
         color = "black", 
         # whiskerLength = 1,
@@ -524,6 +557,9 @@ by_edu2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<- 1: never 
       showInLegend = FALSE
     ) %>% 
     highcharter::hc_plotOptions(
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      ),
       errorbar = list(
         color = "black", 
         # whiskerLength = 1,
@@ -590,6 +626,9 @@ by_pol2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<- 1: never 
       showInLegend = FALSE
     ) %>% 
     highcharter::hc_plotOptions(
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      ),
       errorbar = list(
         color = "black", 
         # whiskerLength = 1,
