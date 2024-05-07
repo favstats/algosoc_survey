@@ -79,6 +79,69 @@ source("utils.R")
 
 
 
+# Ability to Recognize and Influence AI {.tabset .tabset-fade .tabset-pills .break}
+
+> With artificial intelligence (AI), computer programs can perform tasks themselves and also learn themselves. AI is increasingly used in society, and also in online media. Many websites use AI to show you more content and ads you like. The following questions are about the offers (such as articles, films or songs) that are shown to you on websites and apps for news and entertainment (e.g. Netflix or Spotify). 
+
+>To what extent do you agree or disagree with the following statements?
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+var_labels <- c(
+  "I recognize it when a website or app uses AI to adapt the content to me.",
+  "I recognize it when specific content is recommended to me by AI.",
+  "I know where to find the settings to change or disable AI personalization.",
+  "I know how to access the data that AI systems use to tailor content to me.",
+  "I know how I can influence what content is recommended to me by AI."
+)
+
+data %>% 
+  generate_general("DIGIQ1", "DIGIQ5", var_labels,
+                   "<- 1: totally disagree   -    7: totally agree ->")
+```
+
+## By Age
+
+```{r}
+data %>% 
+  by_age("DIGIQ1", "DIGIQ5", var_labels,
+                   "<- 1: totally disagree   -    7: totally agree ->")
+```
+
+
+## By Gender
+
+```{r}
+data %>% 
+  by_gender("DIGIQ1", "DIGIQ5", var_labels,
+                   "<- 1: totally disagree   -    7: totally agree ->")
+```
+
+
+## By Education
+
+
+
+```{r}
+data %>% 
+  by_edu("DIGIQ1", "DIGIQ5", var_labels,
+                   "<- 1: totally disagree   -    7: totally agree ->")
+```
+
+
+## By Politics
+
+```{r}
+data %>% 
+  by_pol("DIGIQ1", "DIGIQ5", var_labels,
+                   "<- 1: totally disagree   -    7: totally agree ->")
+```
+
+:::
+
 
 
 # Ability to Detect AI-Generated Content {.tabset .tabset-fade .tabset-pills .break} 
@@ -205,5 +268,3 @@ data %>%
 ```
 
 :::
-
-

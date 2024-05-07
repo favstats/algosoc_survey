@@ -1,10 +1,20 @@
 /*-- scss:defaults --*/
 $body-color: #000;
 $navbar-bg: #fff;
-$navbar-hl: #ed1c24;
-$link-color: #ed1c24;
+$navbar-hl: #f39917;
+$link-color: #f39917;
 $link-hover-color: #000;
 $nav-tabs-link-active-color: #000;
+
+
+/*-- scss:variables --*/
+$font-primary: 'Roboto', Arial, sans-serif;
+
+
+html, body {
+  font-family: $font-primary;
+}
+
 
 /*-- scss:rules --*/
 table {
