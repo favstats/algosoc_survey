@@ -1,11 +1,7 @@
 ---
-description-meta: "How often do you think you have come across the following things on social media in the past year?"
+description-meta: ""
 execute:
   echo: false
-format:
-  html:
-    toc: true
-    toc-location: right
 ---
 
 ```{r setup, include=FALSE}
@@ -28,6 +24,34 @@ options(scipen = 999)
 ```
 
 
+The page is divided into four main sections: 
+
+
+```{=html}
+<center>
+<div class="button-container">
+```
+ 
+
+  <a href="#iconify-fluent-text-grammar-settings-20-regular-ability-to-recognize-and-influence-ai" class="buttontop">
+    {{< iconify fluent text-grammar-settings-20-regular >}} Ability to Recognize and Influence AI
+  </a>
+
+  <a href="#iconify-material-symbols-light-interactive-space-outline-rounded-usage-of-ai-systems" class="buttontop">
+    {{< iconify material-symbols-light interactive-space-outline-rounded >}} Usage of AI Systems 
+  </a>
+  <a href="#iconify-lets-icons-view-light-exposure-to-ai" class="buttontop">
+    {{< iconify lets-icons view-light >}} Exposure to AI
+  </a>
+  <a href="#iconify-carbon-ibm-watson-knowledge-studio-familiarity-with-ai-terms" class="buttontop">
+    {{< iconify carbon ibm-watson-knowledge-studio >}} Familiarity with AI terms
+  </a>
+    
+
+```{=html}
+</div>
+</center>
+```
 
 
 
@@ -139,11 +163,11 @@ important_issue <- data %>%
     #   y = 6
     # )
    
-data %>% 
-  # select(ADSVR_1) %>% 
-  mutate(important1 = sjmisc::to_label(ADSVR_1)) %>% 
-  select(important1) %>% pull(important1) %>% levels() %>% 
-  dput()
+# data %>% 
+#   # select(ADSVR_1) %>% 
+#   mutate(important1 = sjmisc::to_label(ADSVR_1)) %>% 
+#   select(important1) %>% pull(important1) %>% levels() %>% 
+#   dput()
 ```
 ## By Age
 

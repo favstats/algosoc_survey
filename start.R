@@ -1,4 +1,4 @@
-
+library(tidyverse)
 
 dir("_site", full.names = T, recursive = T) %>% 
   keep(~str_detect(.x, "\\.qmd")) %>% 

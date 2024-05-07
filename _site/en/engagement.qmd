@@ -13,17 +13,17 @@ The page is divided into four main sections:
 ```
  
 
-  <a href="#ability-to-regognize-and-influence-ai" class="buttontop">
-    Ability to Recognize and Influence AI
+  <a href="#iconify-fluent-text-grammar-settings-20-regular-ability-to-recognize-and-influence-ai" class="buttontop">
+    {{< iconify fluent text-grammar-settings-20-regular >}} Ability to Recognize and Influence AI
   </a>
 
-  <a href="#usage-of-ai-systems" class="buttontop">
+  <a href="#iconify-material-symbols-light-interactive-space-outline-rounded-usage-of-ai-systems" class="buttontop">
     {{< iconify material-symbols-light interactive-space-outline-rounded >}} Usage of AI Systems 
   </a>
-  <a href="#exposure-to-ai" class="buttontop">
+  <a href="#iconify-lets-icons-view-light-exposure-to-ai" class="buttontop">
     {{< iconify lets-icons view-light >}} Exposure to AI
   </a>
-  <a href="#familiarity-with-ai-terms" class="buttontop">
+  <a href="#iconify-carbon-ibm-watson-knowledge-studio-familiarity-with-ai-terms" class="buttontop">
     {{< iconify carbon ibm-watson-knowledge-studio >}} Familiarity with AI terms
   </a>
     
@@ -85,37 +85,20 @@ data <- read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
     leeftijd %in% 65:150 ~ "65+",
   )) %>% 
   left_join(polvals %>% select(nomem_encr, left_right)) %>% 
-  # mutate(pol_cat = case_when(
-  #   left_right %in% 0:4 ~ "left",
-  #   left_right == 5 ~ "center",
-  #   left_right %in% 6:10 ~ "right"
-  #   )) %>% 
   mutate(pol_cat = case_when(
     left_right %in% 0:3 ~ "left",
     left_right %in% 4:6 ~ "center",
     left_right %in% 7:10 ~ "right"
     ))
 
-# hist(data$left_right)
-
 
 std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
 
-# data %>% 
-#   count(left_right)
-# 
-# polvals %>% 
-#   count(cv23o101) %>% 
-#   mutate(lab = sjmisc::to_label(cv23o101))
-# data %>% 
-#   write_csv("../../L_AlgoSoc_wave1_1.0p.csv")
 ```
 
 
 
-
-
-# Ability to Recognize and Influence AI {.tabset .tabset-fade .tabset-pills .break}
+# {{< iconify fluent text-grammar-settings-20-regular >}} Ability to Recognize and Influence AI {.tabset .tabset-fade .tabset-pills .break}
 
 > With artificial intelligence (AI), computer programs can perform tasks themselves and also learn themselves. AI is increasingly used in society, and also in online media. Many websites use AI to show you more content and ads you like. The following questions are about the offers (such as articles, films or songs) that are shown to you on websites and apps for news and entertainment (e.g. Netflix or Spotify). 
 
@@ -187,7 +170,7 @@ data %>%
 ::: {.panel-tabset}
 
 
-  ## Overall
+## Overall
 
 
 ```{r}
@@ -271,7 +254,7 @@ data %>%
 :::
 
 
-# Exposure to AI {.tabset .tabset-fade .tabset-pills .break}
+# {{< iconify lets-icons view-light >}} Exposure to AI {.tabset .tabset-fade .tabset-pills .break}
 
 > Artificial Intelligence (AI) can be used to create artificial content such as text, images and videos.
 
@@ -336,7 +319,7 @@ data %>%
 
 :::
 
-# Familiarity with AI terms {.tabset .tabset-fade .tabset-pills .break}
+# {{< iconify carbon ibm-watson-knowledge-studio >}} Familiarity with AI terms {.tabset .tabset-fade .tabset-pills .break}
 
 > How familiar are you with the following terms?
 
@@ -402,3 +385,17 @@ data %>%
 
 
 :::
+
+
+
+
+<br>
+
+<center>
+
+<img src="algosoclogo.png" width="13%">
+
+
+</center>
+
+

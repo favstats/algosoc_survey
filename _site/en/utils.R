@@ -1,11 +1,32 @@
+thecolors <<- c(
+  "#F7A35C",    # Light orange
+  "#ADD8E6",    # Light blue
+  "#E9BB97",    # Soft amber
+  "#E4D354",    # Light mustard
+  "#90EE90",    # Light green
+  "#1F78B4",    # Bluish
+  "#F4A8A8",    # Pale red
+  "#C29EC4",    # Pastel purple
+  "#FFD966",    # Light gold
+  "#B2DFEE",    # Light sky blue
+  "#FFB6C2",    # Light pink
+  "#B0E0C6"     # Powder blue
+)
+
+# thecolors
+
 generate_general <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -    7: very often ->") {
   
-  media_rec <- data %>% 
+  fin <- data %>% 
     select(var1:var2) %>% 
+    drop_na()
+  
+  media_rec <- fin %>% 
     gather() %>% 
     group_by(key) %>% 
     summarize(mean_val = mean(value, na.rm =T),
-              sd_val = std.error(value)) %>% 
+              sd_val = std.error(value),
+              n = n()) %>% 
     ungroup() %>% 
     mutate(varlabs = thevarlabs) %>% 
     mutate(varlabs = fct_reorder(varlabs, mean_val)) %>% 
@@ -13,16 +34,8 @@ generate_general <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: nev
   
   theorder <<- media_rec %>% distinct(varlabs) %>% pull(varlabs) 
   
-  
-  # color_vector <- c("#F7A35C", "#F8C488", "#F8E4C8", "#F7D1A3", "#E9BB97", "#FFDDAA")
-    
-  colors <- c("#F7A35C", "lightblue", "#E9BB97", "#e4d354" , "lightgreen", "#1F78B4")
-  
-  
-  # colors <- c("darkred", "darkblue", "darkgreen", "#f7a35c", "purple", "#f15c80", "#e4d354")
-  
   hchart(media_rec, "column", hcaes(x = varlabs, y = mean_val), name = "Mean") %>%
-    hc_colors(colors) %>%
+    hc_colors(thecolors) %>%
     hc_add_series(
       media_rec,
       "errorbar", 
@@ -49,8 +62,12 @@ generate_general <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: nev
       title = list(text = thelabel), 
       max = 7, min = 1
     )  %>%
-    hc_legend(enabled = FALSE)  # Disabling the legend to remove "Series 1"
-  
+    hc_legend(enabled = FALSE)   %>%
+    hc_caption(
+      text = paste0("<em>N = ", nrow(fin), ". Errorbars show standard errors.</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
+    )
 }
 
 
@@ -65,12 +82,16 @@ by_age <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
   # thevarlabs
   
   # mutate(varlabs = c("ChatGPT", "Midjourney")) %>% 
-  media_rec_ages <- data %>% 
+  fin <- data %>% 
     select(var1:var2, age_groups) %>% 
+    drop_na()
+  
+  media_rec_ages <- fin %>% 
     gather(key, value, -age_groups) %>% 
     group_by(key, age_groups) %>% 
     summarize(mean_val = mean(value, na.rm =T),
-              sd_val = std.error(value)) %>% 
+              sd_val = std.error(value),
+              n = n()) %>% 
     ungroup() %>% 
     left_join(varlabdat) %>% 
     mutate(varlabs = factor(varlabs, levels = as.character(theorder))) %>%
@@ -119,6 +140,11 @@ by_age <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
       verticalAlign = "top",
       floating = TRUE,
       y = 6
+    )   %>%
+    hc_caption(
+      text = paste0("<em>N = ", nrow(fin), ". Errorbars show standard errors.</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     )
   
 }
@@ -131,14 +157,23 @@ by_gender <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -
     names() %>% 
     tibble(key = ., varlabs = thevarlabs)
   
-  media_rec_genders <- data %>% 
-    # count(geslacht) %>% 
+  fin <- data %>% 
     mutate(geslacht = sjmisc::to_label(geslacht)) %>% 
     select(var1:var2, geslacht) %>% 
+    drop_na() %>% 
+    mutate(geslacht = case_when(
+      geslacht == "Vrouw" ~ "Woman",
+      geslacht == "Anders" ~ "Other",
+      T ~ geslacht
+    ))
+  
+  media_rec_genders <- fin %>% 
+    drop_na() %>% 
     gather(key, value, -geslacht) %>% 
     group_by(key, geslacht) %>% 
     summarize(mean_val = mean(value, na.rm =T),
-              sd_val = std.error(value)) %>% 
+              sd_val = std.error(value),
+              n = n()) %>%  
     ungroup() %>% 
     left_join(varlabdat) %>% 
     mutate(varlabs = factor(varlabs, levels = as.character(theorder))) %>%
@@ -185,6 +220,11 @@ by_gender <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -
       verticalAlign = "top",
       floating = TRUE,
       y = 6
+    ) %>%
+    hc_caption(
+      text = paste0("<em>N = ", nrow(fin), ". Errorbars show standard errors.</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     )
   
 }
@@ -197,16 +237,41 @@ by_edu <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
     names() %>% 
     tibble(key = ., varlabs = thevarlabs)
   
+  education_levels <- c("Primary (basisonderwijs)", 
+                        "Pre-Vocational (vmbo)", 
+                        "Secondary (havo/vwo)", 
+                        "Vocational (mbo)", 
+                        "Applied Sciences (hbo)", 
+                        "University (wo)") %>% 
+    tibble(eng = ., oplcat = c("basisonderwijs",
+                               "vmbo",
+                               "havo/vwo",
+                               "mbo",
+                               "hbo",
+                               "wo"))
   
-  media_rec_edu <- data %>% 
+  
+  fin <- data %>% 
     drop_na(oplcat) %>% 
     # count(oplcat) %>% 
     mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
+    left_join(education_levels) %>% 
+    mutate(oplcat = eng) %>% 
+    mutate(oplcat = fct_relevel(oplcat, c("Primary (basisonderwijs)", 
+                                          "Pre-Vocational (vmbo)", 
+                                          "Secondary (havo/vwo)", 
+                                          "Vocational (mbo)", 
+                                          "Applied Sciences (hbo)", 
+                                          "University (wo)"))) %>% 
     select(var1:var2, oplcat) %>% 
+    drop_na() 
+  
+  media_rec_edu <- fin %>% 
     gather(key, value, -oplcat) %>% 
     group_by(key, oplcat) %>% 
     summarize(mean_val = mean(value, na.rm =T),
-              sd_val = std.error(value)) %>% 
+              sd_val = std.error(value),
+              n = n()) %>%  
     ungroup() %>% 
     left_join(varlabdat) %>% 
     mutate(varlabs = factor(varlabs, levels = as.character(theorder))) %>%
@@ -254,6 +319,11 @@ by_edu <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
       verticalAlign = "top",
       floating = TRUE,
       y = 6
+    ) %>%
+    hc_caption(
+      text = paste0("<em>N = ", nrow(fin), ". Errorbars show standard errors.</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     )
 }
 
@@ -265,16 +335,17 @@ by_pol <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
     names() %>% 
     tibble(key = ., varlabs = thevarlabs)
   
-  
-  media_rec_edu <- data %>% 
-    drop_na(pol_cat) %>% 
-    # count(oplcat) %>% 
+  fin <- data %>% 
     mutate(oplcat = sjmisc::to_label(pol_cat)) %>% 
     select(var1:var2, pol_cat) %>% 
+    drop_na() 
+  
+  media_rec_pol <- fin %>% 
     gather(key, value, -pol_cat) %>% 
     group_by(key, pol_cat) %>% 
     summarize(mean_val = mean(value, na.rm =T),
-              sd_val = std.error(value)) %>% 
+              sd_val = std.error(value),
+              n = n()) %>% 
     ungroup() %>% 
     left_join(varlabdat) %>% 
     mutate(varlabs = factor(varlabs, levels = as.character(theorder))) %>%
@@ -283,7 +354,7 @@ by_pol <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
   # mutate(varlabs = var_labels)
   
   hchart(
-    media_rec_edu, 
+    media_rec_pol, 
     "column",
     # hcaes(x = varlabs, y = mean_val),
     hcaes(x = varlabs, y = mean_val, group = pol_cat),
@@ -291,7 +362,7 @@ by_pol <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
   ) %>%
     
     hc_add_series(
-      media_rec_edu,
+      media_rec_pol,
       "errorbar", 
       hcaes(y = mean_val, 
             x = varlabs, low = mean_val - sd_val, 
@@ -323,6 +394,11 @@ by_pol <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
       verticalAlign = "top",
       floating = TRUE,
       y = 6
+    ) %>%
+    hc_caption(
+      text = paste0("<em>N = ", nrow(fin), ". Errorbars show standard errors. Politics category is based on 10-scale: 0-3: left; 4-6: center; 7-10: right.</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     )
 }
 
@@ -332,6 +408,7 @@ by_pol <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
 
 generate_general2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<- 1: never    -    7: very often ->") {
   
+
   media_rec <- data %>% 
     select(var1,var2,var3) %>% 
     gather() %>% 
@@ -360,6 +437,9 @@ generate_general2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<-
       showInLegend = FALSE
     ) %>% 
     highcharter::hc_plotOptions(
+      column = list(
+        colorByPoint = TRUE  # This ensures that each bar gets a different color
+      ),
       series = list(
         tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
       ),
