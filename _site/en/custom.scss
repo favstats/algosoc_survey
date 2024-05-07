@@ -119,16 +119,7 @@ button:hover {
   background-color: inherit; /* Inherits background-color from .nav-item */
 }
 
-.panel-tabset .nav-item:hover {
-  background-color: #eee; /* Light grey background on hover */
-}
 
-
-
-.panel-tabset .break .nav-tabs, .break .nav-item .active {
-  color: #fff; /* White text for active and hover states */
-  background-color: #f39917; /* Orange background for active tab */
-}
 
 /* Responsive Adjustment for Mobile Devices */
 @media (max-width: 768px) {
@@ -195,3 +186,14 @@ blockquote {
   transform: translateY(-2px);
 }
 
+
+.panel-tabset .nav-item:hover {
+  background-color: #eee; /* Light grey background on hover */
+}
+
+
+
+.panel-tabset .break .nav-tabs, .break .nav-item .active {
+  color: #fff; /* White text for active and hover states */
+  background-color: #f39917; /* Orange background for active tab */
+}
