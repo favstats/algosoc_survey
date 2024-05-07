@@ -1,6 +1,6 @@
 project:
   type: website
-  output-dir: ../docs
+  output-dir: ../../docs/en
 
 website:
   favicon: algosoclogo.png
@@ -9,24 +9,23 @@ website:
     logo: algosoclogo.png
     left:
       - href: index.qmd
+        text: "{{< iconify ph info-thin >}} Welkom"
+      - href: engagement.qmd
         text: "{{< iconify ph users-three >}} Betrokkenheid"
       - href: attitudes.qmd
         text: "{{< iconify ph head-circuit >}} Houdingen"
       - href: values.qmd
         text: "{{< iconify ph globe-hemisphere-west >}} Waarden"
-      - href: about.qmd
-        text: "{{< iconify ph info-thin >}} Over"
     right:
       - text: "en {{< iconify emojione flag-for-united-states >}}"
-        href: "https://favstats.github.io/algosoc_survey/en"
+        href: "https://monitor.algosoc.org/en"
       - text: "nl {{< iconify emojione flag-for-netherlands >}}"
-        href: "https://favstats.github.io/algosoc_survey/"
+        href: "https://monitor.algosoc.org/"
 
 format:
   html:
     theme:
       - cosmo
       - custom.scss
-    mainfont: acumin-pro-semi-condensed, helvetica, arial, sans-serif
     fontsize: 1.2em
 

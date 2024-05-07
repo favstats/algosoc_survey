@@ -1,11 +1,7 @@
 ---
-description-meta: "How often do you think you have come across the following things on social media in the past year?"
+description-meta: ""
 execute:
   echo: false
-format:
-  html:
-    toc: true
-    toc-location: right
 ---
 
 ```{r setup, include=FALSE}
@@ -33,17 +29,10 @@ options(scipen = 999)
 
 
 ```{r include=FALSE}
-# print(getwd())
-# here::here("")
-# prCint(getwd())
-# hcoptslang <- getOption("highcharter.lang")
-# 
-# hcoptslang$shortMonths <- c("Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec")
-# 
-# options(highcharter.lang = hcoptslang)
-polvals <- read_sav("../cv23o_EN_1.0p.sav") %>% 
+
+polvals <- read_sav("../../cv23o_EN_1.0p.sav") %>% 
   mutate(left_right = cv23o101)
-data <- read_sav("../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
+data <- read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>% 
   mutate(age_groups = case_when(
     leeftijd %in% 16:17 ~ "16-17",
     leeftijd %in% 18:24 ~ "18-24",
@@ -54,11 +43,6 @@ data <- read_sav("../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
     leeftijd %in% 65:150 ~ "65+",
   )) %>% 
   left_join(polvals %>% select(nomem_encr, left_right)) %>% 
-  # mutate(pol_cat = case_when(
-  #   left_right %in% 0:4 ~ "left",
-  #   left_right == 5 ~ "center",
-  #   left_right %in% 6:10 ~ "right"
-  #   )) %>% 
   mutate(pol_cat = case_when(
     left_right %in% 0:3 ~ "left",
     left_right %in% 4:6 ~ "center",
@@ -71,17 +55,43 @@ std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
 
 
 # data %>% 
-#   write_csv("../L_AlgoSoc_wave1_1.0p.csv")
+#   write_csv("../../L_AlgoSoc_wave1_1.0p.csv")
 
 
 source("utils.R")
 ```
 
+The page is divided into three main sections: 
+
+
+```{=html}
+<center>
+<div class="button-container">
+```
+ 
 
 
 
+  <a href="#iconify-fluent-emoji-high-contrast-detective-detecting-ai-generated-content" class="buttontop">
+    {{< iconify fluent-emoji-high-contrast detective >}} Detecting AI-Generated Content
+  </a>
+  <a href="#iconify-mingcute-safe-lock-fill-trust-in-adm-systems" class="buttontop">
+    {{< iconify mingcute safe-lock-fill >}} Trust in ADM Systems
+  </a>
+  <a href="#iconify-game-icons-sands-of-time-future-of-adm-systems" class="buttontop">
+    {{< iconify game-icons sands-of-time >}} Future of ADM Systems 
+  </a>
 
-# Ability to Detect AI-Generated Content {.tabset .tabset-fade .tabset-pills .break} 
+```{=html}
+</div>
+</center>
+```
+
+
+Each section allows you to examine overall trends as well as breakdowns by age, gender, education level, and political leaning.  
+
+
+# {{< iconify fluent-emoji-high-contrast detective >}} Detecting AI-Generated Content {.tabset .tabset-fade .tabset-pills .break} 
 
 > How confident are you that the following groups can tell the difference between content created by AI and content created by people?
 
@@ -145,9 +155,9 @@ data %>%
 
 :::
 
-# Trust in AI Systems {.tabset .tabset-fade .tabset-pills .break}
+# {{< iconify mingcute safe-lock-fill >}} Trust in ADM Systems {.tabset .tabset-fade .tabset-pills .break}
 
-> We ask you a number of additional questions about automatic decision-making systems. These are computer programs that make decisions that used to be made by people. These decisions are made automatically by computers based on data. 
+> We ask you a number of additional questions about automatic decision-making (ADM) systems. These are computer programs that make decisions that used to be made by people. These decisions are made automatically by computers based on data. 
 
 > How confident are you that automated decision-making systems can properly determine...
 
@@ -205,5 +215,78 @@ data %>%
 ```
 
 :::
+
+
+# {{< iconify game-icons sands-of-time >}} Future of ADM Systems {.tabset .tabset-fade .tabset-pills .break}
+
+> If automated decision-making (ADM) becomes more common in the future, what do you think will happen?
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+var_labels <- c(
+  "If the news is automated, journalists will be able to focus more on investigative journalism.",
+  "I will only get news items that interest me.",
+  "It will make reporting fairer and more balanced.",
+  "If certain law enforcement tasks are automated, the police will have more time to focus on major crimes.",
+  "It will make the determination of social benefits fairer and more balanced."
+)
+
+data %>% 
+  generate_general("ADSO1", "ADSO5", var_labels,
+                   "<- 1: totally disagree   -    7: totally agree ->")
+```
+
+## By Age
+
+```{r}
+data %>% 
+  by_age("ADSO1", "ADSO5", var_labels,
+                   "<- 1: totally disagree   -    7: totally agree ->")
+```
+
+
+## By Gender
+
+```{r}
+data %>% 
+  by_gender("ADSO1", "ADSO5", var_labels,
+                   "<- 1: totally disagree   -    7: totally agree ->")
+```
+
+
+## By Education
+
+
+
+```{r}
+data %>% 
+  by_edu("ADSO1", "ADSO5", var_labels,
+                   "<- 1: totally disagree   -    7: totally agree ->")
+```
+
+
+## By Politics
+
+```{r}
+data %>% 
+  by_pol("ADSO1", "ADSO5", var_labels,
+                   "<- 1: totally disagree   -    7: totally agree ->")
+```
+
+:::
+
+
+<br>
+
+<center>
+
+<img src="algosoclogo.png" width="13%">
+
+
+</center>
+
 
 

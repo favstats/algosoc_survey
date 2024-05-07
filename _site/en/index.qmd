@@ -5,7 +5,7 @@ execute:
 ---
 
 
-> Welcome to the AlgoSoc AI Monitor, providing insights into public perceptions and experiences with artificial intelligence (AI) and automated decision making (ADM) systems in society! We asked *3,921 respondents* in the Netherlands what they think about this topic. 
+> Welcome to the AlgoSoc AI Monitor, providing insights into public perceptions and experiences with artificial intelligence (AI) and automated decision making (ADM) systems in society! We asked *3,946 respondents* in the Netherlands what they think about this topic. 
 
 
 This dashboard aggregates data collected via the <a href="https://algosoc.org/" target="_blank">AlgoSoc Consortium</a> to show how citizens think and feel about AI in society. The dashboard is divided into three main pages. 
@@ -46,7 +46,7 @@ If you want to know more about AlgoSoc and our work on AI, visit us on <a href="
 
 ### Methodology
 
-This first wave of data collection interviewed a total of *3,921 participants* on key questions surrounding algorithms and public values across the sectors of health, justice and media. The data was collected as part of [Centerdata’s](https://www.centerdata.nl/) [LISS panel](https://www.lissdata.nl/) throughout March of 2024.
+This first wave of data collection interviewed a total of *3,946 participants* on key questions surrounding algorithms and public values across the sectors of health, justice and media. The data was collected as part of [Centerdata’s](https://www.centerdata.nl/) [LISS panel](https://www.lissdata.nl/) throughout March of 2024.
 
 <br>
 

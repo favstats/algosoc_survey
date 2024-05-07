@@ -89,6 +89,9 @@ The page is divided into four main sections:
 </center>
 ```
 
+Each section allows you to examine overall trends as well as breakdowns by age, gender, education level, and political leaning.  
+
+
 # {{< iconify healthicons world-care-outline >}} Most Important Values {.tabset .tabset-fade .tabset-pills .break}
 
 > What do you consider the 5 most important values for automated decision-making systems? [only top important value shown]
@@ -152,13 +155,13 @@ important_issue <- data %>%
       series = list(
         tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
       )
-    )
+    )  %>%
+    hc_caption(
+      text = paste0("<em>N = ", sum(important_issue$n), ". Errorbars show standard errors.</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
+    ) 
    
-# data %>%
-#   # select(ADSVR_1) %>%
-#   mutate(important1 = sjmisc::to_label(ADSVR_1)) %>%
-#   select(important1) %>% pull(important1) %>% levels() %>%
-#   dput()
 ```
 
 
@@ -199,7 +202,12 @@ important_issue_age <- data  %>%
       series = list(
         tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
       )
-    )
+    ) %>%
+    hc_caption(
+      text = paste0("<em>N = ", sum(important_issue_age$n), ". Errorbars show standard errors.</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
+    ) 
 ```
 
 ## By Gender
@@ -219,7 +227,9 @@ important_issue_gender <- data  %>%
   drop_na()  %>% 
   left_join(thelabs %>% 
               rename(important1 = dutchlabs)) %>% 
-  mutate(important1 =adsv_var_labels)
+  mutate(important1 =adsv_var_labels) %>% 
+    mutate(geslacht = fct_relevel(geslacht, c("Man", "Woman", "Other"))) %>% 
+    arrange(geslacht)
 
 
    
@@ -249,7 +259,12 @@ important_issue_gender <- data  %>%
   hc_chart(events = list(load = JS("function() {
   var chart = this;
   chart.series[2].setVisible(false)
-  }"))) 
+  }"))) %>%
+    hc_caption(
+      text = paste0("<em>N = ", sum(important_issue_gender$n), ". Errorbars show standard errors.</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
+    ) 
 ```
 
 ## By Education
@@ -313,7 +328,12 @@ important_issue_edu <- data  %>%
       series = list(
         tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
       )
-    )
+    ) %>%
+    hc_caption(
+      text = paste0("<em>N = ", sum(important_issue_edu$n), ". Errorbars show standard errors.</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
+    ) 
 ```
 
 ## By Politics
@@ -357,7 +377,12 @@ important_issue_pol <- data  %>%
       series = list(
         tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
       )
-    )
+    ) %>%
+    hc_caption(
+      text = paste0("<em>N = ", sum(important_issue_pol$n), ". Errorbars show standard errors. Politics category is based on 10-scale: 0-3: left; 4-6: center; 7-10: right.</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
+    ) 
 ```
 
 

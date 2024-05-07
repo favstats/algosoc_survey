@@ -88,6 +88,9 @@ The page is divided into three main sections:
 ```
 
 
+Each section allows you to examine overall trends as well as breakdowns by age, gender, education level, and political leaning.  
+
+
 # {{< iconify fluent-emoji-high-contrast detective >}} Detecting AI-Generated Content {.tabset .tabset-fade .tabset-pills .break} 
 
 > How confident are you that the following groups can tell the difference between content created by AI and content created by people?

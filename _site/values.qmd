@@ -24,50 +24,16 @@ options(scipen = 999)
 ```
 
 
-The page is divided into four main sections: 
-
-
-```{=html}
-<center>
-<div class="button-container">
-```
- 
-
-  <a href="#iconify-fluent-text-grammar-settings-20-regular-ability-to-recognize-and-influence-ai" class="buttontop">
-    {{< iconify fluent text-grammar-settings-20-regular >}} Ability to Recognize and Influence AI
-  </a>
-
-  <a href="#iconify-material-symbols-light-interactive-space-outline-rounded-usage-of-ai-systems" class="buttontop">
-    {{< iconify material-symbols-light interactive-space-outline-rounded >}} Usage of AI Systems 
-  </a>
-  <a href="#iconify-lets-icons-view-light-exposure-to-ai" class="buttontop">
-    {{< iconify lets-icons view-light >}} Exposure to AI
-  </a>
-  <a href="#iconify-carbon-ibm-watson-knowledge-studio-familiarity-with-ai-terms" class="buttontop">
-    {{< iconify carbon ibm-watson-knowledge-studio >}} Familiarity with AI terms
-  </a>
-    
-
-```{=html}
-</div>
-</center>
-```
 
 
 
 
 ```{r include=FALSE}
-# print(getwd())
-# here::here("")
-# prCint(getwd())
-# hcoptslang <- getOption("highcharter.lang")
-# 
-# hcoptslang$shortMonths <- c("Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec")
-# 
-# options(highcharter.lang = hcoptslang)
-polvals <- read_sav("../cv23o_EN_1.0p.sav") %>% 
+
+polvals <- read_sav("../../cv23o_EN_1.0p.sav") %>% 
   mutate(left_right = cv23o101)
-data <- read_sav("../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
+
+data <- read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>%
   mutate(age_groups = case_when(
     leeftijd %in% 16:17 ~ "16-17",
     leeftijd %in% 18:24 ~ "18-24",
@@ -77,14 +43,8 @@ data <- read_sav("../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
     leeftijd %in% 55:64 ~ "55-64",
     leeftijd %in% 65:150 ~ "65+",
   )) %>% 
-  # select(ADSVR_1) %>% 
   mutate(important1 = sjmisc::to_label(ADSVR_1)) %>% 
   left_join(polvals %>% select(nomem_encr, left_right)) %>% 
-  # mutate(pol_cat = case_when(
-  #   left_right %in% 0:4 ~ "left",
-  #   left_right == 5 ~ "center",
-  #   left_right %in% 6:10 ~ "right"
-  #   )) %>% 
   mutate(pol_cat = case_when(
     left_right %in% 0:3 ~ "left",
     left_right %in% 4:6 ~ "center",
@@ -97,10 +57,42 @@ std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
 
 source("utils.R")
 # data %>% 
-#   write_csv("../L_AlgoSoc_wave1_1.0p.csv")
+#   write_csv("../../L_AlgoSoc_wave1_1.0p.csv")
 ```
 
-# Most Important Values {.tabset .tabset-fade .tabset-pills .break}
+
+The page is divided into four main sections: 
+
+
+```{=html}
+<center>
+<div class="button-container">
+```
+ 
+
+  <a href="#iconify-healthicons-world-care-outline-most-important-values" class="buttontop">
+    {{< iconify healthicons world-care-outline >}} Most Important Values
+  </a>
+  <a href="#iconify-fluent-data-usage-16-regular-usefulness-of-ai" class="buttontop">
+    {{< iconify fluent data-usage-16-regular >}} Usefulness of AI
+  </a>
+  <a href="#iconify-solar-danger-outline-riskiness-of-ai" class="buttontop">
+    {{< iconify solar danger-outline >}} Riskiness of AI
+  </a>
+  <a href="#iconify-material-symbols-light-balance-fairness-of-ai" class="buttontop">
+    {{< iconify material-symbols-light balance >}} Fairness of AI
+  </a>
+    
+
+```{=html}
+</div>
+</center>
+```
+
+Each section allows you to examine overall trends as well as breakdowns by age, gender, education level, and political leaning.  
+
+
+# {{< iconify healthicons world-care-outline >}} Most Important Values {.tabset .tabset-fade .tabset-pills .break}
 
 > What do you consider the 5 most important values for automated decision-making systems? [only top important value shown]
 
@@ -148,27 +140,31 @@ important_issue <- data %>%
     important_issue, 
     "column",
     # hcaes(x = varlabs, y = mean_val),
-    hcaes(x = important1, y = perc)
-  ) %>%
+    hcaes(x = important1, y = perc), name = "%"
+  ) %>%    
+     hc_colors(thecolors) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
       title = list(text = "% Naming As Number 1 Important Issue"), 
-      max = 90, min = 0
-    ) #%>% 
-    # hc_legend(
-    #   layout = "vertical",
-    #   align = "right",
-    #   verticalAlign = "top",
-    #   floating = TRUE,
-    #   y = 6
-    # )
+      max = 40, min = 0
+    ) %>% 
+    highcharter::hc_plotOptions(
+      column = list(
+        colorByPoint = TRUE  # This ensures that each bar gets a different color
+      ),
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      )
+    )  %>%
+    hc_caption(
+      text = paste0("<em>N = ", sum(important_issue$n), ". Errorbars show standard errors.</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
+    ) 
    
-# data %>% 
-#   # select(ADSVR_1) %>% 
-#   mutate(important1 = sjmisc::to_label(ADSVR_1)) %>% 
-#   select(important1) %>% pull(important1) %>% levels() %>% 
-#   dput()
 ```
+
+
 ## By Age
 
 ```{r}
@@ -194,21 +190,36 @@ important_issue_age <- data  %>%
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
       title = list(text = "% Naming As Number 1 Important Issue"), 
-      max = 90, min = 0
+      max = 40, min = 0
     ) %>% 
     hc_legend(
       layout = "vertical",
       align = "right",
       verticalAlign = "top",
       floating = TRUE
-    )
+    ) %>% 
+    highcharter::hc_plotOptions(
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      )
+    ) %>%
+    hc_caption(
+      text = paste0("<em>N = ", sum(important_issue_age$n), ". Errorbars show standard errors.</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
+    ) 
 ```
 
 ## By Gender
 
 ```{r}
 important_issue_gender <- data  %>% 
-    mutate(geslacht = sjmisc::to_label(geslacht)) %>%
+    mutate(geslacht = sjmisc::to_label(geslacht)) %>% 
+    mutate(geslacht = case_when(
+      geslacht == "Vrouw" ~ "Woman",
+      geslacht == "Anders" ~ "Other",
+      T ~ geslacht
+    )) %>% 
   count(important1, geslacht, sort = T) %>% 
   group_by(geslacht) %>% 
   mutate(perc = n/sum(n)*100) %>% 
@@ -216,7 +227,9 @@ important_issue_gender <- data  %>%
   drop_na()  %>% 
   left_join(thelabs %>% 
               rename(important1 = dutchlabs)) %>% 
-  mutate(important1 =adsv_var_labels)
+  mutate(important1 =adsv_var_labels) %>% 
+    mutate(geslacht = fct_relevel(geslacht, c("Man", "Woman", "Other"))) %>% 
+    arrange(geslacht)
 
 
    
@@ -230,22 +243,58 @@ important_issue_gender <- data  %>%
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
       title = list(text = "% Naming As Number 1 Important Issue"), 
-      max = 90, min = 0
+      max = 40, min = 0
     ) %>% 
     hc_legend(
       layout = "vertical",
       align = "right",
       verticalAlign = "top",
       floating = TRUE
-    )
+    ) %>% 
+    highcharter::hc_plotOptions(
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      )
+    ) %>%
+  hc_chart(events = list(load = JS("function() {
+  var chart = this;
+  chart.series[2].setVisible(false)
+  }"))) %>%
+    hc_caption(
+      text = paste0("<em>N = ", sum(important_issue_gender$n), ". Errorbars show standard errors.</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
+    ) 
 ```
 
 ## By Education
 
 
 ```{r}
+  education_levels <- c("Primary (basisonderwijs)", 
+                        "Pre-Vocational (vmbo)", 
+                        "Secondary (havo/vwo)", 
+                        "Vocational (mbo)", 
+                        "Applied Sciences (hbo)", 
+                        "University (wo)") %>% 
+    tibble(eng = ., oplcat = c("basisonderwijs",
+                               "vmbo",
+                               "havo/vwo",
+                               "mbo",
+                               "hbo",
+                               "wo"))
+  
+
 important_issue_edu <- data  %>% 
     mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
+    left_join(education_levels) %>% 
+    mutate(oplcat = eng) %>% 
+    mutate(oplcat = fct_relevel(oplcat, c("Primary (basisonderwijs)", 
+                                          "Pre-Vocational (vmbo)", 
+                                          "Secondary (havo/vwo)", 
+                                          "Vocational (mbo)", 
+                                          "Applied Sciences (hbo)", 
+                                          "University (wo)"))) %>% 
   count(important1, oplcat, sort = T) %>% 
   group_by(oplcat) %>% 
   mutate(perc = n/sum(n)*100) %>% 
@@ -267,14 +316,24 @@ important_issue_edu <- data  %>%
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
       title = list(text = "% Naming As Number 1 Important Issue"), 
-      max = 90, min = 0
+      max = 40, min = 0
     ) %>% 
     hc_legend(
       layout = "vertical",
       align = "right",
       verticalAlign = "top",
       floating = TRUE
-    )
+    ) %>% 
+    highcharter::hc_plotOptions(
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      )
+    ) %>%
+    hc_caption(
+      text = paste0("<em>N = ", sum(important_issue_edu$n), ". Errorbars show standard errors.</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
+    ) 
 ```
 
 ## By Politics
@@ -290,7 +349,9 @@ important_issue_pol <- data  %>%
   drop_na() %>% 
   left_join(thelabs %>% 
               rename(important1 = dutchlabs)) %>% 
-  mutate(important1 =adsv_var_labels)
+  mutate(important1 =adsv_var_labels) %>% 
+  mutate(pol_cat = fct_relevel(pol_cat, c("left", "center", "right"))) %>% 
+  arrange(pol_cat)
 
 
    
@@ -304,22 +365,31 @@ important_issue_pol <- data  %>%
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
       title = list(text = "% Naming As Number 1 Important Issue"), 
-      max = 90, min = 0
+      max = 40, min = 0
     ) %>% 
     hc_legend(
       layout = "vertical",
       align = "right",
       verticalAlign = "top",
       floating = TRUE
-    )
+    ) %>% 
+    highcharter::hc_plotOptions(
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      )
+    ) %>%
+    hc_caption(
+      text = paste0("<em>N = ", sum(important_issue_pol$n), ". Errorbars show standard errors. Politics category is based on 10-scale: 0-3: left; 4-6: center; 7-10: right.</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
+    ) 
 ```
 
 
 
 ::: 
 
-
-# Usefulness of AI
+# {{< iconify fluent data-usage-16-regular >}} Usefulness of AI {.tabset .tabset-fade .tabset-pills .break}
 
 In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
 
@@ -377,8 +447,7 @@ data %>%
 
 ::: 
 
-
-# Riskiness of AI
+# {{< iconify solar danger-outline >}} Riskiness of AI {.tabset .tabset-fade .tabset-pills .break}
 
 In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
 
@@ -434,11 +503,9 @@ data %>%
 ::: 
 
 
+# {{< iconify material-symbols-light balance >}} Fairness of AI {.tabset .tabset-fade .tabset-pills .break}
 
-
-# Fairness of AI
-
-In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
+> In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
 
 > More automatic decision-making in news media/the legal system/healthcare will be **more fair**.
 
@@ -492,4 +559,17 @@ data %>%
 ```
 
 ::: 
+
+
+
+<br>
+
+<center>
+
+<img src="algosoclogo.png" width="13%">
+
+
+</center>
+
+
 

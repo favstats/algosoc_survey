@@ -16,11 +16,6 @@ html, body {
 }
 
 
-/*-- scss:rules --*/
-table {
-  font-family: acumin-pro-semi-condensed, helvetica, arial, sans-serif !important;
-}
-
 .navbar {
   border-bottom: 1px solid #ccc;
 }
@@ -31,9 +26,6 @@ table {
   border-radius: 100%;
 }
 
-h1, h2, h3 {
-  font-family: "Miller Text", georgia, serif;
-}
 
 h1 {
   font-size: 1.8rem;
@@ -124,16 +116,7 @@ button:hover {
   background-color: inherit; /* Inherits background-color from .nav-item */
 }
 
-.panel-tabset .nav-item:hover {
-  background-color: #eee; /* Light grey background on hover */
-}
 
-
-
-.panel-tabset .break .nav-tabs, .break .nav-item .active {
-  color: #fff; /* White text for active and hover states */
-  background-color: #f39917; /* Orange background for active tab */
-}
 
 /* Responsive Adjustment for Mobile Devices */
 @media (max-width: 768px) {
@@ -157,11 +140,6 @@ button:hover {
 
 }
 
-.tab-content {
-  order: 1; /* Ensures that the content is at the top */
-  border-top: 1px solid #ccc; /* Adds a subtle top border */
-  border-bottom: none; /* Adds a subtle top border */
-}
 
 
 blockquote {
@@ -172,4 +150,53 @@ blockquote {
 }
 
 
+
+
+.button-container {
+  text-align: center;
+}
+
+.buttontop {
+  display: inline-block;
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.buttontop:hover {
+  background-color: #45a049;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+
+.panel-tabset .nav-item:hover {
+  background-color: #ccc; /* Light grey background on hover */
+}
+
+
+
+
+.panel-tabset .nav-tabs .nav-link.active {
+  color: #fff; /* White text for active and hover states */
+  background-color: #f39917; /* Orange background for active tab */
+  box-shadow: 0 6px 8px rgba(211, 211, 211, 1);
+  transform: translateY(-2px);
+}
+
+
+.panel-tabset .tab-content {
+  order: 1; /* Ensures that the content is at the top */
+  border-top: 1px solid #ccc; /* Adds a subtle top border */
+  border-bottom: none; /* Adds a subtle top border */
+}
 
