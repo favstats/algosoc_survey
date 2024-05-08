@@ -83,7 +83,7 @@ div.sidebar-item-container .sidebar-link:hover {
 
 /* Darker background on mouse-over */
 button:hover {
-  background-color: #17616A;
+  background-color: #ccc;
 }
 
 
@@ -214,4 +214,49 @@ blockquote.question-text {
   position: relative; /* For pseudo-element positioning if needed */
 }
 
+/* Navbar link styling */
+.nav-link {
+    font-size: 20px;
+    position: relative;
+    display: inline-block;
+    padding: 2px;
+    color: #f39917; /* Change color as needed */
+    text-decoration: none; /* Removes default underline */
+    transition: color 0.8s; /* Smooth transition for color change */
+}
 
+/* Underline effect */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 8px;
+    left: 50%;
+    background-color: #f39917; /* Underline color */
+    transition: width 0.8s ease 0s, left 0.8s ease 0s; /* Animates the line drawing */
+}
+
+/* Hover effect */
+.nav-link:hover::after {
+    width: 100%; /* Full width */
+    left: 0; /* Starts from the left */
+}
+
+/* Additional hover effects */
+.nav-link:hover {
+    color: #555; /* Darken text on hover */
+}
+
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar .nav-left, .navbar .nav-right {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+}
