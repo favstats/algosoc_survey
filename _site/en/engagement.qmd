@@ -102,7 +102,10 @@ std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
 
 > With artificial intelligence (AI), computer programs can perform tasks themselves and also learn themselves. AI is increasingly used in society, and also in online media. Many websites use AI to show you more content and ads you like. The following questions are about the offers (such as articles, films or songs) that are shown to you on websites and apps for news and entertainment (e.g. Netflix or Spotify). 
 
-> To what extent do you agree or disagree with the following statements?
+
+<blockquote class="question-text">
+  To what extent do you agree or disagree with the following statements?
+</blockquote>
 
 ::: {.panel-tabset}
 
@@ -165,7 +168,10 @@ data %>%
 
 # {{< iconify material-symbols-light interactive-space-outline-rounded >}} Usage of AI Systems {.tabset .tabset-fade .tabset-pills .break}
 
-> How often in the past year did you use...
+<blockquote class="question-text">
+  How often in the past year did you use...
+</blockquote>
+
 
 ::: {.panel-tabset}
 
@@ -258,7 +264,10 @@ data %>%
 
 > Artificial Intelligence (AI) can be used to create artificial content such as text, images and videos.
 
-> How often do you think you have come across the following things on social media in the past year?
+
+<blockquote class="question-text">
+  How often do you think you have come across the following things on social media in the past year?
+</blockquote>
 
 
 
@@ -321,7 +330,10 @@ data %>%
 
 # {{< iconify carbon ibm-watson-knowledge-studio >}} Familiarity with AI terms {.tabset .tabset-fade .tabset-pills .break}
 
-> How familiar are you with the following terms?
+<blockquote class="question-text">
+  How familiar are you with the following terms?
+
+</blockquote>
 
 ```{r}
 var_labels <- c(

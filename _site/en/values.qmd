@@ -94,7 +94,11 @@ Each section allows you to examine overall trends as well as breakdowns by age, 
 
 # {{< iconify healthicons world-care-outline >}} Most Important Values {.tabset .tabset-fade .tabset-pills .break}
 
-> What do you consider the 5 most important values for automated decision-making systems? [only top important value shown]
+
+<blockquote class="question-text">
+What do you consider the 5 most important values for automated decision-making systems? [only top important value shown]
+
+</blockquote>
 
 
 ::: {.panel-tabset}
@@ -391,9 +395,12 @@ important_issue_pol <- data  %>%
 
 # {{< iconify fluent data-usage-16-regular >}} Usefulness of AI {.tabset .tabset-fade .tabset-pills .break}
 
-In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
+> In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
 
-> More automatic decision-making in news media/the legal system/healthcare will be **useful**.
+
+<blockquote class="question-text">
+More automatic decision-making in news media/the legal system/healthcare will be **useful**.
+</blockquote>
 
 ::: {.panel-tabset}
 
@@ -449,9 +456,13 @@ data %>%
 
 # {{< iconify solar danger-outline >}} Riskiness of AI {.tabset .tabset-fade .tabset-pills .break}
 
-In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
+> In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
 
-> More automatic decision-making in news media/the legal system/healthcare will be **risky**.
+
+
+<blockquote class="question-text">
+More automatic decision-making in news media/the legal system/healthcare will be **risky**.
+</blockquote>
 
 ::: {.panel-tabset}
 
@@ -507,7 +518,9 @@ data %>%
 
 > In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
 
-> More automatic decision-making in news media/the legal system/healthcare will be **more fair**.
+<blockquote class="question-text">
+More automatic decision-making in news media/the legal system/healthcare will be **more fair**.
+</blockquote>
 
 ::: {.panel-tabset}
 
