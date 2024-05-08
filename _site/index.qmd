@@ -4,12 +4,24 @@ execute:
   echo: false
 ---
 
+```{=html}
+<style>
+.justify {
+  text-align: justify
+}
+</style>
+```
+
+::: justify
+
 > Welkom bij de AlgoSoc AI Monitor, die inzicht geeft in de publieke percepties en ervaringen met kunstmatige intelligentie (AI) en geautomatiseerde besluitvormingssystemen (ADM) in de samenleving! We hebben 3946 respondenten in Nederland gevraagd wat ze hierover denken.
 
 
 Dit dashboard bundelt gegevens die zijn verzameld via het <a href="https://algosoc.org/" target="\_blank">AlgoSoc Consortium</a> om weer te geven hoe burgers denken en voelen over AI in de samenleving. Het dashboard is onderverdeeld in drie hoofdpagina's.
 
 Klik op een van de onderstaande knoppen voor snelle navigatie:
+
+:::
 
 ```{=html}
 <center>
@@ -32,12 +44,23 @@ Klik op een van de onderstaande knoppen voor snelle navigatie:
 </center>
 ```
 
+::: justify
 
 Als je meer wilt weten over AlgoSoc en ons werk over AI, bezoek ons dan op <a href="https://algosoc.org/" target="\_blank">algosoc.org</a>!
 
+
+### Meer over AlgoSoc
+
+In de opkomende algoritmische samenleving worden belangrijke beslissingen niet langer alleen door mensen genomen. Dataficatie, geavanceerde algoritmen en steeds geavanceerdere modellen voor kunstmatige intelligentie (AI) zorgen ervoor dat geautomatiseerde besluitvormingssystemen (ADM) nu de menselijke besluitvorming aanvullen en gedeeltelijk vervangen. Hoewel het uitbesteden van besluitvorming aan (quasi-)geautomatiseerde systemen betere beslissingen en snellere en efficiëntere diensten kan opleveren, transformeert het ook gevestigde routines, checks and balances en besluitvormingsinstellingen, wat leidt tot nieuwe uitdagingen bij het realiseren van publieke waarden en ongekende verschuivingen. in beslissingsmacht.
+
+
+Het NWO Zwaartekrachtprogramma *Public Values in the Algorithmic Society* (AlgoSoc) speelt in op de dringende behoefte aan een geïnformeerd maatschappelijk perspectief op automatisering en geautomatiseerde besluitvorming. Gebaseerd op een diepgaand begrip van de systemische veranderingen die ADS met zich meebrengen, onderzoekt AlgoSoc hoe publieke waarden kunnen worden gerealiseerd in de sectoren *justitie*, *gezondheid* en *media*. Het maakt gebruik van interdisciplinaire expertise die de sociale wetenschappen, geesteswetenschappen, rechten en computerwetenschappen combineert om bestuurskaders te ontwikkelen die een aanvulling vormen op technologiegedreven ADM-initiatieven in de samenleving.
+
 # Methodologie
+
 In deze eerste golf van gegevensverzameling zijn 3946 deelnemers geïnterviewd over belangrijke vragen rond algoritmen en publieke waarden in de sectoren gezondheid, justitie en media. De gegevens zijn in maart 2024 verzameld als onderdeel van het [Centerdata](https://www.centerdata.nl/) [LISS panel](https://www.lissdata.nl/).
 
+:::
 
 <br>
 <center>

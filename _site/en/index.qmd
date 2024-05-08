@@ -6,11 +6,13 @@ execute:
 
 ```{=html}
 <style>
-p {
+.justify {
   text-align: justify
 }
 </style>
 ```
+
+::: justify
 
 > Welcome to the AlgoSoc AI Monitor, providing insights into public perceptions and experiences with artificial intelligence (AI) and automated decision making (ADM) systems in society! We asked *3,946 respondents* in the Netherlands what they think about this topic. 
 
@@ -20,7 +22,7 @@ This dashboard aggregates data collected via the <a href="https://algosoc.org/" 
 
 Click on any of the buttons below for quick navigation:
 
-
+:::
 
 
 ```{=html}
@@ -47,6 +49,7 @@ Click on any of the buttons below for quick navigation:
 
 
 
+::: justify
 
 If you want to know more about AlgoSoc and our work on AI, visit us on <a href="https://algosoc.org/" target="_blank">algosoc.org</a>!
 
@@ -61,6 +64,8 @@ In the emerging algorithmic society, key decisions are no longer made by humans 
 
 
 The NWO Gravitation Program *Public Values in the Algorithmic Society*   (AlgoSoc) is a response to the urgent need for an informed societal perspective on automation and automated decision-making. Grounded in a deep understanding of the systemic changes that ADS entail, AlgoSoc examines how to realize public values across the sectors of *justice*, *health*, and *media*. It leverages interdisciplinary expertise combining the social sciences, humanities, law, and computer science to develop governance frameworks that complement technology-driven ADM initiatives in society.
+
+:::
 
 <br>
 
