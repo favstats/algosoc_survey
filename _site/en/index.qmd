@@ -21,7 +21,7 @@ execute:
 
 
 <blockquote class="highlightit">
-Welcome to the AlgoSoc *AI Opinion Monitor*, providing insights into public perceptions and experiences with artificial intelligence (AI) and automated decision making (ADM) systems in society! We asked *3,946 respondents* in the Netherlands what they think about this topic. .
+Welcome to the AlgoSoc *AI Opinion Monitor*, providing insights into public perceptions and experiences with artificial intelligence (AI) and automated decision making (ADM) systems in society! We asked *3,946 respondents* in the Netherlands what they think about this topic.
 </blockquote>
 
 
@@ -29,7 +29,7 @@ Welcome to the AlgoSoc *AI Opinion Monitor*, providing insights into public perc
 
 
 
-```{r,warning=F, message=F}
+```{r, echo = F, warning=F, message=F}
 ## this is important to keep for some reason ##
 library(tippy)
 tippy_this(
