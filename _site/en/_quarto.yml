@@ -39,4 +39,5 @@ format:
       - cosmo
       - custom.scss
     fontsize: 1.2em
-
+    include-before-body:
+      file: custom.js
