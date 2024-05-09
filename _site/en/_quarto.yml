@@ -8,7 +8,6 @@ website:
   navbar:
     logo: algosoclogo.png
     href: index.qmd  # This makes the logo a clickable link that directs to the main dashboard
-
     left:
       - href: engagement.qmd
         text: "{{< iconify ph users-three >}} Engagement"
