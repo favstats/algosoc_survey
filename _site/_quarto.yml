@@ -10,11 +10,11 @@ website:
     href: index.qmd  # This makes the logo a clickable link that directs to the main dashboard
     left:
       - href: engagement.qmd
-        text: "{{< iconify ph users-three >}} Engagement"
+        text: "{{< iconify ph users-three >}} Betrokkenheid"
       - href: attitudes.qmd
-        text: "{{< iconify ph head-circuit >}} Attitudes"
+        text: "{{< iconify ph head-circuit >}} Houdingen"
       - href: values.qmd
-        text: "{{< iconify ph globe-hemisphere-west >}} Values"
+        text: "{{< iconify ph globe-hemisphere-west >}} Waarden"
     right:
       - href: about.qmd
         text: "About {{< iconify ph info-thin >}}"
