@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>AlgoSoc AI Monitor</title>
+<title>AlgoSoc AI Opinion Monitor</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -61,6 +61,13 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<link href="site_libs/tippyjs-3.2.0/themes/google.css" rel="stylesheet">
+<link href="site_libs/tippyjs-3.2.0/themes/light-border.css" rel="stylesheet">
+<link href="site_libs/tippyjs-3.2.0/themes/light.css" rel="stylesheet">
+<link href="site_libs/tippyjs-3.2.0/themes/translucent.css" rel="stylesheet">
+<script src="site_libs/tippyjs-3.2.0/tippy.all.min.js"></script>
+<script src="site_libs/tippy-binding-0.1.0/tippy.js"></script>
 
 
 </head>
@@ -76,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
     <img src="./algosoclogo.png" alt="" class="navbar-logo">
     </a>
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">AlgoSoc AI Monitor</span>
+    <span class="navbar-title">AlgoSoc AI Opinion Monitor</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -86,29 +93,29 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" rel="" target="" aria-current="page">
- <span class="menu-text"><iconify-icon inline="" icon="ph:info-thin"></iconify-icon> Welkom</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="./engagement.html" rel="" target="">
- <span class="menu-text"><iconify-icon inline="" icon="ph:users-three"></iconify-icon> Betrokkenheid</span></a>
+ <span class="menu-text"><iconify-icon inline="" icon="ph:users-three"></iconify-icon> Engagement</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./attitudes.html" rel="" target="">
- <span class="menu-text"><iconify-icon inline="" icon="ph:head-circuit"></iconify-icon> Houdingen</span></a>
+ <span class="menu-text"><iconify-icon inline="" icon="ph:head-circuit"></iconify-icon> Attitudes</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./values.html" rel="" target="">
- <span class="menu-text"><iconify-icon inline="" icon="ph:globe-hemisphere-west"></iconify-icon> Waarden</span></a>
+ <span class="menu-text"><iconify-icon inline="" icon="ph:globe-hemisphere-west"></iconify-icon> Values</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="https://monitor.algosoc.org/en" rel="" target="">
+    <a class="nav-link" href="./about.html" rel="" target="">
+ <span class="menu-text">About <iconify-icon inline="" icon="ph:info-thin"></iconify-icon></span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://favstats.github.io/algosoc_survey/en" rel="" target="">
  <span class="menu-text">en <iconify-icon inline="" icon="emojione:flag-for-united-states"></iconify-icon></span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="https://monitor.algosoc.org/" rel="" target="">
+    <a class="nav-link" href="https://favstats.github.io/algosoc_survey/" rel="" target="">
  <span class="menu-text">nl <iconify-icon inline="" icon="emojione:flag-for-netherlands"></iconify-icon></span></a>
   </li>  
 </ul>
@@ -125,6 +132,64 @@ ul.task-list li input[type="checkbox"] {
     
 <!-- main -->
 <main class="content" id="quarto-document-content">
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  tippy('#navbarCollapse > ul.navbar-nav.navbar-nav-scroll.me-auto > li:nth-child(1)', {
+    content: 'Hoe burgers <strong>interageren</strong> met AI-systemen',
+    animation: 'scale',
+    placement: 'bottom',
+    delay: [500, 0]
+  });
+});
+document.addEventListener('DOMContentLoaded', function () {
+  tippy('#navbarCollapse > ul.navbar-nav.navbar-nav-scroll.me-auto > li:nth-child(2)', {
+    content: 'Hoe burgers <strong>denken</strong> over AI-systemen',
+    animation: 'perspective',
+    placement: 'bottom',
+    delay: [500, 0]
+  });
+});
+document.addEventListener('DOMContentLoaded', function () {
+  tippy('#navbarCollapse > ul.navbar-nav.navbar-nav-scroll.me-auto > li:nth-child(3)', {
+    content: 'Ontdek wat burgers <b>waarderen</b>',
+    animation: 'scale',
+    placement: 'bottom',
+    delay: [500, 0]
+  });
+});
+document.addEventListener('DOMContentLoaded', function () {
+  tippy('#navbarCollapse > ul.navbar-nav.navbar-nav-scroll.ms-auto > li:nth-child(1)', {
+    content: 'Meer Info',
+    animation: 'scale',
+    placement: 'bottom',
+    delay: [500, 0]
+  });
+});
+document.addEventListener('DOMContentLoaded', function () {
+  tippy('#navbarCollapse > ul.navbar-nav.navbar-nav-scroll.ms-auto > li:nth-child(2)', {
+    content: 'Engels',
+    animation: 'scale',
+    placement: 'bottom',
+    delay: [500, 0]
+  });
+});
+document.addEventListener('DOMContentLoaded', function () {
+  tippy('#navbarCollapse > ul.navbar-nav.navbar-nav-scroll.ms-auto > li:nth-child(3)', {
+    content: 'Nederlands',
+    animation: 'scale',
+    placement: 'bottom',
+    delay: [500, 0]
+  });
+});
+document.addEventListener('DOMContentLoaded', function () {
+  tippy('#quarto-header > nav > div > div.navbar-brand-container', {
+    content: 'Landingspagina',
+    animation: 'scale',
+    placement: 'bottom',
+    delay: [500, 0]
+  });
+});
+</script>
 
 
 
@@ -132,31 +197,32 @@ ul.task-list li input[type="checkbox"] {
 .justify {
   text-align: justify
 }
+
+
 </style>
 <div class="justify">
-<blockquote class="blockquote">
-<p>Welkom bij de AlgoSoc AI Monitor, die inzicht geeft in de publieke percepties en ervaringen met kunstmatige intelligentie (AI) en geautomatiseerde besluitvormingssystemen (ADM) in de samenleving! We hebben 3946 respondenten in Nederland gevraagd wat ze hierover denken.</p>
+<blockquote class="highlightit blockquote">
+Welkom bij de AlgoSoc <em>AI Opinie Monitor</em>, die inzichten biedt in publieke percepties en ervaringen met kunstmatige intelligentie (AI) en geautomatiseerde beslissystemen (ADM) in de samenleving! We vroegen ongeveer <em>4.000 respondenten</em> in Nederland wat ze van dit onderwerp vinden.
 </blockquote>
-<p>Dit dashboard bundelt gegevens die zijn verzameld via het <a href="https://algosoc.org/" target="\_blank">AlgoSoc Consortium</a> om weer te geven hoe burgers denken en voelen over AI in de samenleving. Het dashboard is onderverdeeld in drie hoofdpagina’s.</p>
-<p>Klik op een van de onderstaande knoppen voor snelle navigatie:</p>
+<p><img src="banner.png" class="img-fluid"></p>
+<div class="cell">
+<div class="cell-output-display">
+<span class="tippy html-widget html-fill-item-overflow-hidden html-fill-item" height="464px" id="htmlwidget-6424431097524b6e8947" width="100%"></span>
+<script type="application/json" data-for="htmlwidget-6424431097524b6e8947">{"x":{"element":"firstNavItem","opts":{"content":"Your tooltip text here...","animation":"scale","duration":1000,"placement":"bottom"}},"evals":[],"jsHooks":[]}</script>
 </div>
+</div>
+<p>Dit dashboard verzamelt gegevens die zijn verzameld via het <a href="https://algosoc.org/" target="_blank">AlgoSoc Consortium</a> om te laten zien hoe burgers denken en voelen over AI in de samenleving. Het dashboard is verdeeld in drie hoofdpagina’s.</p>
+<p>Klik op een van de knoppen hieronder voor snelle navigatie:</p>
+</div>
+
 <center>
 <div class="button-container">
-<p><a href="engagement.html" class="buttontop"> <iconify-icon inline="" icon="ph:users-three"></iconify-icon> Betrokkenheid </a> <a href="attitudes.html" class="buttontop"> <iconify-icon inline="" icon="ph:head-circuit"></iconify-icon> Houdingen<br>
-</a> <a href="values.html" class="buttontop"> <iconify-icon inline="" icon="ph:globe-hemisphere-west"></iconify-icon> Waarden </a></p>
+<p><a href="engagement.html" class="buttontop"> <iconify-icon inline="" icon="ph:users-three"></iconify-icon> Betrokkenheid </a> <a href="attitudes.html" class="buttontop"> <iconify-icon inline="" icon="ph:head-circuit"></iconify-icon> Houdingen </a> <a href="values.html" class="buttontop"> <iconify-icon inline="" icon="ph:globe-hemisphere-west"></iconify-icon> Waarden </a></p>
+
 </div>
 </center>
 <div class="justify">
-<p>Als je meer wilt weten over AlgoSoc en ons werk over AI, bezoek ons dan op <a href="https://algosoc.org/" target="\_blank">algosoc.org</a>!</p>
-<section id="meer-over-algosoc" class="level3">
-<h3 class="anchored" data-anchor-id="meer-over-algosoc">Meer over AlgoSoc</h3>
-<p>In de opkomende algoritmische samenleving worden belangrijke beslissingen niet langer alleen door mensen genomen. Dataficatie, geavanceerde algoritmen en steeds geavanceerdere modellen voor kunstmatige intelligentie (AI) zorgen ervoor dat geautomatiseerde besluitvormingssystemen (ADM) nu de menselijke besluitvorming aanvullen en gedeeltelijk vervangen. Hoewel het uitbesteden van besluitvorming aan (quasi-)geautomatiseerde systemen betere beslissingen en snellere en efficiëntere diensten kan opleveren, transformeert het ook gevestigde routines, checks and balances en besluitvormingsinstellingen, wat leidt tot nieuwe uitdagingen bij het realiseren van publieke waarden en ongekende verschuivingen. in beslissingsmacht.</p>
-<p>Het NWO Zwaartekrachtprogramma <em>Public Values in the Algorithmic Society</em> (AlgoSoc) speelt in op de dringende behoefte aan een geïnformeerd maatschappelijk perspectief op automatisering en geautomatiseerde besluitvorming. Gebaseerd op een diepgaand begrip van de systemische veranderingen die ADS met zich meebrengen, onderzoekt AlgoSoc hoe publieke waarden kunnen worden gerealiseerd in de sectoren <em>justitie</em>, <em>gezondheid</em> en <em>media</em>. Het maakt gebruik van interdisciplinaire expertise die de sociale wetenschappen, geesteswetenschappen, rechten en computerwetenschappen combineert om bestuurskaders te ontwikkelen die een aanvulling vormen op technologiegedreven ADM-initiatieven in de samenleving.</p>
-</section>
-<section id="methodologie" class="level1">
-<h1>Methodologie</h1>
-<p>In deze eerste golf van gegevensverzameling zijn 3946 deelnemers geïnterviewd over belangrijke vragen rond algoritmen en publieke waarden in de sectoren gezondheid, justitie en media. De gegevens zijn in maart 2024 verzameld als onderdeel van het <a href="https://www.centerdata.nl/">Centerdata</a> <a href="https://www.lissdata.nl/">LISS panel</a>.</p>
-</section>
+<p>Als je meer wilt weten over AlgoSoc en ons werk op het gebied van AI, bezoek ons dan op <a href="https://algosoc.org/" target="_blank">algosoc.org</a>!</p>
 </div>
 <br>
 <center>
@@ -400,6 +466,36 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+ Copyright 2024, AlgoSoc
+  </li>  
+</ul>
+    </div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/company/algosoc/">
+      <i class="bi bi-linkedin" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/ALGOSOC_">
+      <i class="bi bi-twitter" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
 
 
 
