@@ -26,6 +26,21 @@ options(scipen = 999)
 
 
 
+```{r, echo = F, warning=F, message=F}
+## this is important to keep for some reason ##
+library(tippy)
+tippy_this(
+  elementId = "firstNavItem",
+  tooltip = "Your tooltip text here...",
+  animation = "scale",
+  duration = 1000,
+  placement = "bottom"
+)
+
+```
+
+
+
 
 
 ```{r include=FALSE}
@@ -46,9 +61,9 @@ data <- read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>%
   mutate(important1 = sjmisc::to_label(ADSVR_1)) %>% 
   left_join(polvals %>% select(nomem_encr, left_right)) %>% 
   mutate(pol_cat = case_when(
-    left_right %in% 0:3 ~ "left",
-    left_right %in% 4:6 ~ "center",
-    left_right %in% 7:10 ~ "right"
+    left_right %in% 0:3 ~ "links",
+    left_right %in% 4:6 ~ "centrum",
+    left_right %in% 7:10 ~ "rechts"
     ))
 
 
@@ -61,7 +76,7 @@ source("utils.R")
 ```
 
 
-The page is divided into four main sections: 
+De pagina is verdeeld in vier hoofdsecties:
 
 
 ```{=html}
@@ -70,18 +85,19 @@ The page is divided into four main sections:
 ```
  
 
-  <a href="#iconify-healthicons-world-care-outline-most-important-values" class="buttontop">
-    {{< iconify healthicons world-care-outline >}} Most Important Values
-  </a>
-  <a href="#iconify-fluent-data-usage-16-regular-usefulness-of-ai" class="buttontop">
-    {{< iconify fluent data-usage-16-regular >}} Usefulness of AI
-  </a>
-  <a href="#iconify-solar-danger-outline-riskiness-of-ai" class="buttontop">
-    {{< iconify solar danger-outline >}} Riskiness of AI
-  </a>
-  <a href="#iconify-material-symbols-light-balance-fairness-of-ai" class="buttontop">
-    {{< iconify material-symbols-light balance >}} Fairness of AI
-  </a>
+<a href="#iconify-healthicons-world-care-outline-most-important-values" class="buttontop">
+  {{< iconify healthicons world-care-outline >}} Belangrijkste Waarden
+</a>
+<a href="#iconify-fluent-data-usage-16-regular-usefulness-of-ai" class="buttontop">
+  {{< iconify fluent data-usage-16-regular >}} Nuttigheid van AI
+</a>
+<a href="#iconify-solar-danger-outline-riskiness-of-ai" class="buttontop">
+  {{< iconify solar danger-outline >}} Risico's van AI
+</a>
+<a href="#iconify-material-symbols-light-balance-fairness-of-ai" class="buttontop">
+  {{< iconify material-symbols-light balance >}} Eerlijkheid van AI
+</a>
+
     
 
 ```{=html}
@@ -89,17 +105,23 @@ The page is divided into four main sections:
 </center>
 ```
 
-Each section allows you to examine overall trends as well as breakdowns by age, gender, education level, and political leaning.  
+Elke sectie stelt je in staat om algemene trends te onderzoeken, evenals uitsplitsingen op leeftijd, geslacht, opleidingsniveau en politieke voorkeur.
 
 
-# {{< iconify healthicons world-care-outline >}} Most Important Values {.tabset .tabset-fade .tabset-pills .break}
+# {{< iconify healthicons world-care-outline >}} Belangrijkste Waarden {.tabset .tabset-fade .tabset-pills .break}
 
-> What do you consider the 5 most important values for automated decision-making systems? [only top important value shown]
+
+
+<blockquote class="question-text">
+Wat beschouw je als de 5 belangrijkste waarden voor geautomatiseerde besluitvormingssystemen? [alleen de belangrijkste waarde wordt getoond]
+
+
+</blockquote>
 
 
 ::: {.panel-tabset}
 
-## Overall
+## Algemeen
 
 ```{r}
 adsv_var_names <- c("ADSV1", "ADSV2", "ADSV3", "ADSV4", "ADSV5", "ADSV6", "ADSV7", "ADSV8")
@@ -131,10 +153,10 @@ important_issue <- data %>%
   mutate(important1 = sjmisc::to_label(ADSVR_1)) %>% 
   count(important1, sort = T) %>% 
   mutate(perc = n/sum(n)*100) %>% 
-  drop_na() %>% 
-  left_join(thelabs %>% 
-              rename(important1 = dutchlabs)) %>% 
-  mutate(important1 =adsv_var_labels)
+  drop_na() # %>% 
+  # left_join(thelabs %>% 
+  #             rename(important1 = dutchlabs)) %>% 
+  # mutate(important1 =adsv_var_labels)
 
    hchart(
     important_issue, 
@@ -145,7 +167,7 @@ important_issue <- data %>%
      hc_colors(thecolors) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
-      title = list(text = "% Naming As Number 1 Important Issue"), 
+      title = list(text = "% Aangeven als Nummer 1 Belangrijkste Kwestie"), 
       max = 40, min = 0
     ) %>% 
     highcharter::hc_plotOptions(
@@ -157,7 +179,7 @@ important_issue <- data %>%
       )
     )  %>%
     hc_caption(
-      text = paste0("<em>N = ", sum(important_issue$n), ". Errorbars show standard errors.</em>"),
+      text = paste0("<em>N = ", sum(important_issue$n), ". Foutbalken tonen standaardfouten.</em>"),
       align = "right",  # Change to "left" or "right" as needed
       style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     ) 
@@ -165,7 +187,7 @@ important_issue <- data %>%
 ```
 
 
-## By Age
+## Op Leeftijd
 
 ```{r}
 important_issue_age <- data  %>% 
@@ -173,10 +195,10 @@ important_issue_age <- data  %>%
   group_by(age_groups) %>% 
   mutate(perc = n/sum(n)*100) %>% 
   ungroup() %>% 
-  drop_na()  %>% 
-  left_join(thelabs %>% 
-              rename(important1 = dutchlabs)) %>% 
-  mutate(important1 =adsv_var_labels)
+  drop_na()  #%>% 
+  # left_join(thelabs %>% 
+  #             rename(important1 = dutchlabs)) %>% 
+  # mutate(important1 =adsv_var_labels)
 
 
    
@@ -189,7 +211,7 @@ important_issue_age <- data  %>%
   )  %>% 
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
-      title = list(text = "% Naming As Number 1 Important Issue"), 
+      title = list(text = "% Aangeven als Nummer 1 Belangrijkste Kwestie"), 
       max = 40, min = 0
     ) %>% 
     hc_legend(
@@ -204,31 +226,31 @@ important_issue_age <- data  %>%
       )
     ) %>%
     hc_caption(
-      text = paste0("<em>N = ", sum(important_issue_age$n), ". Errorbars show standard errors.</em>"),
+      text = paste0("<em>N = ", sum(important_issue_age$n), ". Foutbalken tonen standaardfouten.</em>"),
       align = "right",  # Change to "left" or "right" as needed
       style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     ) 
 ```
 
-## By Gender
+## Op Geslacht
 
 ```{r}
 important_issue_gender <- data  %>% 
     mutate(geslacht = sjmisc::to_label(geslacht)) %>% 
-    mutate(geslacht = case_when(
-      geslacht == "Vrouw" ~ "Woman",
-      geslacht == "Anders" ~ "Other",
-      T ~ geslacht
-    )) %>% 
+    # mutate(geslacht = case_when(
+    #   geslacht == "Vrouw" ~ "Woman",
+    #   geslacht == "Anders" ~ "Other",
+    #   T ~ geslacht
+    # )) %>% 
   count(important1, geslacht, sort = T) %>% 
   group_by(geslacht) %>% 
   mutate(perc = n/sum(n)*100) %>% 
   ungroup() %>% 
   drop_na()  %>% 
-  left_join(thelabs %>% 
-              rename(important1 = dutchlabs)) %>% 
-  mutate(important1 =adsv_var_labels) %>% 
-    mutate(geslacht = fct_relevel(geslacht, c("Man", "Woman", "Other"))) %>% 
+  # left_join(thelabs %>% 
+  #             rename(important1 = dutchlabs)) %>% 
+  # mutate(important1 =adsv_var_labels) %>% 
+    # mutate(geslacht = fct_relevel(geslacht, c("Man", "Woman", "Other"))) %>% 
     arrange(geslacht)
 
 
@@ -242,7 +264,7 @@ important_issue_gender <- data  %>%
   )  %>% 
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
-      title = list(text = "% Naming As Number 1 Important Issue"), 
+      title = list(text = "% Aangeven als Nummer 1 Belangrijkste Kwestie"), 
       max = 40, min = 0
     ) %>% 
     hc_legend(
@@ -261,13 +283,13 @@ important_issue_gender <- data  %>%
   chart.series[2].setVisible(false)
   }"))) %>%
     hc_caption(
-      text = paste0("<em>N = ", sum(important_issue_gender$n), ". Errorbars show standard errors.</em>"),
+      text = paste0("<em>N = ", sum(important_issue_gender$n), ". Foutbalken tonen standaardfouten.</em>"),
       align = "right",  # Change to "left" or "right" as needed
       style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     ) 
 ```
 
-## By Education
+## Op Opleiding
 
 
 ```{r}
@@ -287,22 +309,22 @@ important_issue_gender <- data  %>%
 
 important_issue_edu <- data  %>% 
     mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
-    left_join(education_levels) %>% 
-    mutate(oplcat = eng) %>% 
-    mutate(oplcat = fct_relevel(oplcat, c("Primary (basisonderwijs)", 
-                                          "Pre-Vocational (vmbo)", 
-                                          "Secondary (havo/vwo)", 
-                                          "Vocational (mbo)", 
-                                          "Applied Sciences (hbo)", 
-                                          "University (wo)"))) %>% 
+    # left_join(education_levels) %>% 
+    # mutate(oplcat = eng) %>% 
+    # mutate(oplcat = fct_relevel(oplcat, c("Primary (basisonderwijs)", 
+    #                                       "Pre-Vocational (vmbo)", 
+    #                                       "Secondary (havo/vwo)", 
+    #                                       "Vocational (mbo)", 
+    #                                       "Applied Sciences (hbo)", 
+    #                                       "University (wo)"))) %>% 
   count(important1, oplcat, sort = T) %>% 
   group_by(oplcat) %>% 
   mutate(perc = n/sum(n)*100) %>% 
   ungroup() %>% 
-  drop_na()  %>% 
-  left_join(thelabs %>% 
-              rename(important1 = dutchlabs)) %>% 
-  mutate(important1 =adsv_var_labels)
+  drop_na()  #%>% 
+  # left_join(thelabs %>% 
+  #             rename(important1 = dutchlabs)) %>% 
+  # mutate(important1 =adsv_var_labels)
 
 
    
@@ -315,7 +337,7 @@ important_issue_edu <- data  %>%
   )  %>% 
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
-      title = list(text = "% Naming As Number 1 Important Issue"), 
+      title = list(text = "% Aangeven als Nummer 1 Belangrijkste Kwestie"), 
       max = 40, min = 0
     ) %>% 
     hc_legend(
@@ -330,13 +352,13 @@ important_issue_edu <- data  %>%
       )
     ) %>%
     hc_caption(
-      text = paste0("<em>N = ", sum(important_issue_edu$n), ". Errorbars show standard errors.</em>"),
+      text = paste0("<em>N = ", sum(important_issue_edu$n), ". Foutbalken tonen standaardfouten.</em>"),
       align = "right",  # Change to "left" or "right" as needed
       style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     ) 
 ```
 
-## By Politics
+## Op Politiek
 
 
 ```{r}
@@ -347,9 +369,9 @@ important_issue_pol <- data  %>%
   mutate(perc = n/sum(n)*100) %>% 
   ungroup() %>% 
   drop_na() %>% 
-  left_join(thelabs %>% 
-              rename(important1 = dutchlabs)) %>% 
-  mutate(important1 =adsv_var_labels) %>% 
+  # left_join(thelabs %>% 
+  #             rename(important1 = dutchlabs)) %>% 
+  # mutate(important1 =adsv_var_labels) %>% 
   mutate(pol_cat = fct_relevel(pol_cat, c("left", "center", "right"))) %>% 
   arrange(pol_cat)
 
@@ -364,7 +386,7 @@ important_issue_pol <- data  %>%
   )  %>% 
     highcharter::hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(
-      title = list(text = "% Naming As Number 1 Important Issue"), 
+      title = list(text = "% Aangeven als Nummer 1 Belangrijkste Kwestie"), 
       max = 40, min = 0
     ) %>% 
     hc_legend(
@@ -379,7 +401,7 @@ important_issue_pol <- data  %>%
       )
     ) %>%
     hc_caption(
-      text = paste0("<em>N = ", sum(important_issue_pol$n), ". Errorbars show standard errors. Politics category is based on 10-scale: 0-3: left; 4-6: center; 7-10: right.</em>"),
+      text = paste0("<em>N = ", sum(important_issue_pol$n), ". Foutbalken tonen standaardfouten. Politics category is based on 10-scale: 0-3: left; 4-6: center; 7-10: right.</em>"),
       align = "right",  # Change to "left" or "right" as needed
       style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     ) 
@@ -389,173 +411,182 @@ important_issue_pol <- data  %>%
 
 ::: 
 
-# {{< iconify fluent data-usage-16-regular >}} Usefulness of AI {.tabset .tabset-fade .tabset-pills .break}
+# {{< iconify fluent data-usage-16-regular >}} Nuttigheid van AI {.tabset .tabset-fade .tabset-pills .break}
 
-In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
+> In de meeste voorspellingen zal geautomatiseerde besluitvorming in de toekomst vaker gaan voorkomen. Als dat inderdaad zo is, in welke mate bent u het dan oneens of eens met de volgende uitspraken:
 
-> More automatic decision-making in news media/the legal system/healthcare will be **useful**.
+
+<blockquote class="question-text">
+Meer automatische besluitvorming in de nieuwsmedia/het rechtsstelsel/de gezondheidszorg zal **nuttig** zijn.
+</blockquote>
 
 ::: {.panel-tabset}
 
-## Overall
+## Algemeen
 
 ```{r}
-theorder <<- readRDS("data/theorder.rds")
+theorder <<- c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg") %>% 
+  factor(levels = c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg"))
 
 data %>% 
   generate_general2("ADSR1", "ADSRt2_1", "ADSRt3_1",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+                   c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg"),
+                   "<- 1: helemaal mee oneens    -    7: helemaal mee eens ->")
 ```
 
-## By Age
+## Op Leeftijd
 
 ```{r}
 data %>% 
   by_age2("ADSR1", "ADSRt2_1", "ADSRt3_1",
-         c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+                   c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg"),
+                   "<- 1: helemaal mee oneens    -    7: helemaal mee eens ->")
 ```
 
-## By Gender
+## Op Geslacht
 
 ```{r}
 data %>% 
   by_gender2("ADSR1", "ADSRt2_1", "ADSRt3_1",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+                   c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg"),
+                   "<- 1: helemaal mee oneens    -    7: helemaal mee eens ->")
 ```
 
-## By Education
+## Op Opleiding
 
 ```{r}
 data %>% 
   by_edu2("ADSR1", "ADSRt2_1", "ADSRt3_1",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+                   c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg"),
+                   "<- 1: helemaal mee oneens    -    7: helemaal mee eens ->")
 ```
 
-## By Politics
+## Op Politiek
 
 ```{r}
 data %>% 
   by_pol2("ADSR1", "ADSRt2_1", "ADSRt3_1",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+                   c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg"),
+                   "<- 1: helemaal mee oneens    -    7: helemaal mee eens ->")
 ```
 
 
 ::: 
 
-# {{< iconify solar danger-outline >}} Riskiness of AI {.tabset .tabset-fade .tabset-pills .break}
+# {{< iconify solar danger-outline >}} Risico's van AI {.tabset .tabset-fade .tabset-pills .break}
 
-In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
+> In de meeste voorspellingen zal geautomatiseerde besluitvorming in de toekomst vaker gaan voorkomen. Als dat inderdaad zo is, in welke mate bent u het dan oneens of eens met de volgende uitspraken:
 
-> More automatic decision-making in news media/the legal system/healthcare will be **risky**.
+
+<blockquote class="question-text">
+Meer automatische besluitvorming in de nieuwsmedia/het rechtsstelsel/de gezondheidszorg zal **riskant** zijn.
+</blockquote>
 
 ::: {.panel-tabset}
 
-## Overall
+## Algemeen
 
 ```{r}
 data %>% 
   generate_general2("ADSR2", "ADSRt2_2", "ADSRt3_2",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+                   c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg"),
+                   "<- 1: helemaal mee oneens    -    7: helemaal mee eens ->")
 ```
 
-## By Age
+## Op Leeftijd
 
 ```{r}
 data %>% 
   by_age2("ADSR2", "ADSRt2_2", "ADSRt3_2",
-         c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+         c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg"),
+                   "<- 1: helemaal mee oneens    -    7: helemaal mee eens ->")
 ```
 
-## By Gender
+## Op Geslacht
 
 ```{r}
 data %>% 
   by_gender2("ADSR2", "ADSRt2_2", "ADSRt3_2",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+                   c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg"),
+                   "<- 1: helemaal mee oneens    -    7: helemaal mee eens ->")
 ```
 
-## By Education
+## Op Opleiding
 
 ```{r}
 data %>% 
   by_edu2("ADSR2", "ADSRt2_2", "ADSRt3_2",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+                   c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg"),
+                   "<- 1: helemaal mee oneens    -    7: helemaal mee eens ->")
 ```
 
-## By Politics
+## Op Politiek
 
 ```{r}
 data %>% 
   by_pol2("ADSR2", "ADSRt2_2", "ADSRt3_2",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+                   c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg"),
+                   "<- 1: helemaal mee oneens    -    7: helemaal mee eens ->")
 ```
 
 ::: 
 
 
-# {{< iconify material-symbols-light balance >}} Fairness of AI {.tabset .tabset-fade .tabset-pills .break}
+# {{< iconify material-symbols-light balance >}} Eerlijkheid van AI {.tabset .tabset-fade .tabset-pills .break}
 
-> In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
+> In de meeste voorspellingen zal geautomatiseerde besluitvorming in de toekomst vaker gaan voorkomen. Als dat inderdaad zo is, in welke mate bent u het dan oneens of eens met de volgende uitspraken:
 
-> More automatic decision-making in news media/the legal system/healthcare will be **more fair**.
+<blockquote class="question-text">
+Meer automatische besluitvorming in de nieuwsmedia/het rechtsstelsel/de gezondheidszorg zal **eerlijker** zijn.
+</blockquote>
 
 ::: {.panel-tabset}
 
-## Overall
+## Algemeen
 
 ```{r}
 theorderold <- theorder 
 data %>% 
   generate_general2("ADSR3", "ADSRt2_3", "ADSRt3_3",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+                   c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg"),
+                   "<- 1: helemaal mee oneens    -    7: helemaal mee eens ->")
 theorder <<- theorderold
 ```
 
-## By Age
+## Op Leeftijd
 
 ```{r}
 data %>% 
   by_age2("ADSR3", "ADSRt2_3", "ADSRt3_3",
-         c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+         c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg"),
+                   "<- 1: helemaal mee oneens    -    7: helemaal mee eens ->")
 ```
 
-## By Gender
+## Op Geslacht
 
 ```{r}
 data %>% 
   by_gender2("ADSR3", "ADSRt2_3", "ADSRt3_3",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+                   c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg"),
+                   "<- 1: helemaal mee oneens    -    7: helemaal mee eens ->")
 ```
 
-## By Education
+## Op Opleiding
 
 ```{r}
 data %>% 
   by_edu2("ADSR3", "ADSRt2_3", "ADSRt3_3",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+                   c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg"),
+                   "<- 1: helemaal mee oneens    -    7: helemaal mee eens ->")
 ```
 
-## By Politics
+## Op Politiek
 
 ```{r}
 data %>% 
   by_pol2("ADSR3", "ADSRt2_3", "ADSRt3_3",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+                   c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg"),
+                   "<- 1: helemaal mee oneens    -    7: helemaal mee eens ->")
 ```
 
 ::: 

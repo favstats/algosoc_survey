@@ -83,7 +83,7 @@ div.sidebar-item-container .sidebar-link:hover {
 
 /* Darker background on mouse-over */
 button:hover {
-  background-color: #17616A;
+  background-color: #ccc;
 }
 
 
@@ -200,3 +200,119 @@ blockquote {
   border-bottom: none; /* Adds a subtle top border */
 }
 
+
+
+blockquote.question-text {
+  font-size: 1em; /* Proper text sizing */
+  color: #333; /* Dark grey for main text for readability */
+  border-left: 5px solid #0056b3; /* Algosoc blue for distinction */
+  background-color: #f0f8ff; /* Very light blue background for soft contrast */
+  padding: 10px 20px; /* Padding for aesthetics */
+  margin: 20px 0; /* Margin to distinguish blockquotes from other content */
+  line-height: 1.6; /* Improved readability */
+  position: relative; /* For pseudo-element positioning if needed */
+}
+
+
+blockquote.highlightit {
+  font-size: 1em; /* Proper text sizing */
+  color: #333; /* Dark grey for main text for readability */
+  border-left: 5px solid #f39917; /* Algosoc blue for distinction */
+  border-right: 5px solid #f39917; /* Algosoc blue for distinction */
+
+  background-color: #f7e3ce; /* Very light blue background for soft contrast */
+  padding: 10px 20px; /* Padding for aesthetics */
+  margin: 20px 0; /* Margin to distinguish blockquotes from other content */
+  line-height: 1.6; /* Improved readability */
+  position: relative; /* For pseudo-element positioning if needed */
+}
+
+/* Navbar link styling */
+.nav-link {
+    font-size: 20px;
+    position: relative;
+    display: inline-block;
+    padding: 2px;
+    color: #f39917; /* Change color as needed */
+    text-decoration: none; /* Removes default underline */
+    transition: color 0.8s; /* Smooth transition for color change */
+}
+
+/* Underline effect */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 8px;
+    left: 50%;
+    background-color: #f39917; /* Underline color */
+    transition: width 0.8s ease 0s, left 0.8s ease 0s; /* Animates the line drawing */
+}
+
+/* Hover effect */
+.nav-link:hover::after {
+    width: 100%; /* Full width */
+    left: 0; /* Starts from the left */
+}
+
+/* Additional hover effects */
+.nav-link:hover {
+    color: #555; /* Darken text on hover */
+}
+
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 200px; /* Adjust width as needed */
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -100px; /* Use half of the width to center the tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Show the tooltip on hover */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar .nav-left, .navbar .nav-right {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+}

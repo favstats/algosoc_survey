@@ -19,12 +19,15 @@ generate_general <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: nev
   
   fin <- data %>% 
     select(var1:var2) %>% 
+    # select(var1:var2, weight) %>% 
     drop_na()
   
   media_rec <- fin %>% 
-    gather() %>% 
+    # gather(key, value, -weight) %>% 
+    gather(key, value) %>% 
     group_by(key) %>% 
     summarize(mean_val = mean(value, na.rm =T),
+    # summarize(mean_val = weighted.mean(value, w = weight, na.rm =T),
               sd_val = std.error(value),
               n = n()) %>% 
     ungroup() %>% 
@@ -64,7 +67,7 @@ generate_general <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: nev
     )  %>%
     hc_legend(enabled = FALSE)   %>%
     hc_caption(
-      text = paste0("<em>N = ", nrow(fin), ". Errorbars show standard errors.</em>"),
+      text = paste0("<em>N = ", nrow(fin), ". Foutbalken tonen standaardfouten.</em>"),
       align = "right",  # Change to "left" or "right" as needed
       style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     )
@@ -84,12 +87,15 @@ by_age <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
   # mutate(varlabs = c("ChatGPT", "Midjourney")) %>% 
   fin <- data %>% 
     select(var1:var2, age_groups) %>% 
+    # select(var1:var2, age_groups, weight) %>% 
     drop_na()
   
   media_rec_ages <- fin %>% 
     gather(key, value, -age_groups) %>% 
+    # gather(key, value, -age_groups, -weight) %>% 
     group_by(key, age_groups) %>% 
     summarize(mean_val = mean(value, na.rm =T),
+    # summarize(mean_val = weighted.mean(value, w = weight,na.rm =T),
               sd_val = std.error(value),
               n = n()) %>% 
     ungroup() %>% 
@@ -142,7 +148,7 @@ by_age <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
       y = 6
     )   %>%
     hc_caption(
-      text = paste0("<em>N = ", nrow(fin), ". Errorbars show standard errors.</em>"),
+      text = paste0("<em>N = ", nrow(fin), ". Foutbalken tonen standaardfouten.</em>"),
       align = "right",  # Change to "left" or "right" as needed
       style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     )
@@ -160,14 +166,14 @@ by_gender <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -
   fin <- data %>% 
     mutate(geslacht = sjmisc::to_label(geslacht)) %>% 
     select(var1:var2, geslacht) %>% 
-    drop_na() %>% 
-    mutate(geslacht = case_when(
-      geslacht == "Vrouw" ~ "Woman",
-      geslacht == "Anders" ~ "Other",
-      T ~ geslacht
-    )) %>% 
-    mutate(geslacht = fct_relevel(geslacht, c("Man", "Woman", "Other"))) %>% 
-    arrange(geslacht)
+    drop_na() #%>% 
+    # mutate(geslacht = case_when(
+    #   geslacht == "Vrouw" ~ "Woman",
+    #   geslacht == "Anders" ~ "Other",
+    #   T ~ geslacht
+    # )) %>% 
+    # mutate(geslacht = fct_relevel(geslacht, c("Man", "Woman", "Other"))) %>% 
+    # arrange(geslacht)
   
   media_rec_genders <- fin %>% 
     drop_na() %>% 
@@ -224,7 +230,7 @@ by_gender <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -
       y = 6
     ) %>%
     hc_caption(
-      text = paste0("<em>N = ", nrow(fin), ". Errorbars show standard errors.</em>"),
+      text = paste0("<em>N = ", nrow(fin), ". Foutbalken tonen standaardfouten.</em>"),
       align = "right",  # Change to "left" or "right" as needed
       style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     )
@@ -238,33 +244,33 @@ by_edu <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
     select(var1:var2) %>% 
     names() %>% 
     tibble(key = ., varlabs = thevarlabs)
-  
-  education_levels <- c("Primary (basisonderwijs)", 
-                        "Pre-Vocational (vmbo)", 
-                        "Secondary (havo/vwo)", 
-                        "Vocational (mbo)", 
-                        "Applied Sciences (hbo)", 
-                        "University (wo)") %>% 
-    tibble(eng = ., oplcat = c("basisonderwijs",
-                               "vmbo",
-                               "havo/vwo",
-                               "mbo",
-                               "hbo",
-                               "wo"))
-  
+  # 
+  # education_levels <- c("Primary (basisonderwijs)", 
+  #                       "Pre-Vocational (vmbo)", 
+  #                       "Secondary (havo/vwo)", 
+  #                       "Vocational (mbo)", 
+  #                       "Applied Sciences (hbo)", 
+  #                       "University (wo)") %>% 
+  #   tibble(eng = ., oplcat = c("basisonderwijs",
+  #                              "vmbo",
+  #                              "havo/vwo",
+  #                              "mbo",
+  #                              "hbo",
+  #                              "wo"))
+  # 
   
   fin <- data %>% 
     drop_na(oplcat) %>% 
     # count(oplcat) %>% 
     mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
-    left_join(education_levels) %>% 
-    mutate(oplcat = eng) %>% 
-    mutate(oplcat = fct_relevel(oplcat, c("Primary (basisonderwijs)", 
-                                          "Pre-Vocational (vmbo)", 
-                                          "Secondary (havo/vwo)", 
-                                          "Vocational (mbo)", 
-                                          "Applied Sciences (hbo)", 
-                                          "University (wo)"))) %>% 
+    # left_join(education_levels) %>% 
+    # mutate(oplcat = eng) %>% 
+    # mutate(oplcat = fct_relevel(oplcat, c("Primary (basisonderwijs)", 
+    #                                       "Pre-Vocational (vmbo)", 
+    #                                       "Secondary (havo/vwo)", 
+    #                                       "Vocational (mbo)", 
+    #                                       "Applied Sciences (hbo)", 
+    #                                       "University (wo)"))) %>% 
     select(var1:var2, oplcat) %>% 
     drop_na() 
   
@@ -323,7 +329,7 @@ by_edu <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
       y = 6
     ) %>%
     hc_caption(
-      text = paste0("<em>N = ", nrow(fin), ". Errorbars show standard errors.</em>"),
+      text = paste0("<em>N = ", nrow(fin), ". Foutbalken tonen standaardfouten.</em>"),
       align = "right",  # Change to "left" or "right" as needed
       style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     )
@@ -398,7 +404,7 @@ by_pol <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
       y = 6
     ) %>%
     hc_caption(
-      text = paste0("<em>N = ", nrow(fin), ". Errorbars show standard errors. Politics category is based on 10-scale: 0-3: left; 4-6: center; 7-10: right.</em>"),
+      text = paste0("<em>N = ", nrow(fin), ". Foutbalken tonen standaardfouten. Politics category is based on 10-scale: 0-3: left; 4-6: center; 7-10: right.</em>"),
       align = "right",  # Change to "left" or "right" as needed
       style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     )
@@ -456,7 +462,7 @@ generate_general2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<-
     )  %>%
     hc_legend(enabled = FALSE)   %>%
     hc_caption(
-      text = paste0("<em>N = ", nrow(fin), ". Errorbars show standard errors.</em>"),
+      text = paste0("<em>N = ", nrow(fin), ". Foutbalken tonen standaardfouten.</em>"),
       align = "right",  # Change to "left" or "right" as needed
       style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     )
@@ -534,7 +540,7 @@ by_age2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<- 1: never 
       y = 6
     )   %>%
     hc_caption(
-      text = paste0("<em>N = ", nrow(fin), ". Errorbars show standard errors.</em>"),
+      text = paste0("<em>N = ", nrow(fin), ". Foutbalken tonen standaardfouten.</em>"),
       align = "right",  # Change to "left" or "right" as needed
       style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     )
@@ -552,14 +558,14 @@ by_gender2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<- 1: nev
   fin <- data %>% 
     mutate(geslacht = sjmisc::to_label(geslacht)) %>% 
     select(var1, var2, var3, geslacht) %>% 
-    drop_na() %>% 
-    mutate(geslacht = case_when(
-      geslacht == "Vrouw" ~ "Woman",
-      geslacht == "Anders" ~ "Other",
-      T ~ geslacht
-    )) %>% 
-    mutate(geslacht = fct_relevel(geslacht, c("Man", "Woman", "Other"))) %>% 
-    arrange(geslacht)
+    drop_na() #%>% 
+    # mutate(geslacht = case_when(
+    #   geslacht == "Vrouw" ~ "Woman",
+    #   geslacht == "Anders" ~ "Other",
+    #   T ~ geslacht
+    # )) %>% 
+    # mutate(geslacht = fct_relevel(geslacht, c("Man", "Woman", "Other"))) %>% 
+    # arrange(geslacht)
   
   media_rec_genders <- fin %>% 
     drop_na() %>% 
@@ -616,7 +622,7 @@ by_gender2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<- 1: nev
       y = 6
     ) %>%
     hc_caption(
-      text = paste0("<em>N = ", nrow(fin), ". Errorbars show standard errors.</em>"),
+      text = paste0("<em>N = ", nrow(fin), ". Foutbalken tonen standaardfouten.</em>"),
       align = "right",  # Change to "left" or "right" as needed
       style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     )
@@ -631,32 +637,32 @@ by_edu2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<- 1: never 
     names() %>% 
     tibble(key = ., varlabs = thevarlabs)
   
-  education_levels <- c("Primary (basisonderwijs)", 
-                        "Pre-Vocational (vmbo)", 
-                        "Secondary (havo/vwo)", 
-                        "Vocational (mbo)", 
-                        "Applied Sciences (hbo)", 
-                        "University (wo)") %>% 
-    tibble(eng = ., oplcat = c("basisonderwijs",
-                               "vmbo",
-                               "havo/vwo",
-                               "mbo",
-                               "hbo",
-                               "wo"))
+  # education_levels <- c("Primary (basisonderwijs)", 
+  #                       "Pre-Vocational (vmbo)", 
+  #                       "Secondary (havo/vwo)", 
+  #                       "Vocational (mbo)", 
+  #                       "Applied Sciences (hbo)", 
+  #                       "University (wo)") %>% 
+  #   tibble(eng = ., oplcat = c("basisonderwijs",
+  #                              "vmbo",
+  #                              "havo/vwo",
+  #                              "mbo",
+  #                              "hbo",
+  #                              "wo"))
   
   
   fin <- data %>% 
     drop_na(oplcat) %>% 
     # count(oplcat) %>% 
     mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
-    left_join(education_levels) %>% 
-    mutate(oplcat = eng) %>% 
-    mutate(oplcat = fct_relevel(oplcat, c("Primary (basisonderwijs)", 
-                                          "Pre-Vocational (vmbo)", 
-                                          "Secondary (havo/vwo)", 
-                                          "Vocational (mbo)", 
-                                          "Applied Sciences (hbo)", 
-                                          "University (wo)"))) %>% 
+    # left_join(education_levels) %>% 
+    # mutate(oplcat = eng) %>% 
+    # mutate(oplcat = fct_relevel(oplcat, c("Primary (basisonderwijs)", 
+    #                                       "Pre-Vocational (vmbo)", 
+    #                                       "Secondary (havo/vwo)", 
+    #                                       "Vocational (mbo)", 
+    #                                       "Applied Sciences (hbo)", 
+    #                                       "University (wo)"))) %>% 
     select(var1, var2, var3, oplcat) %>% 
     drop_na() 
   
@@ -715,7 +721,7 @@ by_edu2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<- 1: never 
       y = 6
     ) %>%
     hc_caption(
-      text = paste0("<em>N = ", nrow(fin), ". Errorbars show standard errors.</em>"),
+      text = paste0("<em>N = ", nrow(fin), ". Foutbalken tonen standaardfouten.</em>"),
       align = "right",  # Change to "left" or "right" as needed
       style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     )
@@ -790,7 +796,7 @@ by_pol2 <- function(data, var1, var2, var3, thevarlabs, thelabel = "<- 1: never 
       y = 6
     ) %>%
     hc_caption(
-      text = paste0("<em>N = ", nrow(fin), ". Errorbars show standard errors. Politics category is based on 10-scale: 0-3: left; 4-6: center; 7-10: right.</em>"),
+      text = paste0("<em>N = ", nrow(fin), ". Foutbalken tonen standaardfouten. Politics category is based on 10-scale: 0-3: left; 4-6: center; 7-10: right.</em>"),
       align = "right",  # Change to "left" or "right" as needed
       style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     )

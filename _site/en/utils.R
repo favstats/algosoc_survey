@@ -19,12 +19,15 @@ generate_general <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: nev
   
   fin <- data %>% 
     select(var1:var2) %>% 
+    # select(var1:var2, weight) %>% 
     drop_na()
   
   media_rec <- fin %>% 
-    gather() %>% 
+    # gather(key, value, -weight) %>% 
+    gather(key, value) %>% 
     group_by(key) %>% 
     summarize(mean_val = mean(value, na.rm =T),
+    # summarize(mean_val = weighted.mean(value, w = weight, na.rm =T),
               sd_val = std.error(value),
               n = n()) %>% 
     ungroup() %>% 
@@ -84,12 +87,15 @@ by_age <- function(data, var1, var2, thevarlabs, thelabel = "<- 1: never    -   
   # mutate(varlabs = c("ChatGPT", "Midjourney")) %>% 
   fin <- data %>% 
     select(var1:var2, age_groups) %>% 
+    # select(var1:var2, age_groups, weight) %>% 
     drop_na()
   
   media_rec_ages <- fin %>% 
     gather(key, value, -age_groups) %>% 
+    # gather(key, value, -age_groups, -weight) %>% 
     group_by(key, age_groups) %>% 
     summarize(mean_val = mean(value, na.rm =T),
+    # summarize(mean_val = weighted.mean(value, w = weight,na.rm =T),
               sd_val = std.error(value),
               n = n()) %>% 
     ungroup() %>% 

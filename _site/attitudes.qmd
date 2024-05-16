@@ -4,6 +4,23 @@ execute:
   echo: false
 ---
 
+
+
+```{r, echo = F, warning=F, message=F}
+## this is important to keep for some reason ##
+library(tippy)
+tippy_this(
+  elementId = "firstNavItem",
+  tooltip = "Your tooltip text here...",
+  animation = "scale",
+  duration = 1000,
+  placement = "bottom"
+)
+
+```
+
+
+
 ```{r setup, include=FALSE}
 # here::i_am("wtm_gb.Rproj")
 
@@ -44,9 +61,9 @@ data <- read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>%
   )) %>% 
   left_join(polvals %>% select(nomem_encr, left_right)) %>% 
   mutate(pol_cat = case_when(
-    left_right %in% 0:3 ~ "left",
-    left_right %in% 4:6 ~ "center",
-    left_right %in% 7:10 ~ "right"
+    left_right %in% 0:3 ~ "links",
+    left_right %in% 4:6 ~ "centrum",
+    left_right %in% 7:10 ~ "rechts"
     ))
 
 
@@ -61,7 +78,7 @@ std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
 source("utils.R")
 ```
 
-The page is divided into three main sections: 
+De pagina is verdeeld in drie hoofdsecties:
 
 
 ```{=html}
@@ -72,15 +89,15 @@ The page is divided into three main sections:
 
 
 
-  <a href="#iconify-fluent-emoji-high-contrast-detective-detecting-ai-generated-content" class="buttontop">
-    {{< iconify fluent-emoji-high-contrast detective >}} Detecting AI-Generated Content
-  </a>
-  <a href="#iconify-mingcute-safe-lock-fill-trust-in-adm-systems" class="buttontop">
-    {{< iconify mingcute safe-lock-fill >}} Trust in ADM Systems
-  </a>
-  <a href="#iconify-game-icons-sands-of-time-future-of-adm-systems" class="buttontop">
-    {{< iconify game-icons sands-of-time >}} Future of ADM Systems 
-  </a>
+<a href="#iconify-fluent-emoji-high-contrast-detective-detecting-ai-generated-content" class="buttontop">
+  {{< iconify fluent-emoji-high-contrast detective >}} Detecteren van door AI gegenereerde content
+</a>
+<a href="#iconify-mingcute-safe-lock-fill-trust-in-AI-systems" class="buttontop">
+  {{< iconify mingcute safe-lock-fill >}} Vertrouwen in AI-systemen
+</a>
+<a href="#iconify-game-icons-sands-of-time-future-of-AI-systems" class="buttontop">
+  {{< iconify game-icons sands-of-time >}} Toekomst van AI-systemen
+</a>
 
 ```{=html}
 </div>
@@ -88,192 +105,209 @@ The page is divided into three main sections:
 ```
 
 
-Each section allows you to examine overall trends as well as breakdowns by age, gender, education level, and political leaning.  
+Elke sectie stelt je in staat om algemene trends te onderzoeken, evenals uitsplitsingen op leeftijd, geslacht, opleidingsniveau en politieke voorkeur.
 
 
-# {{< iconify fluent-emoji-high-contrast detective >}} Detecting AI-Generated Content {.tabset .tabset-fade .tabset-pills .break} 
 
-> How confident are you that the following groups can tell the difference between content created by AI and content created by people?
+# {{< iconify fluent-emoji-high-contrast detective >}} Detecteren van door AI gegenereerde inhoud {.tabset .tabset-fade .tabset-pills .break}
+
+
+
+
+<blockquote class="question-text">
+ Hoe zeker bent u ervan dat de volgende groepen het verschil kunnen zien tussen content gemaakt door AI en content gemaakt door mensen?
+</blockquote>
 
 ::: {.panel-tabset}
 
-## Overall
+## Algemeen
 
 ```{r}
 var_labels <- c(
-  "People from the general population",
-  "Members of Parliament",
-  "Judges",
-  "Journalists",
-  "Police officers",
-  "Doctors",
-  "Friends/family",
-  "Yourself"
+  "Mensen uit de algemene bevolking",
+  "Parlementsleden",
+  "Rechters",
+  "Journalisten",
+  "Politieagenten",
+  "Artsen",
+  "Vrienden/familie",
+  "Uzelf"
 )
 
 data %>% 
   generate_general("CONF1", "CONF8", var_labels,
-                   "<- 1: not sure at all   -    7: very sure ->")
+                   "<- 1: helemaal niet zeker   -    7: heel erg zeker ->")
 ```
 
-## By Age
+## Op Leeftijd
 
 ```{r}
 data %>% 
   by_age("CONF1", "CONF8", var_labels,
-                   "<- 1: not sure at all   -    7: very sure ->")
+                   "<- 1: helemaal niet zeker   -    7: heel erg zeker ->")
 ```
 
 
-## By Gender
+## Op Geslacht
 
 ```{r}
 data %>% 
   by_gender("CONF1", "CONF8", var_labels,
-                   "<- 1: not sure at all   -    7: very sure ->")
+                   "<- 1: helemaal niet zeker   -    7: heel erg zeker ->")
 ```
 
 
-## By Education
+## Op Opleiding
 
 
 
 ```{r}
 data %>% 
   by_edu("CONF1", "CONF8", var_labels,
-                   "<- 1: not sure at all   -    7: very sure ->")
+                   "<- 1: helemaal niet zeker   -    7: heel erg zeker ->")
 ```
 
 
-## By Politics
+## Op Politiek
 
 ```{r}
 data %>% 
   by_pol("CONF1", "CONF8", var_labels,
-                   "<- 1: not sure at all   -    7: very sure ->")
+                   "<- 1: helemaal niet zeker   -    7: heel erg zeker ->")
 ```
 
 :::
 
-# {{< iconify mingcute safe-lock-fill >}} Trust in ADM Systems {.tabset .tabset-fade .tabset-pills .break}
+# {{< iconify mingcute safe-lock-fill >}} Vertrouwen in AI-systemen {.tabset .tabset-fade .tabset-pills .break}
 
-> We ask you a number of additional questions about automatic decision-making (ADM) systems. These are computer programs that make decisions that used to be made by people. These decisions are made automatically by computers based on data. 
 
-> How confident are you that automated decision-making systems can properly determine...
+> We stellen u nog een aantal extra vragen over automatische besluitvormingssystemen. Dat zijn computerprogramma's die beslissingen maken die vroeger door mensen werden genomen. Deze
+beslissingen worden automatisch door computers genomen op basis van gegevens.
+
+
+<blockquote class="question-text">
+Hoeveel vertrouwen hebt u erin dat automatische besluitvormingssystemen goed kunnen bepalen...
+</blockquote>
 
 ::: {.panel-tabset}
 
-## Overall
+## Algemeen
 
 ```{r}
 var_labels <- c(
-  "Social Welfare",
-  "The News You See",
-  "Cancer Diagnosis"
+  "...of iemand in aanmerking komt voor een bijstandsuitkering?",
+  "...welke nieuwsberichten aanbevolen worden aan iemand?",
+  "...of iemand kanker heeft?"
 )
 
 data %>% 
   generate_general("TADS1", "TADS3", var_labels,
-                   "<- 1: no trust   -    7: complete trust ->")
+                   "<- 1: geen vertrouwen   -    7: volledig vertrouwen ->")
 ```
 
-## By Age
+## Op Leeftijd
 
 ```{r}
 data %>% 
   by_age("TADS1", "TADS3", var_labels,
-                   "<- 1: no trust   -    7: complete trust ->")
+                   "<- 1: geen vertrouwen   -    7: olledig vertrouwen ->")
 ```
 
 
-## By Gender
+## Op Geslacht
 
 ```{r}
 data %>% 
   by_gender("TADS1", "TADS3", var_labels,
-                   "<- 1: no trust   -    7: complete trust ->")
+                   "<- 1: helemaal niet zeker   -    7: heel erg zeker ->")
 ```
 
 
-## By Education
+## Op Opleiding
 
 
 
 ```{r}
 data %>% 
   by_edu("TADS1", "TADS3", var_labels,
-                   "<- 1: no trust   -    7: complete trust ->")
+                   "<- 1: helemaal niet zeker   -    7: heel erg zeker ->")
 ```
 
 
-## By Politics
+## Op Politiek
 
 ```{r}
 data %>% 
   by_pol("TADS1", "TADS3", var_labels,
-                   "<- 1: no trust   -    7: complete trust ->")
+                   "<- 1: helemaal niet zeker   -    7: heel erg zeker ->")
 ```
 
 :::
 
 
-# {{< iconify game-icons sands-of-time >}} Future of ADM Systems {.tabset .tabset-fade .tabset-pills .break}
+# {{< iconify game-icons sands-of-time >}} Toekomst van AI-systemen {.tabset .tabset-fade .tabset-pills .break}
 
-> If automated decision-making (ADM) becomes more common in the future, what do you think will happen?
+
+<blockquote class="question-text">
+Als geautomatiseerde besluitvorming in de toekomst vaker voorkomt, wat denkt u dan dat er zal gebeuren?
+
+</blockquote>
 
 ::: {.panel-tabset}
 
-## Overall
+## Algemeen
 
 ```{r}
 var_labels <- c(
-  "If the news is automated, journalists will be able to focus more on investigative journalism.",
-  "I will only get news items that interest me.",
-  "It will make reporting fairer and more balanced.",
-  "If certain law enforcement tasks are automated, the police will have more time to focus on major crimes.",
-  "It will make the determination of social benefits fairer and more balanced."
+  "Als het nieuws wordt geautomatiseerd, zullen journalisten zich meer kunnen richten op
+onderzoeksjournalistiek.",
+  "Ik zal alleen nog maar nieuwsberichten krijgen die me interesseren.",
+  "Het zal de verslaggeving eerlijker en evenwichtiger maken.",
+  "Als bepaalde taken voor handhaven van de wet worden geautomatiseerd, zal de politie meer
+tijd hebben om zich op grote misdrijven te richten.",
+  "De bepaling van sociale uitkeringen zal er eerlijker en evenwichtiger door worden."
 )
 
 data %>% 
   generate_general("ADSO1", "ADSO5", var_labels,
-                   "<- 1: totally disagree   -    7: totally agree ->")
+                   "<- 1: helemaal mee oneens   -    7: helemaal mee eens ->")
 ```
 
-## By Age
+## Op Leeftijd
 
 ```{r}
 data %>% 
   by_age("ADSO1", "ADSO5", var_labels,
-                   "<- 1: totally disagree   -    7: totally agree ->")
+                   "<- 1: helemaal mee oneens   -    7: helemaal mee eens ->")
 ```
 
 
-## By Gender
+## Op Geslacht
 
 ```{r}
 data %>% 
   by_gender("ADSO1", "ADSO5", var_labels,
-                   "<- 1: totally disagree   -    7: totally agree ->")
+                   "<- 1: helemaal mee oneens   -    7: helemaal mee eens ->")
 ```
 
 
-## By Education
+## Op Opleiding
 
 
 
 ```{r}
 data %>% 
   by_edu("ADSO1", "ADSO5", var_labels,
-                   "<- 1: totally disagree   -    7: totally agree ->")
+                   "<- 1: helemaal mee oneens   -    7: helemaal mee eens ->")
 ```
 
 
-## By Politics
+## Op Politiek
 
 ```{r}
 data %>% 
   by_pol("ADSO1", "ADSO5", var_labels,
-                   "<- 1: totally disagree   -    7: totally agree ->")
+                   "<- 1: helemaal mee oneens   -    7: helemaal mee eens ->")
 ```
 
 :::

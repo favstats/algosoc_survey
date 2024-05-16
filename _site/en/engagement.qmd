@@ -122,6 +122,18 @@ std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
 #     leeftijd %in% 55:64 ~ "55-64",
 #     leeftijd %in% 65:150 ~ "65+",
 #   )) %>% drop_na(ADSR1)
+
+# fin <-wtm_weighted %>% 
+#   select(nomem_encr, weight) %>% 
+#   left_join(data)
+# 
+# fin
+# 
+# lm(DIGIQ1 ~ 1, data = fin, weights = fin$weight)
+# 
+# mean(fin$DIGIQ1, na.rm = T)
+# 
+# weighted.mean(fin$DIGIQ1, w = fin$weight, na.rm = T)
 ```
 
 
