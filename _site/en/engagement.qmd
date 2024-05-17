@@ -134,6 +134,16 @@ std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
 # mean(fin$DIGIQ1, na.rm = T)
 # 
 # weighted.mean(fin$DIGIQ1, w = fin$weight, na.rm = T)
+var_labels <- c(
+  "I recognize it when a website or app uses AI to adapt the content to me.",
+  "I recognize it when specific content is recommended to me by AI.",
+  "I know where to find the settings to change or disable AI personalization.",
+  "I know how to access the data that AI systems use to tailor content to me.",
+  "I know how I can influence what content is recommended to me by AI."
+)
+data %>%
+  generate_general("DIGIQ1", "DIGIQ5", var_labels,
+                   "<- 1: totally disagree   -    7: totally agree ->")
 ```
 
 
@@ -159,20 +169,193 @@ var_labels <- c(
   "I know how to access the data that AI systems use to tailor content to me.",
   "I know how I can influence what content is recommended to me by AI."
 )
+thevarlabs <- var_labels
+# data %>% 
+#   generate_general("DIGIQ1", "DIGIQ5", var_labels,
+#                    "<- 1: totally disagree   -    7: totally agree ->")
 
-data %>% 
-  generate_general("DIGIQ1", "DIGIQ5", var_labels,
-                   "<- 1: totally disagree   -    7: totally agree ->")
+
+
+
+  fin <- data %>% 
+    select(DIGIQ1:DIGIQ5) %>% 
+    # select(var1:var2, weight) %>% 
+    drop_na() %>% 
+    set_names(var_labels)
+  
+  media_rec <- fin %>% 
+    # gather(key, value, -weight) %>% 
+    gather(key, value) %>% 
+    mutate(value = case_when(
+      value %in% 1:3 ~ "disagree",
+      value == 4 ~ "neither agree or disagree",
+      value %in% 5:7 ~ "agree"
+    )) %>% 
+    group_by(key) %>% 
+    count(value) %>% 
+    ungroup() #%>% 
+    # mutate(varlabs = var_labels) %>% 
+    # mutate(varlabs = fct_reorder(varlabs, mean_val)) %>% 
+    # arrange(desc(varlabs))
+  
+
+
+ fin <- data %>% 
+    select(DIGIQ1:DIGIQ5) %>% 
+    # select(var1:var2, weight) %>% 
+    drop_na() %>% 
+    set_names(var_labels)
+  
+  media_rec <- fin %>% 
+    # gather(key, value, -weight) %>% 
+    gather(key, value) %>% 
+    mutate(value = case_when(
+      value %in% 1:3 ~ "disagree",
+      value == 4 ~ "neither agree or disagree",
+      value %in% 5:7 ~ "agree"
+    )) %>% 
+    group_by(key) %>% 
+    count(value) %>% 
+    ungroup() #%>% 
+    # mutate(varlabs = var_labels) %>% 
+    # mutate(varlabs = fct_reorder(varlabs, mean_val)) %>% 
+    # arrange(desc(varlabs))
+# Define distinct colors for each value
+colors <- c("#1f77b4", "#ff7f0e", "#2ca02c") # Add more colors if needed
+
+# Create a stacked bar chart with highcharter
+media_rec %>% 
+  group_by(key) %>% 
+  mutate(perc = n/sum(n)*100) %>%
+  ungroup()  %>%
+  mutate(value = fct_relevel(value, c("agree", "neither agree or disagree", "disagree"))) %>% 
+  hchart("bar", hcaes(x = key, y = perc, group = value)) %>%
+  hc_plotOptions(bar = list(stacking = "percent")) %>%
+  hc_yAxis(max = 100) %>%
+  # hc_title(text = "Stacked Bar Chart") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_colors(colors)
 ```
+
+
+
+
 
 ## By Age
 
-```{r}
+```{r, eval = F}
 data %>% 
   by_age("DIGIQ1", "DIGIQ5", var_labels,
                    "<- 1: totally disagree   -    7: totally agree ->")
 ```
+::: {.panel-tabset}
 
+```{r}
+# Define distinct colors for each value
+colors <- c("#1f77b4", "#ff7f0e", "#2ca02c")  # Add more colors if needed
+
+# Prepare the variable labels for the data
+varlabdat <- data %>%
+  select(DIGIQ1:DIGIQ5) %>%
+  names() %>%
+  tibble(key = ., varlabs = thevarlabs)
+
+# Prepare the data
+fin <- data %>%
+  select(DIGIQ1:DIGIQ5, age_groups) %>%
+  drop_na() %>% 
+  set_names(c(thevarlabs, "age_groups"))
+
+# Recoding the values and summarizing by key and age group
+media_rec_ages <- fin %>%
+  gather(key, value, -age_groups) %>%
+  mutate(value = case_when(
+    value %in% 1:3 ~ "disagree",
+    value == 4 ~ "neither agree or disagree",
+    value %in% 5:7 ~ "agree"
+  )) %>%
+  count(key, age_groups, value) %>%
+  group_by(key, age_groups) %>%
+  mutate(perc = n / sum(n) * 100) %>%
+  ungroup()
+
+
+list_of_plots <- media_rec_ages$key %>% 
+  unique() %>% 
+  map(~{
+    media_rec_ages %>%
+      filter(key == .x) %>%
+      mutate(value = fct_relevel(value, c("agree", "neither agree or disagree", "disagree"))) %>%
+      hchart("bar", hcaes(x = age_groups, y = perc, group = value)) %>%
+      hc_plotOptions(bar = list(stacking = "percent")) %>%
+      hc_xAxis(title = list(text = "")) %>%
+      hc_yAxis(max = 100, title = list(text = "Percentage")) %>%
+      # hc_xAxis(categories = categories_grouped, labels = list(style = list(fontSize = "10px"))) %>%
+      hc_title(text = .x) %>%
+      hc_colors(colors)%>%
+    hc_chart(style = list(width = "100%", height = "100%"))   # Adjust dimensions as needed
+  })
+
+
+# Then pass final list to `hw_grid` function.
+```
+
+
+```{r}
+# list_of_plots[[1]]
+```
+```{r, results='asis'}
+# library(tidyverse)
+# library(highcharter)
+# library(htmltools)
+
+generate_quarto_elements <- function(list_of_plots, plots_per_page = 2) {
+  plot_to_html <- function(plot) {
+    as.character(tags$div(
+      class = "flex-item2",
+      htmltools::tagList(plot)
+    ))
+  }
+  
+  num_plots <- length(list_of_plots)
+  num_pages <- ceiling(num_plots / plots_per_page)
+  
+  # Include CSS for Flexbox layout
+
+
+  
+  for (page in 1:num_pages) {
+    start_index <- (page - 1) * plots_per_page + 1
+    end_index <- min(page * plots_per_page, num_plots)
+    
+    plots_for_page <- list_of_plots[start_index:end_index]
+    
+    html_content <- paste(
+      '<table style="width:100%; border-spacing: 1px;">',
+      '<tr>',
+      paste(
+        lapply(plots_for_page, function(plot) {
+          paste0('<td style="width:50%; vertical-align: top;">', plot_to_html(plot), '</td>')
+        }),
+        collapse = "\n"
+      ),
+      '</tr>',
+      '</table>'
+    )
+    
+
+    cat(paste0("### ", page, "\n"))
+    cat(html_content)
+  }
+}
+
+generate_quarto_elements(list_of_plots, plots_per_page = 2)
+
+```
+
+
+
+::: 
 
 ## By Gender
 
