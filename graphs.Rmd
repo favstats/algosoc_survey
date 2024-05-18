@@ -6,6 +6,9 @@ date: "2024-05-18"
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(haven)
 ```
 
 
@@ -16,6 +19,8 @@ knitr::opts_chunk$set(echo = TRUE)
 You can also embed plots, for example:
 
 ```{r pressure, echo=FALSE}
+
+
 polvals <- read_sav("../cv23o_EN_1.0p.sav") %>% 
   mutate(left_right = cv23o101) #%>% 
   # mutate(left_right = ifelse(is.na(left_right), "99", left_right))
@@ -162,7 +167,7 @@ ggsave("img/expos.png", width=8, height=6, dpi = 300, bg = "white")
 
 
 
-```{r, fig.width=8, fig.height=9, dpi = 300}
+```{r, fig.width=10, fig.height=10, dpi = 300}
 
 varss <- c("People from the general population",
   "Members of Parliament",
