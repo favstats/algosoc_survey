@@ -1,0 +1,244 @@
+---
+title: "Untitled"
+output: html_document
+date: "2024-05-18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+polvals <- read_sav("../cv23o_EN_1.0p.sav") %>% 
+  mutate(left_right = cv23o101) #%>% 
+  # mutate(left_right = ifelse(is.na(left_right), "99", left_right))
+
+data <- read_sav("../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
+  mutate(age_groups = case_when(
+    leeftijd %in% 16:17 ~ "16-17",
+    leeftijd %in% 18:24 ~ "18-24",
+    leeftijd %in% 25:34 ~ "25-34",
+    leeftijd %in% 35:44 ~ "35-44",
+    leeftijd %in% 45:54 ~ "45-54",
+    leeftijd %in% 55:64 ~ "55-64",
+    leeftijd %in% 65:150 ~ "65+",
+  )) %>% 
+  left_join(polvals %>% select(nomem_encr, left_right)) %>% 
+  mutate(pol_cat = case_when(
+    left_right %in% 0:3 ~ "links",
+    left_right %in% 4:6 ~ "centrum",
+    left_right %in% 7:10 ~ "rechts"
+    ))
+
+
+```
+
+```{r, fig.width=8, fig.height=6, dpi = 300}
+# [12:45] Ernesto de León Williams
+# or never (1), rarely (2-3), sometimes (4) (4), often (5-6)(5-6), very often (5-6) (7)
+library(ggtext)
+
+adm_dat <- data %>% #table()
+  mutate(age_groups = case_when(
+    leeftijd %in% 16:24 ~ "16-24\nyear olds",
+    T~ "25+\nyear olds"
+  )) %>%
+  select(ADM1, ADM2, age_groups) %>% 
+  set_names(c("... text generators like ChatGPT?", 
+                    "... image generators like Midjourney?",
+            "age_groups")) %>% 
+  gather(key, value, -age_groups) %>% 
+  mutate(value  = case_when(
+    value %in% 1 ~ "never (1)",
+    value %in% 2:3 ~ "rarely (2-3)",
+    value %in% 4 ~ "sometimes (4)",
+    value %in% 5:6 ~ "often (5-6)",
+    value %in% 7 ~ "very often (7)",
+  ))  %>% 
+  count(key, value, age_groups) %>% 
+  drop_na() %>% 
+  group_by(age_groups, key) %>% 
+  mutate(perc = n/sum(n)*100)  %>% 
+  ungroup() %>% 
+  mutate(value = fct_relevel(value, c("never (1)", "rarely (2-3)", "sometimes (4)", "often (5-6)", "very often (7)") %>% rev)) %>% 
+  mutate(age_groups = fct_rev(age_groups)) %>% 
+  mutate(key = fct_relevel(key, c("... text generators like ChatGPT?", 
+                    "... image generators like Midjourney?")))
+
+threshold <- 5
+
+adm_dat %>% 
+  # filter(value == "never (1)") %>% 
+  ggplot(aes(age_groups, perc, fill = value)) +
+  geom_col(position = position_stack()) +
+  facet_wrap(~key, ncol = 1) +
+  coord_flip() +
+  colorspace::scale_fill_discrete_sequential(palette = "Batlow",name = "Response",
+                                             limits = c("never (1)", "rarely (2-3)", "sometimes (4)", "often (5-6)", "very often (7)"), rev = F) +
+  theme_minimal()  +
+  labs(y = "", x = "") +
+  theme(strip.text = element_markdown(size = 13),
+        axis.text = element_text(size = 11),
+        axis.text.y = element_text(hjust = 0.5),
+        legend.text = element_text(size = 10),
+        legend.position = "bottom", strip.background = element_rect(fill = "lightgrey", color = NA), title = element_text(hjust = 0.5, size = 15))  +
+  geom_text(data = adm_dat %>% 
+              filter(perc >= threshold) %>% 
+              mutate(type_color = ifelse(value %in% c("often (5-6)", "very often (7)"), "black", "white")), aes(label = paste0(round(perc),"%"), color = type_color),
+            position = position_stack(vjust = 0.5), show.legend = F) +
+  scale_color_manual(values = c("black", "white")) +
+  ggtitle(label = "How often the past year did you use ...")
+  
+ggsave("img/adms.png", width=8, height=6, dpi = 300,  bg = "white")
+```
+
+
+
+
+```{r, fig.width=8, fig.height=6, dpi = 300}
+
+expo_dat <- data %>% #table()
+  mutate(age_groups = case_when(
+    leeftijd %in% 16:24 ~ "16-24\nyear olds",
+    T~ "25+\nyear olds"
+  )) %>%
+  select(EXPO1:EXPO3, age_groups) %>% 
+  set_names(c("Texts made by AI",
+  "Photos or images made by AI",
+  "Videos made by AI",
+            "age_groups")) %>% 
+  gather(key, value, -age_groups) %>% 
+  mutate(value  = case_when(
+    value %in% 1:2 ~ "infrequent (1-2)",
+    value %in% 3:5 ~ "moderately frequent (3-5)",
+    value %in% 6:7 ~ "highly frequent (6-7)",
+  ))  %>% 
+  count(key, value, age_groups) %>% 
+  drop_na() %>% 
+  group_by(age_groups, key) %>% 
+  mutate(perc = n/sum(n)*100)  %>% 
+  ungroup() %>% 
+  mutate(value = fct_relevel(value, c("infrequent (1-2)", "moderately frequent (3-5)", "highly frequent (6-7)") %>% rev)) %>% 
+  mutate(age_groups = fct_rev(age_groups)) %>% 
+  mutate(key = fct_relevel(key, c("Texts made by AI",
+  "Photos or images made by AI",
+  "Videos made by AI")))
+
+threshold <- 5
+
+expo_dat %>% 
+  # filter(value == "never (1)") %>% 
+  ggplot(aes(age_groups, perc, fill = value)) +
+  geom_col(position = position_stack()) +
+  facet_wrap(~key, ncol = 1) +
+  coord_flip() +
+  colorspace::scale_fill_discrete_sequential(palette = "Batlow", name = "Response",
+                                             limits = c("infrequent (1-2)", "moderately frequent (3-5)", "highly frequent (6-7)"), rev = F) +
+  theme_minimal()  +
+  labs(y = "", x = "") +
+  theme(strip.text = element_markdown(size = 11),
+        axis.text = element_text(size = 9, hjust = 0.5),
+        axis.text.y = element_text(hjust = 0.5),
+        legend.text = element_text(size = 11),
+        legend.position = "bottom", strip.background = element_rect(fill = "lightgrey", color = NA), title = element_text(hjust = 0.5, size = 12))  +
+  geom_text(data = expo_dat %>% 
+              filter(perc >= threshold) %>% 
+              mutate(type_color = ifelse(value == "highly frequent (6-7)", "black", "white")), aes(label = paste0(round(perc),"%"), color = type_color),
+            position = position_stack(vjust = 0.5), show.legend = F) +
+  scale_color_manual(values = c("black", "white")) +
+  ggtitle(str_wrap("How often did you come across ___ on social media in the past year?", 80))
+  
+ggsave("img/expos.png", width=8, height=6, dpi = 300, bg = "white")
+
+```
+
+
+
+
+```{r, fig.width=8, fig.height=9, dpi = 300}
+
+varss <- c("People from the general population",
+  "Members of Parliament",
+  "Judges",
+  "Journalists",
+  "Police officers",
+  "Doctors",
+  "Friends/family",
+  "You"
+)
+
+# Low Trust: 1, 2, and 3
+# Moderate Trust: 4
+# High Trust: 5, 6, and 7
+
+# data %>% 
+#   generate_general("CONF1", "CONF8
+#   
+  
+conf_dat <- data %>% #table()
+  mutate(age_groups = case_when(
+    leeftijd %in% 16:24 ~ "16-24\nyear olds",
+    T~ "25+\nyear olds"
+  )) %>%
+  select(CONF1:CONF8, age_groups) %>% 
+  set_names(c(varss,
+            "age_groups")) %>% 
+  gather(key, value, -age_groups) %>% 
+  mutate(value  = case_when(
+    value %in% 1:3 ~ "low confidence (1-3)",
+    value %in% 4 ~ "moderate confidence (4)",
+    value %in% 5:7 ~ "high confidence (5-7)",
+  ))  %>% 
+  count(key, value, age_groups) %>% 
+  drop_na() %>% 
+  group_by(age_groups, key) %>% 
+  mutate(perc = n/sum(n)*100)  %>% 
+  ungroup() %>% 
+  mutate(value = fct_relevel(value, c("low confidence (1-3)", "moderate confidence (4)", "high confidence (5-7)") %>% rev)) %>% 
+  mutate(age_groups = fct_rev(age_groups)) %>% 
+  mutate(key = fct_relevel(key, c("People from the general population",
+  "You",
+  "Friends/family",
+  "Members of Parliament",
+  "Police officers",
+  "Doctors",
+  "Judges",
+  "Journalists"
+)))
+
+threshold <- 5
+
+conf_dat %>% 
+  # filter(value == "never (1)") %>% 
+  ggplot(aes(age_groups, perc, fill = value)) +
+  geom_col(position = position_stack()) +
+  facet_wrap(~key, ncol = 1) +
+  coord_flip() +
+  colorspace::scale_fill_discrete_sequential(palette = "Batlow", name = "Response",
+                                             limits = c("low confidence (1-3)", "moderate confidence (4)", "high confidence (5-7)"), rev = F) +
+  theme_minimal()  +
+  labs(y = "", x = "") +
+  theme(strip.text = element_markdown(size = 13),
+        axis.text = element_text(size = 10),
+        axis.text.y = element_text(hjust = 0.5),
+        legend.text = element_text(size = 11),
+        legend.position = "bottom", strip.background = element_rect(fill = "lightgrey", color = NA), title = element_text(hjust = 0.5, size = 15))  +
+  geom_text(data = conf_dat %>% 
+              filter(perc >= threshold) %>% 
+              mutate(type_color = ifelse(value == "high confidence (5-7)", "black", "white")), aes(label = paste0(round(perc),"%"), color = type_color),
+            position = position_stack(vjust = 0.5), show.legend = F) +
+  scale_color_manual(values = c("black", "white")) +
+  ggtitle(str_wrap("How confident are you that ___ can recognize AI content?", 80))
+
+
+ggsave("img/confs.png", width=10, height=10, dpi = 300, bg = "white")
+
+```
+
