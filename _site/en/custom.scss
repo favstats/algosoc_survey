@@ -125,12 +125,21 @@ button:hover {
   }
 }
 
+
 .panel-tabset {
   display: flex;
   flex-direction: column;
   border-top: 1px solid #ccc; /* Adds a top border to the whole set for continuity */
-
+  padding: 0em !important;
+  margin-bottom: 0.25em !important;
 }
+
+.panel-tabset .tab-content {
+
+  padding: 0em !important;
+  margin-bottom: 0.25em !important;
+}
+
 
 .nav-tabs {
   order: 2; /* Ensures that the tabs are at the bottom */
@@ -318,4 +327,27 @@ blockquote.highlightit {
 }
 
 
+/* Styles for Vertical Tabsets */
+.panel-tabset .tabset-vertical {
+  display: flex; /* Ensure the container for vertical tabs is a flex container */
+}
 
+.panel-tabset .tabset-vertical .nav-tabs {
+  flex-direction: column; /* Vertical tabs */
+  margin-left: 1rem; /* Space between tabs and content */
+}
+
+.panel-tabset .tabset-vertical .nav-item {
+  margin-bottom: 0.5rem; /* Space between vertical tabs */
+}
+
+.panel-tabset .tabset-vertical .tab-content {
+  flex-grow: 1; /* Make the content area take the remaining space */
+}
+
+/* Responsive Adjustment for Mobile Devices */
+@media (max-width: 768px) {
+  .panel-tabset .nav-tabs {
+    justify-content: space-around; /* Adjusts spacing for smaller screens */
+  }
+}

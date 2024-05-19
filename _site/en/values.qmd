@@ -5,9 +5,6 @@ execute:
 ---
 
 ```{r setup, include=FALSE}
-# here::i_am("wtm_gb.Rproj")
-
-
 ## Global options
 knitr::opts_chunk$set(
     cache = F,
@@ -45,10 +42,11 @@ tippy_this(
 
 ```{r include=FALSE}
 
+source("utils.R")
 polvals <- read_sav("../../cv23o_EN_1.0p.sav") %>% 
   mutate(left_right = cv23o101)
 
-data <- read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>%
+data <- read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
   mutate(age_groups = case_when(
     leeftijd %in% 16:17 ~ "16-17",
     leeftijd %in% 18:24 ~ "18-24",
@@ -58,19 +56,39 @@ data <- read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>%
     leeftijd %in% 55:64 ~ "55-64",
     leeftijd %in% 65:150 ~ "65+",
   )) %>% 
-  mutate(important1 = sjmisc::to_label(ADSVR_1)) %>% 
   left_join(polvals %>% select(nomem_encr, left_right)) %>% 
   mutate(pol_cat = case_when(
     left_right %in% 0:3 ~ "left",
     left_right %in% 4:6 ~ "center",
     left_right %in% 7:10 ~ "right"
-    ))
+    )) %>% 
+    mutate(geslacht = sjmisc::to_label(geslacht)) %>% 
+    mutate(geslacht = case_when(
+      geslacht == "Vrouw" ~ "Woman",
+      geslacht == "Anders" ~ "Other",
+      T ~ geslacht
+    )) %>% 
+    mutate(geslacht = fct_relevel(geslacht, c("Man", "Woman", "Other"))) %>% 
+    arrange(geslacht)  %>% 
+    mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
+    left_join(education_levels) %>%
+    mutate(oplcat = eng) %>%
+    mutate(oplcat = fct_relevel(oplcat, c("Primary (basisonderwijs)",
+                                          "Pre-Vocational (vmbo)",
+                                          "Secondary (havo/vwo)",
+                                          "Vocational (mbo)",
+                                          "Applied Sciences (hbo)",
+                                          "University (wo)"))) %>% 
+    mutate(pol_cat = fct_relevel(pol_cat, c("left", "center", "right"))) %>% 
+  # select(ADSVR_1) %>% 
+  mutate(important1 = sjmisc::to_label(ADSVR_1))
+
+colors <- c("#2ca02c", "#1f77b4", "#ff7f0e") # Add more colors if needed
+
+# Create a stacked bar chart with highcharter
+myMenuItems <- c("downloadPNG", "downloadJPEG", "downloadSVG", "downloadPDF")
 
 
-
-std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
-
-source("utils.R")
 # data %>% 
 #   write_csv("../../L_AlgoSoc_wave1_1.0p.csv")
 ```
@@ -422,52 +440,94 @@ More automatic decision-making in news media/the legal system/healthcare will be
 ## Overall
 
 ```{r}
-theorder <<- readRDS("data/theorder.rds")
+var_labels <- c(
+  "Social Welfare",
+  "The News You See",
+  "Cancer Diagnosis"
+)
 
-data %>% 
-  generate_general2("ADSR1", "ADSRt2_1", "ADSRt3_1",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+categories_dat <- c("agree", "neither agree or disagree", "disagree")
+
+var_labels <- c("News Media", "Legal System", "Healthcare")
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels, 
+            categories_dat)
+
+
+# theorder <<- readRDS("data/theorder.rds")
+
+
 ```
 
-## By Age
+## By Age 
 
-```{r}
-data %>% 
-  by_age2("ADSR1", "ADSRt2_1", "ADSRt3_1",
-         c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T)
+
 ```
 
-## By Gender
-
-```{r}
-data %>% 
-  by_gender2("ADSR1", "ADSRt2_1", "ADSRt3_1",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
-```
-
-## By Education
-
-```{r}
-data %>% 
-  by_edu2("ADSR1", "ADSRt2_1", "ADSRt3_1",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
-```
-
-## By Politics
-
-```{r}
-data %>% 
-  by_pol2("ADSR1", "ADSRt2_1", "ADSRt3_1",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
-```
 
 
 ::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T)
+```
+::: 
+
+:::
 
 # {{< iconify solar danger-outline >}} Riskiness of AI {.tabset .tabset-fade .tabset-pills .break}
 
@@ -484,49 +544,81 @@ More automatic decision-making in news media/the legal system/healthcare will be
 ## Overall
 
 ```{r}
-data %>% 
-  generate_general2("ADSR2", "ADSRt2_2", "ADSRt3_2",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels, 
+            categories_dat)
 ```
 
-## By Age
+## By Age 
 
-```{r}
-data %>% 
-  by_age2("ADSR2", "ADSRt2_2", "ADSRt3_2",
-         c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T)
+
 ```
+
+
+
+::: 
 
 ## By Gender
 
-```{r}
-data %>% 
-  by_gender2("ADSR2", "ADSRt2_2", "ADSRt3_2",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
-```
+::: {.panel-tabset}
 
-## By Education
 
-```{r}
-data %>% 
-  by_edu2("ADSR2", "ADSRt2_2", "ADSRt3_2",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
-```
+```{r, results='asis'}
 
-## By Politics
 
-```{r}
-data %>% 
-  by_pol2("ADSR2", "ADSRt2_2", "ADSRt3_2",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T)
+
 ```
 
 ::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T)
+```
+::: 
+
+:::
 
 
 # {{< iconify material-symbols-light balance >}} Fairness of AI {.tabset .tabset-fade .tabset-pills .break}
@@ -539,55 +631,87 @@ More automatic decision-making in news media/the legal system/healthcare will be
 
 ::: {.panel-tabset}
 
+
 ## Overall
 
 ```{r}
-theorderold <- theorder 
-data %>% 
-  generate_general2("ADSR3", "ADSRt2_3", "ADSRt3_3",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
-theorder <<- theorderold
+
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels, 
+            categories_dat)
 ```
 
-## By Age
 
-```{r}
-data %>% 
-  by_age2("ADSR3", "ADSRt2_3", "ADSRt3_3",
-         c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T)
+
 ```
+
+
+
+::: 
 
 ## By Gender
 
-```{r}
-data %>% 
-  by_gender2("ADSR3", "ADSRt2_3", "ADSRt3_3",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
-```
+::: {.panel-tabset}
 
-## By Education
 
-```{r}
-data %>% 
-  by_edu2("ADSR3", "ADSRt2_3", "ADSRt3_3",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
-```
+```{r, results='asis'}
 
-## By Politics
 
-```{r}
-data %>% 
-  by_pol2("ADSR3", "ADSRt2_3", "ADSRt3_3",
-                   c("News Media", "Legal System", "Healthcare"),
-                   "<- 1: totally disagree    -    7: totally agree ->")
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T)
+
 ```
 
 ::: 
 
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T)
+```
+::: 
+
+:::
 
 
 <br>

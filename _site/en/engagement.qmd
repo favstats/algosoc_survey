@@ -106,44 +106,32 @@ data <- read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
     left_right %in% 0:3 ~ "left",
     left_right %in% 4:6 ~ "center",
     left_right %in% 7:10 ~ "right"
-    ))
+    )) %>% 
+    mutate(geslacht = sjmisc::to_label(geslacht)) %>% 
+    mutate(geslacht = case_when(
+      geslacht == "Vrouw" ~ "Woman",
+      geslacht == "Anders" ~ "Other",
+      T ~ geslacht
+    )) %>% 
+    mutate(geslacht = fct_relevel(geslacht, c("Man", "Woman", "Other"))) %>% 
+    arrange(geslacht)  %>% 
+    mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
+    left_join(education_levels) %>%
+    mutate(oplcat = eng) %>%
+    mutate(oplcat = fct_relevel(oplcat, c("Primary (basisonderwijs)",
+                                          "Pre-Vocational (vmbo)",
+                                          "Secondary (havo/vwo)",
+                                          "Vocational (mbo)",
+                                          "Applied Sciences (hbo)",
+                                          "University (wo)"))) %>% 
+    mutate(pol_cat = fct_relevel(pol_cat, c("left", "center", "right")))
+
+colors <- c("#2ca02c", "#1f77b4", "#ff7f0e") # Add more colors if needed
+
+# Create a stacked bar chart with highcharter
+myMenuItems <- c("downloadPNG", "downloadJPEG", "downloadSVG", "downloadPDF")
 
 
-std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
-
-
-# read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
-#   mutate(age_groups = case_when(
-#     leeftijd %in% 16:17 ~ "16-17",
-#     leeftijd %in% 18:24 ~ "18-24",
-#     leeftijd %in% 25:34 ~ "25-34",
-#     leeftijd %in% 35:44 ~ "35-44",
-#     leeftijd %in% 45:54 ~ "45-54",
-#     leeftijd %in% 55:64 ~ "55-64",
-#     leeftijd %in% 65:150 ~ "65+",
-#   )) %>% drop_na(ADSR1)
-
-# fin <-wtm_weighted %>% 
-#   select(nomem_encr, weight) %>% 
-#   left_join(data)
-# 
-# fin
-# 
-# lm(DIGIQ1 ~ 1, data = fin, weights = fin$weight)
-# 
-# mean(fin$DIGIQ1, na.rm = T)
-# 
-# weighted.mean(fin$DIGIQ1, w = fin$weight, na.rm = T)
-var_labels <- c(
-  "I recognize it when a website or app uses AI to adapt the content to me.",
-  "I recognize it when specific content is recommended to me by AI.",
-  "I know where to find the settings to change or disable AI personalization.",
-  "I know how to access the data that AI systems use to tailor content to me.",
-  "I know how I can influence what content is recommended to me by AI."
-)
-data %>%
-  generate_general("DIGIQ1", "DIGIQ5", var_labels,
-                   "<- 1: totally disagree   -    7: totally agree ->")
 ```
 
 
@@ -162,6 +150,8 @@ data %>%
 ## Overall
 
 ```{r}
+
+
 var_labels <- c(
   "I recognize it when a website or app uses AI to adapt the content to me.",
   "I recognize it when specific content is recommended to me by AI.",
@@ -170,186 +160,29 @@ var_labels <- c(
   "I know how I can influence what content is recommended to me by AI."
 )
 thevarlabs <- var_labels
-# data %>% 
-#   generate_general("DIGIQ1", "DIGIQ5", var_labels,
-#                    "<- 1: totally disagree   -    7: totally agree ->")
+
+categories_dat <- c("agree", "neither agree or disagree", "disagree")
 
 
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels, 
+            categories_dat)
 
-
-  fin <- data %>% 
-    select(DIGIQ1:DIGIQ5) %>% 
-    # select(var1:var2, weight) %>% 
-    drop_na() %>% 
-    set_names(var_labels)
-  
-  media_rec <- fin %>% 
-    # gather(key, value, -weight) %>% 
-    gather(key, value) %>% 
-    mutate(value = case_when(
-      value %in% 1:3 ~ "disagree",
-      value == 4 ~ "neither agree or disagree",
-      value %in% 5:7 ~ "agree"
-    )) %>% 
-    group_by(key) %>% 
-    count(value) %>% 
-    ungroup() #%>% 
-    # mutate(varlabs = var_labels) %>% 
-    # mutate(varlabs = fct_reorder(varlabs, mean_val)) %>% 
-    # arrange(desc(varlabs))
-  
-
-
- fin <- data %>% 
-    select(DIGIQ1:DIGIQ5) %>% 
-    # select(var1:var2, weight) %>% 
-    drop_na() %>% 
-    set_names(var_labels)
-  
-  media_rec <- fin %>% 
-    # gather(key, value, -weight) %>% 
-    gather(key, value) %>% 
-    mutate(value = case_when(
-      value %in% 1:3 ~ "disagree",
-      value == 4 ~ "neither agree or disagree",
-      value %in% 5:7 ~ "agree"
-    )) %>% 
-    group_by(key) %>% 
-    count(value) %>% 
-    ungroup() #%>% 
-    # mutate(varlabs = var_labels) %>% 
-    # mutate(varlabs = fct_reorder(varlabs, mean_val)) %>% 
-    # arrange(desc(varlabs))
-# Define distinct colors for each value
-colors <- c("#1f77b4", "#ff7f0e", "#2ca02c") # Add more colors if needed
-
-# Create a stacked bar chart with highcharter
-media_rec %>% 
-  group_by(key) %>% 
-  mutate(perc = n/sum(n)*100) %>%
-  ungroup()  %>%
-  mutate(value = fct_relevel(value, c("agree", "neither agree or disagree", "disagree"))) %>% 
-  hchart("bar", hcaes(x = key, y = perc, group = value)) %>%
-  hc_plotOptions(bar = list(stacking = "percent")) %>%
-  hc_yAxis(max = 100) %>%
-  # hc_title(text = "Stacked Bar Chart") %>%
-  hc_legend(enabled = TRUE) %>%
-  hc_colors(colors)
 ```
 
 
 
+## By Age 
 
-
-## By Age
-
-```{r, eval = F}
-data %>% 
-  by_age("DIGIQ1", "DIGIQ5", var_labels,
-                   "<- 1: totally disagree   -    7: totally agree ->")
-```
 ::: {.panel-tabset}
 
-```{r}
-# Define distinct colors for each value
-colors <- c("#1f77b4", "#ff7f0e", "#2ca02c")  # Add more colors if needed
-
-# Prepare the variable labels for the data
-varlabdat <- data %>%
-  select(DIGIQ1:DIGIQ5) %>%
-  names() %>%
-  tibble(key = ., varlabs = thevarlabs)
-
-# Prepare the data
-fin <- data %>%
-  select(DIGIQ1:DIGIQ5, age_groups) %>%
-  drop_na() %>% 
-  set_names(c(thevarlabs, "age_groups"))
-
-# Recoding the values and summarizing by key and age group
-media_rec_ages <- fin %>%
-  gather(key, value, -age_groups) %>%
-  mutate(value = case_when(
-    value %in% 1:3 ~ "disagree",
-    value == 4 ~ "neither agree or disagree",
-    value %in% 5:7 ~ "agree"
-  )) %>%
-  count(key, age_groups, value) %>%
-  group_by(key, age_groups) %>%
-  mutate(perc = n / sum(n) * 100) %>%
-  ungroup()
-
-
-list_of_plots <- media_rec_ages$key %>% 
-  unique() %>% 
-  map(~{
-    media_rec_ages %>%
-      filter(key == .x) %>%
-      mutate(value = fct_relevel(value, c("agree", "neither agree or disagree", "disagree"))) %>%
-      hchart("bar", hcaes(x = age_groups, y = perc, group = value)) %>%
-      hc_plotOptions(bar = list(stacking = "percent")) %>%
-      hc_xAxis(title = list(text = "")) %>%
-      hc_yAxis(max = 100, title = list(text = "Percentage")) %>%
-      # hc_xAxis(categories = categories_grouped, labels = list(style = list(fontSize = "10px"))) %>%
-      hc_title(text = .x) %>%
-      hc_colors(colors)%>%
-    hc_chart(style = list(width = "100%", height = "100%"))   # Adjust dimensions as needed
-  })
-
-
-# Then pass final list to `hw_grid` function.
-```
-
-
-```{r}
-# list_of_plots[[1]]
-```
 ```{r, results='asis'}
-# library(tidyverse)
-# library(highcharter)
-# library(htmltools)
 
-generate_quarto_elements <- function(list_of_plots, plots_per_page = 2) {
-  plot_to_html <- function(plot) {
-    as.character(tags$div(
-      class = "flex-item2",
-      htmltools::tagList(plot)
-    ))
-  }
-  
-  num_plots <- length(list_of_plots)
-  num_pages <- ceiling(num_plots / plots_per_page)
-  
-  # Include CSS for Flexbox layout
-
-
-  
-  for (page in 1:num_pages) {
-    start_index <- (page - 1) * plots_per_page + 1
-    end_index <- min(page * plots_per_page, num_plots)
-    
-    plots_for_page <- list_of_plots[start_index:end_index]
-    
-    html_content <- paste(
-      '<table style="width:100%; border-spacing: 1px;">',
-      '<tr>',
-      paste(
-        lapply(plots_for_page, function(plot) {
-          paste0('<td style="width:50%; vertical-align: top;">', plot_to_html(plot), '</td>')
-        }),
-        collapse = "\n"
-      ),
-      '</tr>',
-      '</table>'
-    )
-    
-
-    cat(paste0("### ", page, "\n"))
-    cat(html_content)
-  }
-}
-
-generate_quarto_elements(list_of_plots, plots_per_page = 2)
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T)
 
 ```
 
@@ -359,31 +192,52 @@ generate_quarto_elements(list_of_plots, plots_per_page = 2)
 
 ## By Gender
 
-```{r}
-data %>% 
-  by_gender("DIGIQ1", "DIGIQ5", var_labels,
-                   "<- 1: totally disagree   -    7: totally agree ->")
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T)
+
 ```
 
+::: 
 
 ## By Education
 
+::: {.panel-tabset}
 
 
-```{r}
-data %>% 
-  by_edu("DIGIQ1", "DIGIQ5", var_labels,
-                   "<- 1: totally disagree   -    7: totally agree ->")
+```{r, results='asis'}
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T)
+
 ```
 
+::: 
 
 ## By Politics
 
-```{r}
-data %>% 
-  by_pol("DIGIQ1", "DIGIQ5", var_labels,
-                   "<- 1: totally disagree   -    7: totally agree ->")
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T)
 ```
+::: 
 
 :::
 
@@ -402,83 +256,103 @@ data %>%
 ## Overall
 
 
+<!-- [Yesterday 12:53] Ernesto de León Williams -->
+<!-- Familiarity: -->
+<!-- Unfamiliar: 1, 2, and 3 -->
+<!-- Somewhat Familiar: 4  -->
+<!-- Familiar: 5, 6 and 7 -->
+<!-- [Yesterday 12:55] Ernesto de León Williams -->
+<!-- Trust: -->
+<!-- Low Trust: 1, 2, and 3 -->
+<!-- Moderate Trust: 4 -->
+<!-- High Trust: 5, 6, and 7 -->
+
+<!-- (<4), sometimes (4), often (>4)
+-->
 ```{r}
 
+var_labels <- c("...text generators like ChatGPT?", 
+                    "...image generators like Midjourney?")
 
-data %>% 
-  generate_general("ADM1", "ADM2", 
-                  c("...text generators like ChatGPT?", 
-                    "...image generators like Midjourney?"))
+categories_dat <- c("often","sometimes","rare")
 
+viz_general(vecc("ADM", 1:2), 
+            var_labels, 
+            categories_dat)
 
 ```
 
-
-<!-- </div> -->
-
-<!-- <div id="Tab2a" class="tab tab-content"> -->
 
 ## By Age
 
 
-```{r}
+::: {.panel-tabset}
 
-
-
-data %>% 
-  by_age("ADM1", "ADM2", 
-                  c("...text generators like ChatGPT?", 
-                    "...image generators like Midjourney?"))
+```{r, results='asis'}
+# source("utils.R")
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T)
 ```
 
-<!-- </div> -->
+:::
 
-<!-- <div id="Tab3a" class="tab tab-content"> -->
 
 ## By Gender
 
 
-```{r}
+::: {.panel-tabset}
+
+```{r, results='asis'}
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T)
 
 
-data %>% 
-  by_gender("ADM1", "ADM2", 
-                  c("...text generators like ChatGPT?", 
-                    "...image generators like Midjourney?"))
 ```
 
 
-<!-- </div> -->
+:::
 
-<!-- <div id="Tab4a" class="tab tab-content"> -->
 
 ## By Education
 
-```{r}
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
 
 
-data %>% 
-  by_edu("ADM1", "ADM2", 
-                  c("...text generators like ChatGPT?", 
-                    "...image generators like Midjourney?"))
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T)
 ```
 
-<!-- </div> -->
+:::
 
-<!-- <div id="Tab5a" class="tab tab-content"> -->
 
 ## By Politics
 
-```{r}
 
 
-data %>% 
-  by_pol("ADM1", "ADM2", 
-                  c("...text generators like ChatGPT?", 
-                    "...image generators like Midjourney?"))
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T)
 ```
 
-<!-- </div> -->
+:::
 
 :::
 
@@ -494,62 +368,96 @@ data %>%
 
 
 
-```{r}
-var_labels <- c(
-  "Texts made by AI",
-  "Photos or images made by AI",
-  "Videos made by AI"
-)
-```
-
 
 ::: {.panel-tabset}
 
 ## Overall
 
 ```{r}
-data %>% 
-  generate_general("EXPO1", "EXPO3", var_labels,
-                   thelabel = "<- 1: not at all    -    7: very often ->")
+var_labels <- c(
+  "Texts made by AI",
+  "Photos or images made by AI",
+  "Videos made by AI"
+)
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat)
 ```
+
 
 ## By Age
 
 
-```{r}
-data %>% 
-  by_age("EXPO1", "EXPO3", var_labels,
-                   thelabel = "<- 1: not at all    -    7: very often ->")
+::: {.panel-tabset}
+
+```{r, results='asis'}
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T)
 ```
+
+:::
 
 
 ## By Gender
 
-```{r}
-data %>% 
-  by_gender("EXPO1", "EXPO3", var_labels,
-                   thelabel = "<- 1: not at all    -    7: very often ->")
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T)
+
+
 ```
 
+
+:::
 
 
 ## By Education
 
-```{r}
-data %>% 
-  by_edu("EXPO1", "EXPO3", var_labels,
-                   thelabel = "<- 1: not at all    -    7: very often ->")
-```
 
-## By Politics
+::: {.panel-tabset}
 
-```{r}
-data %>% 
-  by_pol("EXPO1", "EXPO3", var_labels,
-                   thelabel = "<- 1: not at all    -    7: very often ->")
+```{r, results='asis'}
+
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T)
 ```
 
 :::
+
+
+## By Politics
+
+
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T)
+```
+
+:::
+
+:::
+
 
 # {{< iconify carbon ibm-watson-knowledge-studio >}} Familiarity with AI terms {.tabset .tabset-fade .tabset-pills .break}
 
@@ -558,7 +466,19 @@ data %>%
 
 </blockquote>
 
+
+<!-- Unfamiliar: 1, 2, and 3 -->
+<!-- Somewhat Familiar: 4  -->
+<!-- Familiar: 5, 6 and 7 -->
+
+::: {.panel-tabset}
+
+## Overall
+
 ```{r}
+
+categories_dat <- c("familiar","somewhat familiar","unfamiliar")
+
 var_labels <- c(
   "Generative AI",
   "ChatGPT",
@@ -566,63 +486,85 @@ var_labels <- c(
   "Algorithms",
   "Chatbots"
 )
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat)
 ```
 
-
-
-::: {.panel-tabset}
-
-## Overall
-
-```{r}
-data %>% 
-  generate_general("KAI1", "KAI5", var_labels,
-                   "<- 1: not familiar with it at all    -    7: very familiar with it ->")
-```
 
 
 ## By Age
 
-```{r}
-data %>% 
-  by_age("KAI1", "KAI5", var_labels,
-                   "<- 1: not familiar with it at all    -    7: very familiar with it ->")
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T)
 ```
 
+:::
 
 
 ## By Gender
 
-```{r}
-data %>% 
-  by_gender("KAI1", "KAI5", var_labels,
-                   "<- 1: not familiar with it at all    -    7: very familiar with it ->")
-```
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T)
 
 
-
-## By Education
-
-```{r}
-data %>% 
-  by_edu("KAI1", "KAI5", var_labels,
-                   "<- 1: not familiar with it at all    -    7: very familiar with it ->")
-```
-
-
-## By Politics
-
-```{r}
-data %>% 
-  by_pol("KAI1", "KAI5", var_labels,
-                   "<- 1: not familiar with it at all    -    7: very familiar with it ->")
 ```
 
 
 :::
 
 
+## By Education
 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T)
+```
+
+:::
+
+
+## By Politics
+
+
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T)
+```
+
+:::
+
+:::
 
 <br>
 
