@@ -388,7 +388,7 @@ var_labels <- c(
   "...of iemand kanker heeft"
 )
 
-categories_dat <- c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)")
+categories_dat <- c("Eens (5-7)", "Noch eens, noch oneens (4)", "Oneens (1-3)")
 
 var_labels <- c("Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg")
 

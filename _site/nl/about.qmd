@@ -41,6 +41,7 @@ Deze eerste golf van dataverzameling heeft in totaal *3.946 deelnemers* geïnter
 
 
 
+
 #### Fabio Votta
 
 ```{r, echo=F}
@@ -68,12 +69,16 @@ card <- div(
         class = "card-body",
         p(
           class = "card-text", 
-          "Fabio Votta is a Postdoc at the University of Amsterdam who studies digital political campaigns and the role of ad delivery algorithms."
+          "Fabio Votta is a Postdoc at the University of Amsterdam who studies digital political campaigns and the role of ad delivery algorithms. He is particularly interested in how political actors use targeted campaign messages to reach specific voters and how social media algorithms enable personalized delivery of political ads."
+        ,
+        div(
+          style = "display: flex; justify-content: flex-end",
+          a(href = "https://www.favstats.eu/", "Website: favstats.eu")
         )
       )
     )
   )
-)
+))
 
 # print(card)
 
@@ -87,7 +92,10 @@ card
 #### Ernesto de León
 
 ```{r, echo=F}
-card <- div(
+card <- shiny::fluidPage(
+  tags$head(
+    tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
+  ),div(
   class = "card",
   div(
     class = "row no-gutters align-items-center",  # Added align-items-center to vertically center the content
@@ -107,13 +115,17 @@ card <- div(
       div(
         class = "card-body",
         p(
-          class = "card-text", 
-          "Ernesto de León focuses on political information flows in a digital age and its effects on political attitudes. In these projects, I make use of computational methodologies to explore web behaviour, use of algorithmic intermediaries to news (such as social media and search engines), and to conduct large-scale automated content analyses through text-as-data approaches."
+          class = "card-text",
+          "Ernesto de León focuses on political information flows in a digital age and its effects on political attitudes. In these projects, he makes use of computational methodologies to explore web behaviour, use of algorithmic intermediaries to news (such as social media and search engines), and to conduct large-scale automated content analyses through text-as-data approaches."
+        ),
+        div(
+          style = "display: flex; justify-content: flex-end",
+          a(href = "https://www.ernesto-deleon.com/", "Website: ernesto-deleon.com")
         )
       )
     )
   )
-)
+))
 
 # print(card)
 
@@ -123,6 +135,7 @@ card
 
 
 ```
+
 
 :::
 
