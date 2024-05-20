@@ -44,7 +44,7 @@ dir("_site", full.names = T, recursive = T) %>%
       
       
       str_replace_all('Each section allows you to examine overall trends as well as breakdowns by age\\, gender\\, education level\\, and political leaning',
-                      'Elke sectie stelt je in staat om algemene trends te onderzoeken, evenals uitsplitsingen naar leeftijd, geslacht, opleidingsniveau en politieke voorkeur') %>% 
+                      'Je kunt algemene trends onderzoeken in de verschillende secties, met de mogelijkheid om te differentiëren  naar leeftijd, geslacht, opleidingsniveau en politieke voorkeur') %>% 
       
       
       

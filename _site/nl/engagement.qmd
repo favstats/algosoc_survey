@@ -46,7 +46,7 @@ De pagina is verdeeld in vier hoofdsecties:
 ```
 
 
-Elke sectie stelt je in staat om algemene trends te onderzoeken, evenals uitsplitsingen naar leeftijd, geslacht, opleidingsniveau en politieke voorkeur.  
+Je kunt algemene trends onderzoeken in de verschillende secties, met de mogelijkheid om te differentiëren  naar leeftijd, geslacht, opleidingsniveau en politieke voorkeur.  
 
 ```{r setup, include=FALSE}
 # here::i_am("wtm_gb.Rproj")

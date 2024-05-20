@@ -70,7 +70,7 @@ De pagina is verdeeld in drie hoofdsecties:
 ```
 
 
-Elke sectie stelt je in staat om algemene trends te onderzoeken, evenals uitsplitsingen naar leeftijd, geslacht, opleidingsniveau en politieke voorkeur.  
+Je kunt algemene trends onderzoeken in de verschillende secties, met de mogelijkheid om te differentiëren  naar leeftijd, geslacht, opleidingsniveau en politieke voorkeur.  
 
 
 # {{< iconify fluent-emoji-high-contrast detective >}} Detecteren van door AI gegenereerde content {.tabset .tabset-fade .tabset-pills .break} 

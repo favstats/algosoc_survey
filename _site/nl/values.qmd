@@ -74,7 +74,7 @@ De pagina is verdeeld in vier hoofdsecties:
 </center>
 ```
 
-Elke sectie stelt je in staat om algemene trends te onderzoeken, evenals uitsplitsingen naar leeftijd, geslacht, opleidingsniveau en politieke voorkeur.  
+Je kunt algemene trends onderzoeken in de verschillende secties, met de mogelijkheid om te differentiëren  naar leeftijd, geslacht, opleidingsniveau en politieke voorkeur.  
 
 
 # {{< iconify healthicons world-care-outline >}} Belangrijkste Waarden {.tabset .tabset-fade .tabset-pills .break}
