@@ -286,4 +286,49 @@ vecc <- function(name, num) {
 }
 
 
+polvals <- read_sav("../../cv23o_EN_1.0p.sav") %>% 
+  mutate(left_right = cv23o101) #%>% 
+# mutate(left_right = ifelse(is.na(left_right), "99", left_right))
+
+data <- read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
+  mutate(age_groups = case_when(
+    leeftijd %in% 16:17 ~ "16-17",
+    leeftijd %in% 18:24 ~ "18-24",
+    leeftijd %in% 25:34 ~ "25-34",
+    leeftijd %in% 35:44 ~ "35-44",
+    leeftijd %in% 45:54 ~ "45-54",
+    leeftijd %in% 55:64 ~ "55-64",
+    leeftijd %in% 65:150 ~ "65+",
+  )) %>% 
+  left_join(polvals %>% select(nomem_encr, left_right)) %>% 
+  mutate(pol_cat = case_when(
+    left_right %in% 0:3 ~ "Left",
+    left_right %in% 4:6 ~ "Center",
+    left_right %in% 7:10 ~ "Right"
+  )) %>% 
+  mutate(geslacht = sjmisc::to_label(geslacht)) %>% 
+  mutate(geslacht = case_when(
+    geslacht == "Vrouw" ~ "Woman",
+    geslacht == "Anders" ~ "Other",
+    T ~ geslacht
+  )) %>% 
+  mutate(geslacht = fct_relevel(geslacht, c("Man", "Woman", "Other"))) %>% 
+  arrange(geslacht)  %>% 
+  mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
+  left_join(education_levels) %>%
+  mutate(oplcat = eng) %>%
+  mutate(oplcat = fct_relevel(oplcat, c("Primary (basisonderwijs)",
+                                        "Pre-Vocational (vmbo)",
+                                        "Secondary (havo/vwo)",
+                                        "Vocational (mbo)",
+                                        "Applied Sciences (hbo)",
+                                        "Left (wo)"))) %>% 
+  mutate(pol_cat = fct_relevel(pol_cat, c("left", "Center", "Right"))) %>% 
+  mutate(important1 = sjmisc::to_label(ADSVR_1))
+
+colors <- c("#2ca02c", "#1f77b4", "#ff7f0e") # Add more colors if needed
+
+# Create a stacked bar chart with highcharter
+myMenuItems <- c("downloadPNG", "downloadJPEG", "downloadSVG", "downloadPDF")
+
 

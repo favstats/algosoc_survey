@@ -1,0 +1,513 @@
+---
+description-meta: ""
+execute:
+  echo: false
+---
+
+```{r, echo = F, warning=F, message=F}
+## this is important to keep for some reason ##
+library(tippy)
+tippy_this(
+  elementId = "firstNavItem",
+  tooltip = "Your tooltip text here...",
+  animation = "scale",
+  duration = 1000,
+  placement = "bottom"
+)
+```
+
+De pagina is verdeeld in vier hoofdsecties: 
+
+
+```{=html}
+<center>
+<div class="button-container">
+```
+ 
+
+  <a href="#iconify-fluent-text-grammar-settings-20-regular-vermogen-om-ai-te-herkennen-en-te-beinvloeden" class="buttontop">
+    {{< iconify fluent text-grammar-settings-20-regular >}} Vermogen om AI te herkennen en te beïnvloeden
+  </a>
+
+  <a href="#iconify-material-symbols-light-interactive-space-outline-rounded-gebruik-van-ai-systemen" class="buttontop">
+    {{< iconify material-symbols-light interactive-space-outline-rounded >}} Gebruik van AI-systemen 
+  </a>
+  <a href="#iconify-lets-icons-view-light-contact-met-ai" class="buttontop">
+    {{< iconify lets-icons view-light >}} Contact met AI
+  </a>
+  <a href="#iconify-carbon-ibm-watson-knowledge-studio-bekendheid-met-ai-termen" class="buttontop">
+    {{< iconify carbon ibm-watson-knowledge-studio >}} Bekendheid met AI-termen
+  </a>
+    
+
+```{=html}
+</div>
+</center>
+```
+
+
+Elke sectie stelt je in staat om algemene trends te onderzoeken, evenals uitsplitsingen naar leeftijd, geslacht, opleidingsniveau en politieke voorkeur.  
+
+```{r setup, include=FALSE}
+# here::i_am("wtm_gb.Rproj")
+
+
+## Global options
+knitr::opts_chunk$set(
+    cache = F,
+    echo = F,
+    warning = F,
+    message = F,
+    cache.lazy = FALSE
+)
+
+
+pacman::p_load(htmltools, tidyverse, highcharter, gt, gtExtras, rvest, haven)
+
+options(scipen = 999)
+
+source("utils.R")
+```
+
+
+
+
+
+
+# {{< iconify fluent text-grammar-settings-20-regular >}} Vermogen om AI te herkennen en te beïnvloeden {.tabset .tabset-fade .tabset-pills .break}
+
+> Met kunstmatige intelligentie (AI) kunnen computerprogramma’s zelf taken uitvoeren en ook zelf leren. AI wordt steeds meer gebruikt in de samenleving, en ook in de online media. Veel websites gebruiken AI om je meer inhoud en advertenties te laten zien die je leuk vindt. De volgende vragen gaan over het aanbod (zoals artikelen, films of liedjes) dat aan jou getoond wordt op websites en apps voor nieuws en entertainment (bijv. Netflix of Spotify). 
+
+
+<blockquote class="question-text">
+  In welke mate bent u het eens of oneens met de volgende uitspraken?
+</blockquote>
+
+::: {.panel-tabset}
+
+## Algemeen
+
+```{r}
+
+
+var_labels <- c(
+  "Ik herken het als een website of app AI gebruikt om de content aan mij aan te passen.",
+  "Ik herken het als specifieke content mij wordt aanbevolen door AI.",
+  "Ik weet waar ik de instellingen kan vinden om personalisatie door AI te wijzigen of uit te zetten.",
+  "Ik weet hoe ik bij de gegevens kan komen die AI-systemen gebruiken om content aan mij aan te passen.",
+  "Ik weet hoe ik invloed kan uitoefenen op welke content mij door AI wordt aanbevolen."
+)
+thevarlabs <- var_labels
+
+categories_dat <- c("agree", "neither agree or disagree", "disagree")
+
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels, 
+            categories_dat)
+
+```
+
+
+
+## Op Leeftijd 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T)
+
+```
+
+
+
+::: 
+
+## Op Geslacht
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T)
+
+```
+
+::: 
+
+## Op Opleiding
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T)
+
+```
+
+::: 
+
+## Op Politiek
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T)
+```
+::: 
+
+:::
+
+
+
+# {{< iconify material-symbols-light interactive-space-outline-rounded >}} Gebruik van AI-systemen {.tabset .tabset-fade .tabset-pills .break}
+
+<blockquote class="question-text">
+  Hoe vaak gebruikte u in het afgelopen jaar...
+</blockquote>
+
+
+::: {.panel-tabset}
+
+
+## Algemeen
+
+
+<!-- [Yesterday 12:53] Ernesto de León Williams -->
+<!-- Familiarity: -->
+<!-- Unfamiliar: 1, 2, and 3 -->
+<!-- Somewhat Familiar: 4  -->
+<!-- Familiar: 5, 6 and 7 -->
+<!-- [Yesterday 12:55] Ernesto de León Williams -->
+<!-- Trust: -->
+<!-- Low Trust: 1, 2, and 3 -->
+<!-- Moderate Trust: 4 -->
+<!-- High Trust: 5, 6, and 7 -->
+
+<!-- (<4), sometimes (4), often (>4)
+-->
+```{r}
+
+var_labels <- c("...tekst-generatoren zoals ChatGPT??", 
+                    "...afbeelding-generatoren zoals Midjourney??")
+
+categories_dat <- c("vaak", "soms", "zeldzaam")
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels, 
+            categories_dat)
+
+```
+
+
+## Op Leeftijd
+
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+# source("utils.R")
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T)
+```
+
+:::
+
+
+## Op Geslacht
+
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T)
+
+
+```
+
+
+:::
+
+
+## Op Opleiding
+
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T)
+```
+
+:::
+
+
+## Op Politiek
+
+
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T)
+```
+
+:::
+
+:::
+
+
+# {{< iconify lets-icons view-light >}} Contact met AI {.tabset .tabset-fade .tabset-pills .break}
+
+> Kunstmatige Intelligentie (AI) kan worden gebruikt om kunstmatige inhoud te maken, zoals tekst,
+afbeeldingen en video's.
+
+
+<blockquote class="question-text">
+  Hoe vaak denkt u dat u in het afgelopen jaar de volgende dingen op sociale media bent tegengekomen?
+</blockquote>
+
+
+
+
+::: {.panel-tabset}
+
+## Algemeen
+
+```{r}
+var_labels <- c(
+  "Teksten gemaakt door AI",
+  "Foto's of afbeeldingen gemaakt door AI",
+  "Video’s gemaakt door AI"
+)
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat)
+```
+
+
+## Op Leeftijd
+
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T)
+```
+
+:::
+
+
+## Op Geslacht
+
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T)
+
+
+```
+
+
+:::
+
+
+## Op Opleiding
+
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T)
+```
+
+:::
+
+
+## Op Politiek
+
+
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T)
+```
+
+:::
+
+:::
+
+
+# {{< iconify carbon ibm-watson-knowledge-studio >}} Bekendheid met AI-termen {.tabset .tabset-fade .tabset-pills .break}
+
+<blockquote class="question-text">
+  Hoe bekend bent u met de volgende zaken?
+
+</blockquote>
+
+
+::: {.panel-tabset}
+
+## Algemeen
+
+```{r}
+
+categories_dat <- c("familiar","somewhat familiar","unfamiliar")
+
+var_labels <- c(
+  "Generatieve AI",
+  "ChatGPT",
+  "Deepfakes",
+  "Algoritmen",
+  "Chatbots"
+)
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat)
+```
+
+
+
+## Op Leeftijd
+
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T)
+```
+
+:::
+
+
+## Op Geslacht
+
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T)
+
+
+```
+
+
+:::
+
+
+## Op Opleiding
+
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T)
+```
+
+:::
+
+
+## Op Politiek
+
+
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T)
+```
+
+:::
+
+:::
+
+<br>
+
+<center>
+
+<img src="algosoclogo.png" width="13%">
+
+
+</center>
+
+

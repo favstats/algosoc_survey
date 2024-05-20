@@ -33,6 +33,7 @@ Als je meer wilt weten over AlgoSoc en ons werk op het gebied van AI, bezoek ons
 Deze eerste golf van dataverzameling heeft in totaal *3.946 deelnemers* geïnterviewd over belangrijke vragen rondom algoritmen en publieke waarden in de sectoren gezondheid, rechtspraak en media. De gegevens werden verzameld als onderdeel van het [Centerdata’s](https://www.centerdata.nl/) [LISS panel](https://www.lissdata.nl/) gedurende maart 2024.
 
 
+
 ### About the Creators of the Dashboard
 
 
@@ -68,12 +69,16 @@ card <- div(
         class = "card-body",
         p(
           class = "card-text", 
-          "Fabio Votta is a Postdoc at the University of Amsterdam who studies digital political campaigns and the role of ad delivery algorithms."
+          "Fabio Votta is a Postdoc at the University of Amsterdam who studies digital political campaigns and the role of ad delivery algorithms. He is particularly interested in how political actors use targeted campaign messages to reach specific voters and how social media platforms enable these practices."
+        ,
+        div(
+          style = "display: flex; justify-content: flex-end",
+          a(href = "https://www.favstats.eu/", "Website: favstats.eu")
         )
       )
     )
   )
-)
+))
 
 # print(card)
 
@@ -87,7 +92,10 @@ card
 #### Ernesto de León
 
 ```{r, echo=F}
-card <- div(
+card <- shiny::fluidPage(
+  tags$head(
+    tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
+  ),div(
   class = "card",
   div(
     class = "row no-gutters align-items-center",  # Added align-items-center to vertically center the content
@@ -107,13 +115,17 @@ card <- div(
       div(
         class = "card-body",
         p(
-          class = "card-text", 
-          "Ernesto de León focuses on political information flows in a digital age and its effects on political attitudes. In these projects, I make use of computational methodologies to explore web behaviour, use of algorithmic intermediaries to news (such as social media and search engines), and to conduct large-scale automated content analyses through text-as-data approaches."
+          class = "card-text",
+          "Ernesto de León focuses on political information flows in a digital age and its effects on political attitudes. In these projects, he makes use of computational methodologies to explore web behaviour, use of algorithmic intermediaries to news (such as social media and search engines), and to conduct large-scale automated content analyses through text-as-data approaches."
+        ),
+        div(
+          style = "display: flex; justify-content: flex-end",
+          a(href = "https://www.ernesto-deleon.com/", "Website: ernesto-deleon.com")
         )
       )
     )
   )
-)
+))
 
 # print(card)
 

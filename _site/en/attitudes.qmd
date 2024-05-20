@@ -38,62 +38,10 @@ knitr::opts_chunk$set(
 pacman::p_load(htmltools, tidyverse, highcharter, gt, gtExtras, rvest, haven)
 
 options(scipen = 999)
-```
-
-
-
-
-
-
-```{r include=FALSE}
 
 source("utils.R")
-
-polvals <- read_sav("../../cv23o_EN_1.0p.sav") %>% 
-  mutate(left_right = cv23o101) #%>% 
-  # mutate(left_right = ifelse(is.na(left_right), "99", left_right))
-
-data <- read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
-  mutate(age_groups = case_when(
-    leeftijd %in% 16:17 ~ "16-17",
-    leeftijd %in% 18:24 ~ "18-24",
-    leeftijd %in% 25:34 ~ "25-34",
-    leeftijd %in% 35:44 ~ "35-44",
-    leeftijd %in% 45:54 ~ "45-54",
-    leeftijd %in% 55:64 ~ "55-64",
-    leeftijd %in% 65:150 ~ "65+",
-  )) %>% 
-  left_join(polvals %>% select(nomem_encr, left_right)) %>% 
-  mutate(pol_cat = case_when(
-    left_right %in% 0:3 ~ "left",
-    left_right %in% 4:6 ~ "center",
-    left_right %in% 7:10 ~ "right"
-    )) %>% 
-    mutate(geslacht = sjmisc::to_label(geslacht)) %>% 
-    mutate(geslacht = case_when(
-      geslacht == "Vrouw" ~ "Woman",
-      geslacht == "Anders" ~ "Other",
-      T ~ geslacht
-    )) %>% 
-    mutate(geslacht = fct_relevel(geslacht, c("Man", "Woman", "Other"))) %>% 
-    arrange(geslacht)  %>% 
-    mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
-    left_join(education_levels) %>%
-    mutate(oplcat = eng) %>%
-    mutate(oplcat = fct_relevel(oplcat, c("Primary (basisonderwijs)",
-                                          "Pre-Vocational (vmbo)",
-                                          "Secondary (havo/vwo)",
-                                          "Vocational (mbo)",
-                                          "Applied Sciences (hbo)",
-                                          "University (wo)"))) %>% 
-    mutate(pol_cat = fct_relevel(pol_cat, c("left", "center", "right")))
-
-colors <- c("#2ca02c", "#1f77b4", "#ff7f0e") # Add more colors if needed
-
-# Create a stacked bar chart with highcharter
-myMenuItems <- c("downloadPNG", "downloadJPEG", "downloadSVG", "downloadPDF")
-
 ```
+
 
 The page is divided into three main sections: 
 
@@ -149,7 +97,6 @@ var_labels <- c(
   "Friends/family",
   "Yourself"
 )
-
 
 categories_dat <- c("confident", "somewhat confident", "not confident")
 
@@ -236,7 +183,7 @@ viz_general(vecc("CONF", 1:8),
 
 
 <blockquote class="question-text">
-How confident are you that automated decision-making systems can properly determine...
+How much do you trust automated decision-making systems to properly determine...
 
 </blockquote>
 
@@ -252,6 +199,7 @@ var_labels <- c(
 )
 
 # categories_dat <- c("confident", "neither", "not confident")
+categories_dat <- c("trust", "somewhat trust", "little trust")
 
 
 viz_general(vecc("TADS", 1:3), 
