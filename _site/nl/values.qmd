@@ -61,11 +61,11 @@ De pagina is verdeeld in vier hoofdsecties:
   <a href="#iconify-fluent-data-usage-16-regular-nuttigheid-van-ai" class="buttontop">
     {{< iconify fluent data-usage-16-regular >}} Nuttigheid van AI
   </a>
-  <<a href="#iconify-solar-danger-outline-risicos-van-ai" class="buttontop">
+  <a href="#iconify-solar-danger-outline-risicos-van-ai" class="buttontop">
     {{< iconify solar danger-outline >}} Risico's van AI
   </a>
   <a href="#iconify-material-symbols-light-balance-eerlijkheid-van-ai" class="buttontop">
-    {{< iconify material-symbols-light balance >}} Fairness of AI
+    {{< iconify material-symbols-light balance >}} Eerlijkheid van AI
   </a>
     
 
@@ -573,7 +573,7 @@ viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"),
 :::
 
 
-# {{< iconify material-symbols-light balance >}} Fairness of AI {.tabset .tabset-fade .tabset-pills .break}
+# {{< iconify material-symbols-light balance >}} Eerlijkheid van AI {.tabset .tabset-fade .tabset-pills .break}
 
 > In de meeste voorspellingen zal geautomatiseerde besluitvorming in de toekomst vaker gaan voorkomen. Als dat inderdaad zo is, in welke mate bent u het dan oneens of eens met de volgende uitspraken:
 

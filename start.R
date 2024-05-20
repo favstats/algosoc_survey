@@ -200,13 +200,13 @@ tijd hebben om zich op grote misdrijven te richten") %>%
       
       
       str_replace_all('<a href="#iconify-solar-danger-outline-riskiness-of-ai" class="buttontop">',
-                      '<<a href="#iconify-solar-danger-outline-risicos-van-ai" class="buttontop">') %>% 
+                      '<a href="#iconify-solar-danger-outline-risicos-van-ai" class="buttontop">') %>% 
       str_replace_all('\\{\\{< iconify solar danger-outline >\\}\\} Riskiness of AI',
                       "{{< iconify solar danger-outline >}} Risico's van AI") %>% 
       
       str_replace_all('<a href="#iconify-material-symbols-light-balance-fairness-of-ai" class="buttontop">',
                       '<a href="#iconify-material-symbols-light-balance-eerlijkheid-van-ai" class="buttontop">') %>% 
-      str_replace_all('\\{\\{< iconify material-symbols-light balance >\\}\\} Fairness of AIs',
+      str_replace_all('\\{\\{< iconify material-symbols-light balance >\\}\\} Fairness of AI',
                       '{{< iconify material-symbols-light balance >}} Eerlijkheid van AI') %>% 
       
       
