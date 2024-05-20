@@ -65,8 +65,8 @@ dir("_site", full.names = T, recursive = T) %>%
       str_replace_all('I know how I can influence what content is recommended to me by AI',
                       'Ik weet hoe ik invloed kan uitoefenen op welke content mij door AI wordt aanbevolen') %>% 
       
-      str_replace_all('"Agree (1-3)", "Neither agree or disagree (4)", "Disagree (5-7)"',
-                      '"Eens (1-3)", "Noch eens, noch oneens (4)", "Oneens (5-7)"')  %>% 
+      str_replace_all('"Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)"',
+                      '"Eens (5-7)", "Noch eens, noch oneens (4)", "Oneens (1-3)"')  %>% 
       
       str_replace_all('How often in the past year did you use...',
                       'Hoe vaak gebruikte u in het afgelopen jaar...')  %>% 
@@ -95,8 +95,8 @@ afbeeldingen en video's")  %>%
       
       str_replace_all('How familiar are you with the following terms',
                       'Hoe bekend bent u met de volgende zaken')  %>% 
-      str_replace_all('"Familiar (1-3)","Somewhat familiar (4)","Unfamiliar (5-7)"',
-                      '"Bekend (1-3)", "Enigszins bekend (4)", "Onbekend (5-7)"')  %>%      
+      str_replace_all('"Familiar (5-7)","Somewhat familiar (4)","Unfamiliar (1-3)"',
+                      '"Bekend (5-7)", "Enigszins bekend (4)", "Onbekend (1-3)"')  %>%      
       str_replace_all('Generative AI',
                       'Generatieve AI')  %>% 
       str_replace_all('Algorithms',
@@ -154,8 +154,8 @@ afbeeldingen en video's")  %>%
                       "Vrienden/familie") %>%
       str_replace_all("Yourself",
                       "Uzelf") %>%
-      str_replace_all('"Confident (1-3)", "Somewhat confident (4)", "Not confident (5-7)"',
-                      '"Zeker (1-3)", "Enigszins zeker (4)", "Niet zeker (5-7)"')  %>% 
+      str_replace_all('"Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)"',
+                      '"Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)"')  %>% 
       
       
       str_replace_all('We ask you a number of additional questions about automatic decision-making \\(ADM\\) systems. These are computer programs that make decisions that used to be made by people. These decisions are made automatically by computers based on data',

@@ -116,8 +116,6 @@ dutchlabs <- c("Respect voor privacy van gebruikers",
 thelabs <- tibble(adsv_var_labels, dutchlabs)
 
 important_issue <- data %>% 
-  # select(ADSVR_1) %>% 
-  mutate(important1 = sjmisc::to_label(ADSVR_1)) %>% 
   count(important1, sort = T) %>% 
   mutate(perc = n/sum(n)*100) %>% 
   drop_na() %>% 
@@ -203,12 +201,6 @@ important_issue_age <- data  %>%
 
 ```{r}
 important_issue_gender <- data  %>% 
-    mutate(geslacht = sjmisc::to_label(geslacht)) %>% 
-    mutate(geslacht = case_when(
-      geslacht == "Vrouw" ~ "Woman",
-      geslacht == "Anders" ~ "Other",
-      T ~ geslacht
-    )) %>% 
   count(important1, geslacht, sort = T) %>% 
   group_by(geslacht) %>% 
   mutate(perc = n/sum(n)*100) %>% 
@@ -216,8 +208,7 @@ important_issue_gender <- data  %>%
   drop_na()  %>% 
   left_join(thelabs %>% 
               rename(important1 = dutchlabs)) %>% 
-  mutate(important1 =adsv_var_labels) %>% 
-    mutate(geslacht = fct_relevel(geslacht, c("Man", "Woman", "Other"))) %>% 
+  mutate(important1 =adsv_var_labels)  %>% 
     arrange(geslacht)
 
 
@@ -339,7 +330,6 @@ important_issue_pol <- data  %>%
   left_join(thelabs %>% 
               rename(important1 = dutchlabs)) %>% 
   mutate(important1 =adsv_var_labels) %>% 
-  mutate(pol_cat = fct_relevel(pol_cat, c("left", "center", "right"))) %>% 
   arrange(pol_cat)
 
 
@@ -368,7 +358,7 @@ important_issue_pol <- data  %>%
       )
     ) %>%
     hc_caption(
-      text = paste0("<em>N = ", sum(important_issue_pol$n), ". Politics category is based on 10-scale: 0-3: left; 4-6: center; 7-10: right.</em>"),
+      text = paste0("<em>N = ", sum(important_issue_pol$n), ". Politics category is based on 10-scale: 0-3: Left; 4-6: Center; 7-10: Right.</em>"),
       align = "right",  # Change to "left" or "right" as needed
       style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
     ) 
@@ -398,7 +388,7 @@ var_labels <- c(
   "Cancer Diagnosis"
 )
 
-categories_dat <- c("agree", "neither agree or disagree", "disagree")
+categories_dat <- c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)")
 
 var_labels <- c("News Media", "Legal System", "Healthcare")
 

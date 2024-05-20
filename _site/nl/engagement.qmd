@@ -99,7 +99,7 @@ var_labels <- c(
 )
 thevarlabs <- var_labels
 
-categories_dat <- c("agree", "neither agree or disagree", "disagree")
+categories_dat <- c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)")
 
 
 viz_general(vecc("DIGIQ", 1:5), 
@@ -212,7 +212,7 @@ viz_general(vecc("DIGIQ", 1:5),
 var_labels <- c("...tekst-generatoren zoals ChatGPT??", 
                     "...afbeelding-generatoren zoals Midjourney??")
 
-categories_dat <- c("vaak", "soms", "zeldzaam")
+categories_dat <- c("Often (5-7)","Sometimes (4)","Rare (1-3)")
 
 viz_general(vecc("ADM", 1:2), 
             var_labels, 
@@ -412,7 +412,7 @@ viz_general(vecc("EXPO", 1:3),
 
 ```{r}
 
-categories_dat <- c("familiar","somewhat familiar","unfamiliar")
+categories_dat <- c("Familiar (5-7)","Somewhat familiar (4)","Unfamiliar (1-3)")
 
 var_labels <- c(
   "Generatieve AI",
