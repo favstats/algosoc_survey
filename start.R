@@ -75,8 +75,8 @@ dir("_site", full.names = T, recursive = T) %>%
                       '...tekst-generatoren zoals ChatGPT?')  %>% 
       str_replace_all('...image generators like Midjourney?',
                       '...afbeelding-generatoren zoals Midjourney?') %>% 
-      str_replace_all('"often","sometimes","rare"',
-                      '"vaak", "soms", "zeldzaam"') %>% 
+      str_replace_all('"Often \\(5-7\\)","Sometimes \\(4\\)","Rare \\(1-3\\)"',
+                      '"Vaak (5-7)", "Soms (4)", "Zeldzaam (1-3)"') %>% 
       
       
       
@@ -168,8 +168,8 @@ afbeeldingen en video's")  %>%
                       "...welke nieuwsberichten aanbevolen worden aan iemand") %>%
       str_replace_all("Cancer Diagnosis",
                       "...of iemand kanker heeft") %>%
-      str_replace_all('"Trust \\(1-3\\)", "Somewhat trust \\(4\\)", "Little trust \\(5-7\\)"',
-                      '"Vertrouwen \\(1-3\\)", "Enigszins vertrouwen \\(4\\)", "Weinig vertrouwen \\(5-7\\)"')  %>% 
+      str_replace_all('"Trust \\(5-7\\)", "Somewhat trust \\(4\\)", "Little trust \\(1-3\\)"',
+                      '"Vertrouwen \\(5-7\\)", "Enigszins vertrouwen \\(4\\)", "Weinig vertrouwen \\(1-3\\)"')  %>% 
       
       str_replace_all('If automated decision-making \\(ADM\\) becomes more common in the future, what do you think will happen',
                       'Als geautomatiseerde besluitvorming in de toekomst vaker voorkomt, wat denkt u dan dat er zal gebeuren')  %>% 
