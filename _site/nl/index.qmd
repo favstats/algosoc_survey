@@ -17,7 +17,7 @@ execute:
 ::: justify
 
 <blockquote class="highlightit">
-Welkom bij de *AlgoSoc AI Opinie Monitor*. De Opinie Motor biedt inzichten in publieke percepties van en ervaringen met kunstmatige intelligentie (AI) en geautomatiseerde beslissystemen in de samenleving! We vroegen ongeveer* 4,000 respondenten* in Nederland wat ze van dit onderwerp vinden.
+Welkom bij de *AlgoSoc AI Opinie Monitor*. De Opinie Motor biedt inzichten in publieke percepties van en ervaringen met kunstmatige intelligentie (AI) en geautomatiseerde beslissystemen in de samenleving! We vroegen ongeveer *4,000 respondenten* in Nederland wat ze van dit onderwerp vinden.
 </blockquote>
 
 ![](banner.png)
