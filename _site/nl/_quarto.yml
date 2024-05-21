@@ -12,7 +12,7 @@ website:
       - href: engagement.qmd
         text: "{{< iconify ph users-three >}} Betrokkenheid"
       - href: attitudes.qmd
-        text: "{{< iconify ph head-circuit >}} Houdingen"
+        text: "{{< iconify ph head-circuit >}} Attitudes"
       - href: values.qmd
         text: "{{< iconify ph globe-hemisphere-west >}} Waarden"
     right:
