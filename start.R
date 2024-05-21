@@ -71,10 +71,10 @@ dir("_site", full.names = T, recursive = T) %>%
       str_replace_all('How often in the past year did you use...',
                       'Hoe vaak gebruikte u in het afgelopen jaar...')  %>% 
       
-      str_replace_all('...text generators like ChatGPT?',
-                      '...tekst-generatoren zoals ChatGPT?')  %>% 
-      str_replace_all('...image generators like Midjourney?',
-                      '...afbeelding-generatoren zoals Midjourney?') %>% 
+      str_replace_all('...text generators like ChatGPT',
+                      '...tekst-generatoren zoals ChatGPT')  %>% 
+      str_replace_all('...image generators like Midjourney',
+                      '...afbeelding-generatoren zoals Midjourney') %>% 
       str_replace_all('"Often \\(5-7\\)","Sometimes \\(4\\)","Rare \\(1-3\\)"',
                       '"Vaak (5-7)", "Soms (4)", "Zeldzaam (1-3)"') %>% 
       

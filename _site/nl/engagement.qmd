@@ -209,8 +209,8 @@ viz_general(vecc("DIGIQ", 1:5),
 -->
 ```{r}
 
-var_labels <- c("...tekst-generatoren zoals ChatGPT??", 
-                    "...afbeelding-generatoren zoals Midjourney??")
+var_labels <- c("...tekst-generatoren zoals ChatGPT?", 
+                    "...afbeelding-generatoren zoals Midjourney?")
 
 categories_dat <- c("Vaak (5-7)", "Soms (4)", "Zeldzaam (1-3)")
 
