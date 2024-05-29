@@ -33,7 +33,13 @@ If you want to know more about AlgoSoc and our work on AI, visit us on <a href="
 
 ### Methodology
 
-This first wave of data collection interviewed a total of *3,946 participants* on key questions surrounding algorithms and public values across the sectors of health, justice and media. The data was collected as part of [Centerdata’s](https://www.centerdata.nl/) [LISS panel](https://www.lissdata.nl/) throughout March of 2024.
+This first wave of data collection interviewed a total of *3,946 participants* on key questions surrounding algorithms and public values across the sectors of health, justice and media. The data was collected as part of [Centerdata’s](https://www.centerdata.nl/en/) [LISS panel](https://www.lissdata.nl/) throughout March of 2024.
+
+<center>
+
+![](centerdata.png)
+
+</center>
 
 ### About the Creators of the Dashboard
 

@@ -30,7 +30,7 @@ Als je meer wilt weten over AlgoSoc en ons werk op het gebied van AI, bezoek ons
 
 ### Methodologie
 
-Deze eerste golf van dataverzameling heeft in totaal *3.946 deelnemers* geïnterviewd over belangrijke vragen rondom algoritmen en publieke waarden in de sectoren gezondheid, rechtspraak en media. De gegevens werden verzameld als onderdeel van het [Centerdata’s](https://www.centerdata.nl/) [LISS panel](https://www.lissdata.nl/) gedurende maart 2024.
+Deze eerste golf van dataverzameling heeft in totaal *3.946 deelnemers* geïnterviewd over belangrijke vragen rondom algoritmen en publieke waarden in de sectoren gezondheid, rechtspraak en media. De gegevens werden verzameld als onderdeel van het [Centerdata’s](https://www.centerdata.nl/nl/) [LISS panel](https://www.lissdata.nl/) gedurende maart 2024.
 
 
 

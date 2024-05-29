@@ -73,7 +73,7 @@ card <- div(
         ,
         div(
           style = "display: flex; justify-content: flex-end",
-          a(href = "https://www.favstats.eu/", "Website: favstats.eu")
+          a(href = "https://twitter.com/favstats", "Website: favstats.eu")
         )
       )
     )

@@ -243,6 +243,8 @@ tijd hebben om zich op grote misdrijven te richten") %>%
                       "Meer automatische besluitvorming in de nieuwsmedia/het rechtsstelsel/de gezondheidszorg zal **eerlijker** zijn") %>%    
       str_replace_all('"News Media", "Legal System", "Healthcare"',
                       '"Nieuwsmedia", "Rechtsstelsel", "Gezondheidszorg"') %>%
+      str_replace_all('https://www.centerdata.nl/en/',
+                      'https://www.centerdata.nl/') %>%
       
       
       
