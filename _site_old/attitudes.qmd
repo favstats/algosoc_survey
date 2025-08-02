@@ -1,0 +1,326 @@
+---
+description-meta: ""
+execute:
+  echo: false
+---
+
+
+
+```{r, echo = F, warning=F, message=F}
+## this is important to keep for some reason ##
+library(tippy)
+tippy_this(
+  elementId = "firstNavItem",
+  tooltip = "Your tooltip text here...",
+  animation = "scale",
+  duration = 1000,
+  placement = "bottom"
+)
+
+```
+
+
+
+```{r setup, include=FALSE}
+# here::i_am("wtm_gb.Rproj")
+
+
+## Global options
+knitr::opts_chunk$set(
+    cache = F,
+    echo = F,
+    warning = F,
+    message = F,
+    cache.lazy = FALSE
+)
+
+
+pacman::p_load(htmltools, tidyverse, highcharter, gt, gtExtras, rvest, haven)
+
+options(scipen = 999)
+```
+
+
+
+
+
+
+```{r include=FALSE}
+
+# polvals <- read_sav("../../cv23o_EN_1.0p.sav") %>% 
+#   mutate(left_right = cv23o101)
+# data <- read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>% 
+#   mutate(age_groups = case_when(
+#     leeftijd %in% 16:17 ~ "16-17",
+#     leeftijd %in% 18:24 ~ "18-24",
+#     leeftijd %in% 25:34 ~ "25-34",
+#     leeftijd %in% 35:44 ~ "35-44",
+#     leeftijd %in% 45:54 ~ "45-54",
+#     leeftijd %in% 55:64 ~ "55-64",
+#     leeftijd %in% 65:150 ~ "65+",
+#   )) %>% 
+#   left_join(polvals %>% select(nomem_encr, left_right)) %>% 
+#   mutate(pol_cat = case_when(
+#     left_right %in% 0:3 ~ "links",
+#     left_right %in% 4:6 ~ "centrum",
+#     left_right %in% 7:10 ~ "rechts"
+#     ))
+# 
+
+
+std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
+
+
+# data %>% 
+#   write_csv("../../L_AlgoSoc_wave1_1.0p.csv")
+
+
+source("utils.R")
+```
+
+De pagina is verdeeld in drie hoofdsecties:
+
+
+```{=html}
+<center>
+<div class="button-container">
+```
+ 
+
+
+
+<a href="#iconify-fluent-emoji-high-contrast-detective-detecting-ai-generated-content" class="buttontop">
+  {{< iconify fluent-emoji-high-contrast detective >}} Detecteren van door AI gegenereerde content
+</a>
+<a href="#iconify-mingcute-safe-lock-fill-trust-in-AI-systems" class="buttontop">
+  {{< iconify mingcute safe-lock-fill >}} Vertrouwen in AI-systemen
+</a>
+<a href="#iconify-game-icons-sands-of-time-future-of-AI-systems" class="buttontop">
+  {{< iconify game-icons sands-of-time >}} Toekomst van AI-systemen
+</a>
+
+```{=html}
+</div>
+</center>
+```
+
+
+Elke sectie stelt je in staat om algemene trends te onderzoeken, evenals uitsplitsingen op leeftijd, geslacht, opleidingsniveau en politieke voorkeur.
+
+
+
+# {{< iconify fluent-emoji-high-contrast detective >}} Detecteren van door AI gegenereerde inhoud {.tabset .tabset-fade .tabset-pills .break}
+
+
+
+
+<blockquote class="question-text">
+ Hoe zeker bent u ervan dat de volgende groepen het verschil kunnen zien tussen content gemaakt door AI en content gemaakt door mensen?
+</blockquote>
+
+::: {.panel-tabset}
+
+## Algemeen
+
+```{r}
+var_labels <- c(
+  "Mensen uit de algemene bevolking",
+  "Parlementsleden",
+  "Rechters",
+  "Journalisten",
+  "Politieagenten",
+  "Artsen",
+  "Vrienden/familie",
+  "Uzelf"
+)
+
+data %>% 
+  generate_general("CONF1", "CONF8", var_labels,
+                   "<- 1: helemaal niet zeker   -    7: heel erg zeker ->")
+```
+
+## Op Leeftijd
+
+```{r}
+data %>% 
+  by_age("CONF1", "CONF8", var_labels,
+                   "<- 1: helemaal niet zeker   -    7: heel erg zeker ->")
+```
+
+
+## Op Geslacht
+
+```{r}
+data %>% 
+  by_gender("CONF1", "CONF8", var_labels,
+                   "<- 1: helemaal niet zeker   -    7: heel erg zeker ->")
+```
+
+
+## Op Opleiding
+
+
+
+```{r}
+data %>% 
+  by_edu("CONF1", "CONF8", var_labels,
+                   "<- 1: helemaal niet zeker   -    7: heel erg zeker ->")
+```
+
+
+## Op Politiek
+
+```{r}
+data %>% 
+  by_pol("CONF1", "CONF8", var_labels,
+                   "<- 1: helemaal niet zeker   -    7: heel erg zeker ->")
+```
+
+:::
+
+# {{< iconify mingcute safe-lock-fill >}} Vertrouwen in AI-systemen {.tabset .tabset-fade .tabset-pills .break}
+
+
+> We stellen u nog een aantal extra vragen over automatische besluitvormingssystemen. Dat zijn computerprogramma's die beslissingen maken die vroeger door mensen werden genomen. Deze
+beslissingen worden automatisch door computers genomen op basis van gegevens.
+
+
+<blockquote class="question-text">
+Hoeveel vertrouwen hebt u erin dat automatische besluitvormingssystemen goed kunnen bepalen...
+</blockquote>
+
+::: {.panel-tabset}
+
+## Algemeen
+
+```{r}
+var_labels <- c(
+  "...of iemand in aanmerking komt voor een bijstandsuitkering?",
+  "...welke nieuwsberichten aanbevolen worden aan iemand?",
+  "...of iemand kanker heeft?"
+)
+
+data %>% 
+  generate_general("TADS1", "TADS3", var_labels,
+                   "<- 1: geen vertrouwen   -    7: volledig vertrouwen ->")
+```
+
+## Op Leeftijd
+
+```{r}
+data %>% 
+  by_age("TADS1", "TADS3", var_labels,
+                   "<- 1: geen vertrouwen   -    7: olledig vertrouwen ->")
+```
+
+
+## Op Geslacht
+
+```{r}
+data %>% 
+  by_gender("TADS1", "TADS3", var_labels,
+                   "<- 1: helemaal niet zeker   -    7: heel erg zeker ->")
+```
+
+
+## Op Opleiding
+
+
+
+```{r}
+data %>% 
+  by_edu("TADS1", "TADS3", var_labels,
+                   "<- 1: helemaal niet zeker   -    7: heel erg zeker ->")
+```
+
+
+## Op Politiek
+
+```{r}
+data %>% 
+  by_pol("TADS1", "TADS3", var_labels,
+                   "<- 1: helemaal niet zeker   -    7: heel erg zeker ->")
+```
+
+:::
+
+
+# {{< iconify game-icons sands-of-time >}} Toekomst van AI-systemen {.tabset .tabset-fade .tabset-pills .break}
+
+
+<blockquote class="question-text">
+Als geautomatiseerde besluitvorming in de toekomst vaker voorkomt, wat denkt u dan dat er zal gebeuren?
+
+</blockquote>
+
+::: {.panel-tabset}
+
+## Algemeen
+
+```{r}
+var_labels <- c(
+  "Als het nieuws wordt geautomatiseerd, zullen journalisten zich meer kunnen richten op
+onderzoeksjournalistiek.",
+  "Ik zal alleen nog maar nieuwsberichten krijgen die me interesseren.",
+  "Het zal de verslaggeving eerlijker en evenwichtiger maken.",
+  "Als bepaalde taken voor handhaven van de wet worden geautomatiseerd, zal de politie meer
+tijd hebben om zich op grote misdrijven te richten.",
+  "De bepaling van sociale uitkeringen zal er eerlijker en evenwichtiger door worden."
+)
+
+data %>% 
+  generate_general("ADSO1", "ADSO5", var_labels,
+                   "<- 1: helemaal mee oneens   -    7: helemaal mee eens ->")
+```
+
+## Op Leeftijd
+
+```{r}
+data %>% 
+  by_age("ADSO1", "ADSO5", var_labels,
+                   "<- 1: helemaal mee oneens   -    7: helemaal mee eens ->")
+```
+
+
+## Op Geslacht
+
+```{r}
+data %>% 
+  by_gender("ADSO1", "ADSO5", var_labels,
+                   "<- 1: helemaal mee oneens   -    7: helemaal mee eens ->")
+```
+
+
+## Op Opleiding
+
+
+
+```{r}
+data %>% 
+  by_edu("ADSO1", "ADSO5", var_labels,
+                   "<- 1: helemaal mee oneens   -    7: helemaal mee eens ->")
+```
+
+
+## Op Politiek
+
+```{r}
+data %>% 
+  by_pol("ADSO1", "ADSO5", var_labels,
+                   "<- 1: helemaal mee oneens   -    7: helemaal mee eens ->")
+```
+
+:::
+
+
+<br>
+
+<center>
+
+<img src="algosoclogo.png" width="13%">
+
+
+</center>
+
+
+

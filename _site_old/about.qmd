@@ -1,0 +1,155 @@
+---
+title: " "
+format:
+  html:
+    theme: lumen
+---
+
+```{r, echo = F, warning=F, message=F}
+library(tidyverse)
+library(rvest)
+library(htmltools)
+
+## this is important to keep for some reason ##
+library(tippy)
+tippy_this(
+  elementId = "firstNavItem",
+  tooltip = "Your tooltip text here...",
+  animation = "scale",
+  duration = 1000,
+  placement = "bottom"
+)
+
+```
+
+
+
+Dit dashboard verzamelt gegevens die zijn verzameld via het <a href="https://algosoc.org/" target="_blank">AlgoSoc Consortium</a> om te laten zien wat burgers denken en voelen over AI in de samenleving.
+
+Als je meer wilt weten over AlgoSoc en ons werk op het gebied van AI, bezoek ons dan op <a href="https://algosoc.org/" target="_blank">algosoc.org</a>!
+
+### Methodologie
+
+Deze eerste golf van dataverzameling heeft in totaal *3.946 deelnemers* geïnterviewd over belangrijke vragen rondom algoritmen en publieke waarden in de sectoren gezondheid, rechtspraak en media. De gegevens werden verzameld als onderdeel van het [Centerdata’s](https://www.centerdata.nl/nl/) [LISS panel](https://www.lissdata.nl/) gedurende maart 2024.
+
+
+
+### About the Creators of the Dashboard
+
+
+::: {.panel-tabset}
+
+
+
+
+#### Fabio Votta
+
+```{r, echo=F}
+
+library(htmltools)
+
+card <- div(
+  class = "card",
+  div(
+    class = "row no-gutters align-items-center",  # Added align-items-center to vertically center the content
+    div(
+      class = "col-md-2",  # Reduced column size to make the image smaller
+      div(  # Wrapped the image in another div to center it horizontally
+        style = "display: flex; justify-content: center;",
+        img(
+          class = "card-img", 
+          src = "https://algosoc.org/uploads/_card/fabio-votta-1.jpg",
+          style = "max-width: 500px;"  # Adjusted max-width to control image size
+        )
+      )
+    ),
+    div(
+      class = "col-md-2",
+      div(
+        class = "card-body",
+        p(
+          class = "card-text", 
+          "Fabio Votta is a Postdoc at the University of Amsterdam who studies digital political campaigns and the role of ad delivery algorithms. He is particularly interested in how political actors use targeted campaign messages to reach specific voters and how social media platforms enable these practices."
+        ,
+        div(
+          style = "display: flex; justify-content: flex-end",
+          a(href = "https://www.favstats.eu/", "Website: favstats.eu")
+        )
+      )
+    )
+  )
+))
+
+# print(card)
+
+
+# print(card)
+card
+
+```
+
+
+#### Ernesto de León
+
+```{r, echo=F}
+card <- shiny::fluidPage(
+  tags$head(
+    tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
+  ),div(
+  class = "card",
+  div(
+    class = "row no-gutters align-items-center",  # Added align-items-center to vertically center the content
+    div(
+      class = "col-md-2",  # Reduced column size to make the image smaller
+      div(  # Wrapped the image in another div to center it horizontally
+        style = "display: flex; justify-content: center;",
+        img(
+          class = "card-img", 
+          src = "https://algosoc.org/uploads/_card/Ernesto-de-Leon.jpeg",
+          style = "max-width: 500px;"  # Adjusted max-width to control image size
+        )
+      )
+    ),
+    div(
+      class = "col-md-2",
+      div(
+        class = "card-body",
+        p(
+          class = "card-text",
+          "Ernesto de León focuses on political information flows in a digital age and its effects on political attitudes. In these projects, he makes use of computational methodologies to explore web behaviour, use of algorithmic intermediaries to news (such as social media and search engines), and to conduct large-scale automated content analyses through text-as-data approaches."
+        ),
+        div(
+          style = "display: flex; justify-content: flex-end",
+          a(href = "https://www.ernesto-deleon.com/", "Website: ernesto-deleon.com")
+        )
+      )
+    )
+  )
+))
+
+# print(card)
+
+
+# print(card)
+card
+
+
+```
+
+:::
+
+
+### Meer over AlgoSoc
+
+In de opkomende algoritmische samenleving worden belangrijke beslissingen niet langer alleen door mensen genomen. Dataficatie, geavanceerde algoritmen en steeds geavanceerdere kunstmatige intelligentie (AI) modellen betekenen dat Geautomatiseerde Besluitvormingssystemen (ADM) nu menselijke besluitvorming aanvullen en deels vervangen. Hoewel het uitbesteden van besluitvorming aan (quasi-)geautomatiseerde systemen betere beslissingen, snellere en efficiëntere diensten kan opleveren, transformeert het ook gevestigde routines, checks and balances en besluitvormingsinstituties, wat leidt tot nieuwe uitdagingen voor het realiseren van publieke waarden en ongekende verschuivingen in de besluitvormingsmacht.
+
+Het NWO Gravitation Programma *Publieke Waarden in de Algoritmische Samenleving* (AlgoSoc) is een antwoord op de dringende behoefte aan een geïnformeerd maatschappelijk perspectief op automatisering en geautomatiseerde besluitvorming. Gebaseerd op een diep begrip van de systemische veranderingen die ADS met zich meebrengen, onderzoekt AlgoSoc hoe publieke waarden kunnen worden gerealiseerd in de sectoren *rechtspraak*, *gezondheid* en *media*. Het maakt gebruik van interdisciplinaire expertise die de sociale wetenschappen, geesteswetenschappen, recht en computerwetenschappen combineert om bestuurskaders te ontwikkelen die technologiegedreven ADM-initiatieven in de samenleving aanvullen.
+
+
+<center>
+
+<img src="algosoclogo.png" width="13%">
+
+
+</center>
+

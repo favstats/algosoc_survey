@@ -1,0 +1,2636 @@
+---
+title: ""
+format:
+  html:
+    theme: lumen
+    page-layout: full
+    self-contained: true
+    code-fold: true
+    code-overflow: wrap
+    html-math-method: mathjax
+    include-after-body:
+      text: |
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+              var toc = document.createElement("div");
+              toc.id = "custom-toc";
+              toc.style.position = "fixed";
+              toc.style.top = "0";
+              toc.style.right = "-300px";  // Start hidden
+              toc.style.width = "260px";
+              toc.style.height = "100%";
+              toc.style.background = "white";
+              toc.style.padding = "10px";
+              toc.style.boxShadow = "0px 2px 5px rgba(0, 0, 0, 0.2)";
+              toc.style.transition = "right 0.3s ease-in-out";
+              toc.style.overflowY = "auto";
+          
+              var tocTitle = document.createElement("h3");
+              tocTitle.innerText = "Navigation";
+              toc.appendChild(tocTitle);
+          
+              var headers = document.querySelectorAll("h2, h3, h4");
+              headers.forEach(function (header, index) {
+                  if (!header.id) {
+                      header.id = "section-" + index;
+                  }
+          
+                  var link = document.createElement("a");
+                  link.innerText = header.innerText;
+                  link.href = "#" + header.id;
+                  link.style.display = "block";
+                  link.style.padding = "5px 0";
+                  link.style.color = "#007bff";
+                  link.style.textDecoration = "none";
+          
+                  toc.appendChild(link);
+              });
+          
+              document.body.appendChild(toc);
+          
+              // Create toggle button (📑 icon)
+              var button = document.createElement("button");
+              button.id = "toggle-toc";
+              button.innerHTML = "📑";
+              button.style.position = "fixed";
+              button.style.top = "15px";
+              button.style.right = "15px";
+              button.style.backgroundColor = "white";
+              button.style.color = "#333";
+              button.style.border = "2px solid #ccc"; // Slightly thicker border
+              button.style.padding = "10px 12px"; // Increased padding
+              button.style.cursor = "pointer";
+              button.style.borderRadius = "8px"; // More rounded
+              button.style.fontSize = "22px"; // Larger icon
+              button.style.zIndex = "1000";
+              button.style.boxShadow = "0px 3px 6px rgba(0, 0, 0, 0.2)";
+              button.style.width = "50px"; // Increase button size
+              button.style.height = "50px"; // Make it square
+          
+              document.body.appendChild(button);
+          
+              // Click event to toggle the ToC
+              button.addEventListener("click", function () {
+                  if (toc.style.right === "0px") {
+                      toc.style.right = "-300px"; // Hide ToC
+                  } else {
+                      toc.style.right = "0px"; // Show ToC
+                  }
+              });
+          });
+          document.addEventListener("DOMContentLoaded", function () {
+              document.querySelectorAll("a[href='https://favstats.github.io/de25/']").forEach(function(link) {
+                  link.addEventListener("click", function(event) {
+                      event.preventDefault(); // Prevent default behavior
+                      window.open(link.href, "_blank"); // Open in a new tab/window
+                  });
+              });
+          });
+        </script>
+    includes:
+      in-header: |
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+---
+
+```{r setup, include=FALSE}
+## Global options
+knitr::opts_chunk$set(
+    cache = F,
+    echo = F,
+    warning = F,
+    message = F,
+    cache.lazy = FALSE
+)
+
+
+pacman::p_load(htmltools, tidyverse, highcharter, gt, gtExtras, rvest, haven)
+
+options(scipen = 999)
+```
+
+```{r}
+#' Create time-series line charts from raw data, with optional faceting.
+#'
+#' This function takes a raw dataframe and generates time-series plots.
+#' If a `group_by_var` is provided, it creates a separate, individual
+#' chart for each level of that grouping variable.
+#'
+#' @param data A raw dataframe (e.g., the combined `data` object).
+#' @param issue_var String name of the column containing the issues to plot.
+#' @param wave_var_raw String name of the raw numeric wave column (e.g., "wave").
+#' @param group_by_var Optional string name of the demographic column to
+#'   create separate plots for (e.g., "age_groups").
+#' @param labels_df A dataframe for joining labels.
+#' @param final_labels_col String name of the column in `labels_df` with the final labels.
+#' @param y_axis_label String for the y-axis title.
+#' @param y_max Numeric value to set the maximum for the y-axis.
+#' @return A highcharter plot object (for overall) or an htmltools tagList of
+#'   multiple, separate plots (when grouped).
+
+viz_wave_change4 <- function(data,
+                             issue_var,
+                             wave_var_raw,
+                             group_by_var = NULL,
+                             labels_df,
+                             final_labels_col,
+                             y_axis_label = "% Naming as Most Important",
+                             y_max = 40) {
+
+  # --- 1. Internal Data Preparation ---
+  issue_sym <- sym(issue_var)
+  wave_raw_sym <- sym(wave_var_raw)
+  group_by_sym <- if (!is.null(group_by_var)) sym(group_by_var) else NULL
+  final_labels_sym <- sym(final_labels_col)
+
+  count_vars <- c(issue_var, wave_var_raw, group_by_var)
+
+  summarized_data <- data %>%
+    count(across(all_of(count_vars)), name = "n", sort = TRUE) %>%
+    drop_na() %>%
+    left_join(labels_df, by = setNames("dutchlabs", issue_var)) %>%
+    mutate(
+      !!issue_sym := !!final_labels_sym,
+      wave_label = factor(case_when(
+        !!wave_raw_sym == 1 ~ "March 2024",
+        !!wave_raw_sym == 2 ~ "December 2024",
+        !!wave_raw_sym == 3 ~ "May 2025",
+        TRUE ~ as.character(!!wave_raw_sym)
+      ), levels = c("March 2024", "December 2024", "May 2025"))
+    )
+
+  # --- 2. Plotting Logic ---
+  wave_label_sym <- sym("wave_label")
+  count_sym <- sym("n")
+
+  # A. Logic for creating SEPARATE PLOTS for each group
+  if (!is.null(group_by_sym)) {
+    plot_data <- summarized_data %>%
+      group_by(!!wave_label_sym, !!group_by_sym) %>%
+      mutate(perc = (!!count_sym / sum(!!count_sym)) * 100) %>%
+      ungroup()
+
+    group_levels <- na.omit(unique(plot_data[[group_by_var]]))
+
+    # ===================================================================
+    # KEY LOGIC: Use purrr::map to loop over each group level (e.g., each
+    # age bracket) and create a separate plot for each one.
+    # ===================================================================
+    list_of_plots <- map(group_levels, function(g_level) {
+      
+      # Filter the data to contain only the data for the current group
+      chart_data_for_group <- plot_data %>% filter(!!group_by_sym == g_level)
+
+      # Create a standard highcharter plot for this specific group
+      hchart(chart_data_for_group, "line", hcaes(x = !!wave_label_sym, y = perc, group = !!issue_sym)) %>%
+        hc_title(text = as.character(g_level)) %>% # Title the chart with the group name
+        hc_yAxis(title = list(text = y_axis_label), max = y_max, min = 0) %>%
+        hc_xAxis(title = list(text = "")) %>%
+        hc_legend(layout = "horizontal") %>%
+        hc_tooltip(shared = TRUE, valueDecimals = 1, valueSuffix = "%", headerFormat = '<b>Wave {point.key}</b><br/>', pointFormat = '<span style="color:{series.color}">●</span> {series.name}: <b>{point.y}</b><br/>') %>%
+        hc_plotOptions(series = list(marker = list(enabled = TRUE, radius = 4), lineWidth = 3)) %>%
+        hc_exporting(enabled = TRUE)
+    })
+
+    # Arrange the list of individual plots into a responsive grid
+    return(tagList(tags$div(style = "display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px;", list_of_plots)))
+
+  # B. Logic for creating a SINGLE OVERALL plot
+  } else {
+    plot_data <- summarized_data %>%
+      group_by(!!wave_label_sym) %>%
+      mutate(perc = (!!count_sym / sum(!!count_sym)) * 100) %>%
+      ungroup()
+
+    return(
+        hchart(plot_data, "line", hcaes(x = !!wave_label_sym, y = perc, group = !!issue_sym)) %>%
+        hc_yAxis(title = list(text = y_axis_label), max = y_max, min = 0) %>%
+        hc_xAxis(title = list(text = "Wave")) %>%
+        hc_legend(layout = "horizontal") %>%
+        hc_tooltip(shared = TRUE, valueDecimals = 1, valueSuffix = "%", headerFormat = '<b>Wave {point.key}</b><br/>', pointFormat = '<span style="color:{series.color}">●</span> {series.name}: <b>{point.y}</b><br/>') %>%
+        hc_plotOptions(series = list(marker = list(enabled = TRUE, radius = 4), lineWidth = 3)) %>%
+        hc_caption(text = paste0("<em>N per wave: ", paste0(plot_data %>% group_by(!!wave_label_sym) %>% summarise(N = sum(!!count_sym)) %>% mutate(str = paste0(!!wave_label_sym, " = ", N)) %>% pull(str), collapse = "; "), ".</em>"), align = "right", style = list(fontSize = "10px", color = "lightgrey")) %>%
+        hc_exporting(enabled = TRUE)
+    )
+  }
+}
+
+# Define the label mapping dataframe once
+thelabs <- tibble(
+  dutchlabs = c(
+    "Respect voor privacy van gebruikers",
+    "Gebruiksvriendelijkheid",
+    "Politiek neutraal",
+    "Vrijheid om te kiezen welke informatie je krijgt",
+    "Niet-discriminerend",
+    "Toegankelijkheid (voor bijv. voor mensen met een beperking of minderheden)",
+    "Transparantie over hoe beslissingen worden genomen",
+    "Menselijk toezicht op deze systemen"
+  ),
+  adsv_var_labels = c(
+    "Respect for user privacy",
+    "Ease of use",
+    "Politically neutral",
+    "Freedom to choose information",
+    "Non-discriminatory",
+    "Accessibility",
+    "Transparency about decision making",
+    "Human oversight"
+  )
+)
+
+# # Example 1: Get overall trends
+# viz_wave_change4(
+#   data = data, # Use the raw, combined data
+#   issue_var = "important1",
+#   wave_var_raw = "wave",
+#   labels_df = thelabs,
+#   final_labels_col = "adsv_var_labels"
+# )
+
+
+```
+
+
+
+```{r, echo = F, warning=F, message=F}
+## this is important to keep for some reason ##
+library(tippy)
+tippy_this(
+  elementId = "firstNavItem",
+  tooltip = "Your tooltip text here...",
+  animation = "scale",
+  duration = 1000,
+  placement = "bottom"
+)
+
+```
+
+
+
+
+
+```{r include=FALSE}
+
+source("utils.R")
+
+
+data <- dat %>% 
+  mutate(wave = 1) %>% 
+  bind_rows(dat2 %>% 
+              mutate(wave = 2))  %>% 
+  bind_rows(dat3 %>% 
+              mutate(wave = 3)) 
+```
+
+
+The page is divided into several main sections. Each section allows you to examine overall trends as well as breakdowns by age, gender, education level, and political leaning.  
+
+
+::: {.panel-tabset .top .button-tabs}
+
+
+
+
+
+# {{< iconify healthicons world-care-outline >}} Most Important Values {.tabset .tabset-fade .tabset-pills .break}
+
+## {{< iconify healthicons world-care-outline >}} Most Important Values {.tabset .tabset-fade .tabset-pills .break}
+
+<blockquote class="question-text">
+What do you consider the 5 most important values for automated decision-making systems? [only top important value shown]
+</blockquote>
+
+::: {.panel-tabset}
+# Over Time
+```{r}
+
+adsv_var_names <- c("ADSV1", "ADSV2", "ADSV3", "ADSV4", "ADSV5", "ADSV6", "ADSV7", "ADSV8")
+
+adsv_var_labels <- c(
+  "Respect for user privacy",
+  "Ease of use",
+  "Politically neutral",
+  "Freedom to choose information",
+  "Non-discriminatory",
+  "Accessibility",
+  "Transparency about decision making",
+  "Human oversight"
+)
+
+dutchlabs <- c("Respect voor privacy van gebruikers", 
+  "Gebruiksvriendelijkheid", 
+"Politiek neutraal", 
+"Vrijheid om te kiezen welke informatie je krijgt", 
+"Niet-discriminerend", 
+"Toegankelijkheid (voor bijv. voor mensen met een beperking of minderheden)", 
+"Transparantie over hoe beslissingen worden genomen", 
+"Menselijk toezicht op deze systemen"
+)
+
+thelabs <- tibble(adsv_var_labels, dutchlabs)
+
+important_issue_wave <- data %>% 
+  count(important1, wave, sort = T) %>% 
+  group_by(wave) %>% 
+  mutate(perc = n/sum(n)*100) %>% 
+  drop_na()  %>%
+    mutate(
+      wave_label = case_when(
+        wave == 1 ~ "March 2024",
+        wave == 2 ~ "December 2024",
+        wave == 3 ~ "May 2025",
+        TRUE      ~ as.character(wave)  # fallback if other waves appear
+      ),
+      wave_label = factor(wave_label, levels = c("March 2024", "December 2024", "May 2025"))
+    ) %>% 
+  arrange(wave) %>% 
+  left_join(thelabs %>%
+              rename(important1 = dutchlabs)) %>%
+  mutate(important1 =adsv_var_labels)
+
+
+
+# For labeling the waves as e.g. "Dec 2023", edit here:
+wave_labels <- c("March 2024", "December 2024", "May 2025")
+important_time <- important_issue_wave %>%
+  mutate(wave_label = factor(wave_labels[wave], levels = wave_labels))
+
+```
+
+
+::: {.panel-tabset}
+## Overall
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# Define colors for each important1 level
+colors <- c("#007bff", "#28a745", "#ffc107", "#17a2b8", "#6610f2")
+
+# Split data and create plots
+thcharts <- important_issue_wave %>%
+  ungroup() %>%
+  group_split(important1) %>%
+  map2(.x = ., .y = seq_along(.), ~{
+    # Get the current important1 value for title and color
+    current_issue <- unique(.x$important1)
+    color_index <- (.y - 1) %% length(colors) + 1  # Cycle through colors
+
+    hchart(
+      .x,  # Use the split data frame
+      "line",
+      hcaes(x = wave_label, y = perc)
+    ) %>%
+      hc_title(
+            text = unique(.x$important1)
+      ) %>% 
+      hc_colors(colors[color_index]) %>%  # Assign one color
+      hc_title(text = current_issue) %>%  # Add title with important1 value
+      hc_xAxis(
+        title = list(text = "Wave"),
+        categories = unique(important_issue_wave$wave_label)  # Use wave labels from data
+      ) %>%
+      hc_yAxis(
+        title = list(text = "% Naming as Most Important"),
+        max = max(important_issue_wave$perc, na.rm = TRUE) + 2,
+        min = 0
+      ) %>%
+      hc_legend(enabled = FALSE) %>%  # Disable legend since there's only one series
+      hc_plotOptions(
+        series = list(
+          marker = list(enabled = TRUE, radius = 4),
+          lineWidth = 3,
+          tooltip = list(pointFormat = "<b>{point.y:.2f}%</b>")
+        )
+      ) %>%
+      hc_caption(
+        text = paste0("<em>N per wave: ",
+                      paste0(.x %>%
+                               group_by(wave_label) %>%
+                               summarise(N = sum(n, na.rm = TRUE)) %>%
+                               mutate(str = paste0(wave_label, " = ", N)) %>%
+                               pull(str), collapse = "; "),
+                      ".</em>"),
+        align = "right",
+        style = list(fontSize = "10px", color = "lightgrey")
+      )
+  })
+
+# Render plots using generate_quarto_elements
+generate_quarto_elements(thcharts)
+
+```
+
+
+
+:::
+
+## By Age
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+categories_dat <- c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)")
+
+var_labels <- c("News Media", "Legal System", "Healthcare")
+
+
+# # debugonce(viz_wave_change2)
+# list_of_plots_age <- viz_wave_change3(
+#   data = data ,
+#   vars = c("ADSR3", "ADSRt2_3", "ADSRt3_3"),
+#   range3 = 5:7,
+#   display_range = 5:7,
+#   var_labels = var_labels,
+#   categories_dat = categories_dat,
+#   wave_var = "wave",
+#   group_by_var = "age_groups",
+#   y_axis_label = "% of Respondents Agreeing (5–7)",
+#   facet_by_group = F # This is the only change!
+# )
+
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that Agree (5-7) with the statement.</strong>"
+
+#' Create a separate, correctly ordered time-series chart for each issue.
+#'
+#' This function takes raw data and generates a list of plot objects,
+#' one for each unique issue, ensuring chronological order and custom colors.
+#' It handles missing data and pre-sorts the data to prevent plotting errors.
+#'
+#' @param data A raw dataframe (e.g., the combined `data` object).
+#' @param issue_var String name of the column containing the issues to plot.
+#' @param wave_var_raw String name of the raw numeric wave column (e.g., "wave").
+#' @param group_by_var Optional string name of the demographic column to
+#'   use as the series within each plot (e.g., "age_groups").
+#' @param labels_df A dataframe for joining labels.
+#' @param final_labels_col String name of the column in `labels_df` with the final labels.
+#' @param y_axis_label String for the y-axis title.
+#' @param y_max Numeric value to set the maximum for the y-axis.
+#' @return A raw list of highcharter plot objects.
+
+viz_wave_change4 <- function(data,
+                             issue_var,
+                             wave_var_raw,
+                             group_by_var = NULL,
+                             labels_df,
+                             final_labels_col,
+                             y_axis_label = "% Naming as Most Important",
+                             y_max = 40) {
+
+  # Define the correct chronological order for the waves
+  wave_order <- c("March 2024", "December 2024", "May 2025")
+
+  # --- 1. Internal Data Preparation ---
+  issue_sym <- sym(issue_var)
+  wave_raw_sym <- sym(wave_var_raw)
+  group_by_sym <- if (!is.null(group_by_var)) sym(group_by_var) else NULL
+  final_labels_sym <- sym(final_labels_col)
+
+  count_vars <- c(issue_var, wave_var_raw, group_by_var)
+
+  summarized_data <- data %>%
+    count(across(all_of(count_vars)), name = "n", sort = TRUE) %>%
+    tidyr::complete(!!!syms(c(issue_var, wave_var_raw, group_by_var)), fill = list(n = 0)) %>%
+    drop_na() %>%
+    left_join(labels_df, by = setNames("dutchlabs", issue_var)) %>%
+    mutate(
+      !!issue_sym := !!final_labels_sym,
+      wave_label = factor(case_when(
+        !!wave_raw_sym == 1 ~ "March 2024",
+        !!wave_raw_sym == 2 ~ "December 2024",
+        !!wave_raw_sym == 3 ~ "May 2025",
+        TRUE ~ as.character(!!wave_raw_sym)
+      ), levels = wave_order)
+    )
+
+  # --- 2. Calculate Percentages and Sort Data ---
+  wave_label_sym <- sym("wave_label")
+  count_sym <- sym("n")
+  
+  if (!is.null(group_by_sym)) {
+    plot_data <- summarized_data %>%
+      # FIX #1: Explicitly sort the data frame before calculating percentages.
+      # The `arrange` respects the factor order of `wave_label`.
+      arrange(!!issue_sym, !!group_by_sym, wave_label) %>%
+      group_by(!!wave_label_sym, !!group_by_sym) %>%
+      mutate(perc = (!!count_sym / sum(!!count_sym)) * 100) %>%
+      ungroup()
+  } else {
+    plot_data <- summarized_data %>%
+      # Also sort here for the non-grouped case.
+      arrange(!!issue_sym, wave_label) %>%
+      group_by(!!wave_label_sym) %>%
+      mutate(perc = (!!count_sym / sum(!!count_sym)) * 100) %>%
+      ungroup()
+  }
+  
+  # --- 3. Split Data and Create a Plot for Each Issue ---
+  list_of_plots <- plot_data %>%
+    group_split(!!issue_sym) %>%
+    map(function(issue_df) {
+      
+      current_issue_name <- unique(issue_df[[issue_var]])
+      
+      if (!is.null(group_by_sym)) {
+        mapping <- hcaes(x = wave_label, y = perc, group = !!group_by_sym)
+        show_legend <- TRUE
+      } else {
+        mapping <- hcaes(x = wave_label, y = perc)
+        show_legend <- FALSE
+      }
+
+      hchart(issue_df, "line", mapping) %>%
+        hc_title(text = current_issue_name) %>%
+        hc_colors(thecolors) %>%
+        hc_yAxis(title = list(text = y_axis_label), max = y_max, min = 0) %>%
+        hc_xAxis(title = list(text = "Wave"), categories = wave_order) %>%
+        hc_legend(enabled = show_legend, layout = "horizontal") %>%
+        hc_tooltip(
+            shared = if (show_legend) TRUE else FALSE,
+            valueDecimals = 1, 
+            valueSuffix = "%",
+            headerFormat = if (show_legend) '<b>{point.x}</b><br/>' else '',
+            pointFormat = if (show_legend) '<span style="color:{series.color}">●</span> {series.name}: <b>{point.y}</b><br/>' else '<b>{point.y}</b>'
+        ) %>%
+        hc_plotOptions(series = list(marker = list(enabled = TRUE, radius = 4), lineWidth = 3)) %>%
+        hc_exporting(enabled = TRUE)
+    })
+
+  # --- 4. Return the raw list of plots ---
+  return(list_of_plots)
+}
+
+list_of_plots_age <- viz_wave_change4(
+  data = data, # Use the raw, combined data
+  issue_var = "important1",
+  wave_var_raw = "wave",
+  group_by_var = "age_groups", # Simply specify the group
+  labels_df = thelabs,
+  final_labels_col = "adsv_var_labels"
+)
+
+generate_quarto_elements(list_of_plots_age)
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Gender
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+
+
+list_of_plots_gender <- viz_wave_change4(
+  data = data %>% filter(geslacht != "Other"),
+  issue_var = "important1",
+  wave_var_raw = "wave",
+  group_by_var = "age_groups", # Simply specify the group
+  labels_df = thelabs,
+  final_labels_col = "adsv_var_labels"
+)
+
+generate_quarto_elements(list_of_plots_gender)
+
+
+
+```
+
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+list_of_plots_edu <- viz_wave_change4(
+  data = data,
+  issue_var = "important1",
+  wave_var_raw = "wave",
+  group_by_var = "oplcat", # Simply specify the group
+  labels_df = thelabs,
+  final_labels_col = "adsv_var_labels"
+)
+
+generate_quarto_elements(list_of_plots_edu)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Politics
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+list_of_plots_pol <- viz_wave_change4(
+  data = data,
+  issue_var = "important1",
+  wave_var_raw = "wave",
+  group_by_var = "pol_cat", # Simply specify the group
+  labels_df = thelabs,
+  final_labels_col = "adsv_var_labels"
+)
+
+generate_quarto_elements(list_of_plots_pol)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+
+::: 
+
+
+
+
+
+
+
+# March 2024 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+
+
+generate_overall <- function(dat) {
+  
+important_issue <- dat %>% 
+  count(important1, sort = T) %>% 
+  mutate(perc = n/sum(n)*100) %>% 
+  drop_na() %>% 
+  left_join(thelabs %>% 
+              rename(important1 = dutchlabs)) %>% 
+  mutate(important1 =adsv_var_labels)
+
+   hchart(
+    important_issue, 
+    "column",
+    # hcaes(x = varlabs, y = mean_val),
+    hcaes(x = important1, y = perc), name = "%"
+  ) %>%    
+     hc_colors(thecolors) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+      title = list(text = "% Naming As Number 1 Important Issue"), 
+      max = 40, min = 0
+    ) %>% 
+    highcharter::hc_plotOptions(
+      column = list(
+        colorByPoint = TRUE  # This ensures that each bar gets a different color
+      ),
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      )
+    )  %>%
+    hc_caption(
+      text = paste0("<em>N = ", sum(important_issue$n), ".</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
+    ) 
+}
+
+generate_overall(dat)
+```
+
+
+
+## By Age 
+
+
+```{r, results='asis'}
+
+generate_age <- function(dat){
+  important_issue_age <- dat  %>% 
+  count(important1, age_groups, sort = T) %>% 
+  group_by(age_groups) %>% 
+  mutate(perc = n/sum(n)*100) %>% 
+  ungroup() %>% 
+  drop_na()  %>% 
+  left_join(thelabs %>% 
+              rename(important1 = dutchlabs)) %>% 
+  mutate(important1 =adsv_var_labels)
+
+
+   
+ hchart(
+    important_issue_age, 
+    "column",
+    # hcaes(x = varlabs, y = mean_val),
+    hcaes(x = important1, y = perc, group = age_groups),
+    id = c("a", "b", "c", "d")
+  )  %>% 
+    highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+      title = list(text = "% Naming As Number 1 Important Issue"), 
+      max = 40, min = 0
+    ) %>% 
+    hc_legend(
+      layout = "vertical",
+      align = "right",
+      verticalAlign = "top",
+      floating = TRUE
+    ) %>% 
+    highcharter::hc_plotOptions(
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      )
+    ) %>%
+    hc_caption(
+      text = paste0("<em>N = ", sum(important_issue_age$n), ".</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
+    ) 
+  
+}
+
+
+generate_age(dat)
+
+```
+
+
+
+
+## By Gender
+
+
+
+```{r, results='asis'}
+
+generate_gender <- function(dat) {
+  
+  
+important_issue_gender <- dat  %>% 
+  count(important1, geslacht, sort = T) %>% 
+  group_by(geslacht) %>% 
+  mutate(perc = n/sum(n)*100) %>% 
+  ungroup() %>% 
+  drop_na()  %>% 
+  left_join(thelabs %>% 
+              rename(important1 = dutchlabs)) %>% 
+  mutate(important1 =adsv_var_labels)  %>% 
+    arrange(geslacht)
+
+
+   
+ hchart(
+    important_issue_gender, 
+    "column",
+    # hcaes(x = varlabs, y = mean_val),
+    hcaes(x = important1, y = perc, group = geslacht),
+    id = c("a", "b", "c")
+  )  %>% 
+    highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+      title = list(text = "% Naming As Number 1 Important Issue"), 
+      max = 40, min = 0
+    ) %>% 
+    hc_legend(
+      layout = "vertical",
+      align = "right",
+      verticalAlign = "top",
+      floating = TRUE
+    ) %>% 
+    highcharter::hc_plotOptions(
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      )
+    ) %>%
+  hc_chart(events = list(load = JS("function() {
+  var chart = this;
+  chart.series[2].setVisible(false)
+  }"))) %>%
+    hc_caption(
+      text = paste0("<em>N = ", sum(important_issue_gender$n), ".</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
+    ) 
+  
+}
+
+
+generate_gender(dat)
+```
+
+
+## By Education
+
+
+
+```{r, results='asis'}
+
+generate_edu <- function(dat) {
+  
+  
+
+  education_levels <- c("Primary (basisonderwijs)", 
+                        "Pre-Vocational (vmbo)", 
+                        "Secondary (havo/vwo)", 
+                        "Vocational (mbo)", 
+                        "Applied Sciences (hbo)", 
+                        "University (wo)") %>% 
+    tibble(eng = ., oplcat = c("basisonderwijs",
+                               "vmbo",
+                               "havo/vwo",
+                               "mbo",
+                               "hbo",
+                               "wo"))
+  
+
+important_issue_edu <- dat  %>% 
+    mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
+    left_join(education_levels) %>% 
+    mutate(oplcat = eng) %>% 
+    mutate(oplcat = fct_relevel(oplcat, c("Primary (basisonderwijs)", 
+                                          "Pre-Vocational (vmbo)", 
+                                          "Secondary (havo/vwo)", 
+                                          "Vocational (mbo)", 
+                                          "Applied Sciences (hbo)", 
+                                          "University (wo)"))) %>% 
+  count(important1, oplcat, sort = T) %>% 
+  group_by(oplcat) %>% 
+  mutate(perc = n/sum(n)*100) %>% 
+  ungroup() %>% 
+  drop_na()  %>% 
+  left_join(thelabs %>% 
+              rename(important1 = dutchlabs)) %>% 
+  mutate(important1 =adsv_var_labels)
+
+
+   
+ hchart(
+    important_issue_edu, 
+    "column",
+    # hcaes(x = varlabs, y = mean_val),
+    hcaes(x = important1, y = perc, group = oplcat)#,
+    # id = c("a", "b", "c")
+  )  %>% 
+    highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+      title = list(text = "% Naming As Number 1 Important Issue"), 
+      max = 40, min = 0
+    ) %>% 
+    hc_legend(
+      layout = "vertical",
+      align = "right",
+      verticalAlign = "top",
+      floating = TRUE
+    ) %>% 
+    highcharter::hc_plotOptions(
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      )
+    ) %>%
+    hc_caption(
+      text = paste0("<em>N = ", sum(important_issue_edu$n), ".</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
+    ) 
+  
+}
+
+generate_edu(dat)
+
+```
+
+
+## By Politics
+
+```{r, results='asis'}
+generate_pol <- function(dat) {
+
+important_issue_pol <- dat  %>% 
+    mutate(pol_cat = sjmisc::to_label(pol_cat)) %>% 
+  count(important1, pol_cat, sort = T) %>% 
+  group_by(pol_cat) %>% 
+  mutate(perc = n/sum(n)*100) %>% 
+  ungroup() %>% 
+  drop_na() %>% 
+  left_join(thelabs %>% 
+              rename(important1 = dutchlabs)) %>% 
+  mutate(important1 =adsv_var_labels) %>% 
+  arrange(pol_cat)
+
+
+   
+ hchart(
+    important_issue_pol, 
+    "column",
+    # hcaes(x = varlabs, y = mean_val),
+    hcaes(x = important1, y = perc, group = pol_cat)#,
+    # id = c("a", "b", "c")
+  )  %>% 
+    highcharter::hc_xAxis(title = list(text = "")) %>% 
+    hc_yAxis(
+      title = list(text = "% Naming As Number 1 Important Issue"), 
+      max = 40, min = 0
+    ) %>% 
+    hc_legend(
+      layout = "vertical",
+      align = "right",
+      verticalAlign = "top",
+      floating = TRUE
+    ) %>% 
+    highcharter::hc_plotOptions(
+      series = list(
+        tooltip = list(pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.2f}</b><br/>')
+      )
+    ) %>%
+    hc_caption(
+      text = paste0("<em>N = ", sum(important_issue_pol$n), ". Politics category is based on 10-scale: 0-3: Left; 4-6: Center; 7-10: Right.</em>"),
+      align = "right",  # Change to "left" or "right" as needed
+      style = list(fontSize = '10px', color = 'lightgrey')  # You can adjust the font size here and color if needed
+    ) 
+}
+
+generate_pol(dat)
+```
+
+:::
+
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+generate_overall(dat2)
+
+
+```
+
+
+
+## By Age 
+
+```{r, results='asis'}
+
+generate_age(dat2)
+
+
+```
+
+
+## By Gender
+
+
+```{r, results='asis'}
+
+
+generate_gender(dat2)
+
+
+```
+
+
+## By Education
+
+
+```{r, results='asis'}
+
+generate_edu(dat2)
+
+```
+
+
+## By Politics
+
+
+```{r, results='asis'}
+
+generate_pol(dat2)
+
+```
+
+
+
+:::
+
+
+
+# May 2025 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+generate_overall(dat3)
+
+
+```
+
+
+
+## By Age 
+
+
+```{r, results='asis'}
+
+generate_age(dat3)
+
+
+```
+
+
+
+
+## By Gender
+
+
+
+```{r, results='asis'}
+
+
+generate_gender(dat3)
+
+
+```
+
+
+## By Education
+
+
+
+```{r, results='asis'}
+
+generate_edu(dat3)
+
+
+```
+
+
+## By Politics
+
+
+```{r, results='asis'}
+
+generate_pol(dat3)
+
+```
+
+
+:::
+
+::: 
+
+
+
+
+# {{< iconify fluent data-usage-16-regular >}} Usefulness of AI {.tabset .tabset-fade .tabset-pills .break}
+
+## {{< iconify fluent data-usage-16-regular >}} Usefulness of AI {.tabset .tabset-fade .tabset-pills .break}
+
+
+> In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
+
+
+<blockquote class="question-text">
+More automatic decision-making in news media/the legal system/healthcare will be **useful**.
+</blockquote>
+
+
+::: {.panel-tabset}
+
+# Over Time
+
+```{r}
+
+
+categories_dat <- c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)")
+
+var_labels <- c("News Media", "Legal System", "Healthcare")
+
+
+
+```
+
+
+::: {.panel-tabset}
+
+## Overall
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+# data <- data %>% mutate_at(vars(CONF1:CONF8), ~ifelse(.x < 0, NA, .x))
+
+# debugonce(viz_wave_change)
+graphics <- viz_wave_change(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels, 
+            rev(categories_dat),  wavevar = "wave")
+
+# generate_quarto_dropdown(graphics)
+
+generate_quarto_elements(graphics)
+```
+
+::: 
+
+
+## By Age
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_age <- viz_wave_change3(
+  data = data ,
+  vars = c("ADSR1", "ADSRt2_1", "ADSRt3_1"),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "age_groups",
+  y_axis_label = "% of Respondents Agreeing (5–7)",
+  facet_by_group = F # This is the only change!
+)
+
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that Agree (5-7) with the statement.</strong>"
+
+generate_quarto_elements(list_of_plots_age)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Gender
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_gender <- viz_wave_change3(
+  data = data %>% filter(geslacht != "Other"),
+  vars = c("ADSR1", "ADSRt2_1", "ADSRt3_1"),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "geslacht",
+  y_axis_label = "% of Respondents Agreeing (5–7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_gender)
+
+
+
+
+```
+
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_edu <- viz_wave_change3(
+  data = data ,
+  vars = c("ADSR1", "ADSRt2_1", "ADSRt3_1"),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "oplcat",
+  y_axis_label = "% of Respondents Agreeing (5–7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_edu)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Politics
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_pol <- viz_wave_change3(
+  data = data ,
+  vars = c("ADSR1", "ADSRt2_1", "ADSRt3_1"),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "pol_cat",
+  y_axis_label = "% of Respondents Agreeing (5–7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_pol)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+
+::: 
+
+
+
+
+
+
+
+# March 2024 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels, 
+            categories_dat, data = dat)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat)
+```
+::: 
+
+:::
+
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels, 
+            categories_dat, data = dat2)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat2)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat2)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat2)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat2)
+```
+
+
+::: 
+
+:::
+
+
+
+# May 2025 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels, 
+            categories_dat, data = dat3)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat3)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat3)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat3)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR1", "ADSRt2_1", "ADSRt3_1"), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat3)
+```
+::: 
+
+:::
+
+::: 
+
+# {{< iconify solar danger-outline >}} Riskiness of AI {.tabset .tabset-fade .tabset-pills .break}
+
+## {{< iconify solar danger-outline >}} Riskiness of AI {.tabset .tabset-fade .tabset-pills .break}
+
+
+> In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
+
+
+
+<blockquote class="question-text">
+More automatic decision-making in news media/the legal system/healthcare will be **risky**.
+</blockquote>
+
+
+::: {.panel-tabset}
+
+# Over Time
+
+```{r}
+
+
+categories_dat <- c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)")
+
+var_labels <- c("News Media", "Legal System", "Healthcare")
+
+
+
+```
+
+
+::: {.panel-tabset}
+
+## Overall
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+# data <- data %>% mutate_at(vars(CONF1:CONF8), ~ifelse(.x < 0, NA, .x))
+
+# debugonce(viz_wave_change)
+graphics <- viz_wave_change(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels, 
+            rev(categories_dat),  wavevar = "wave")
+
+# generate_quarto_dropdown(graphics)
+
+generate_quarto_elements(graphics)
+```
+
+::: 
+
+
+## By Age
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_age <- viz_wave_change3(
+  data = data ,
+  vars = c("ADSR2", "ADSRt2_2", "ADSRt3_2"),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "age_groups",
+  y_axis_label = "% of Respondents Agreeing (5–7)",
+  facet_by_group = F # This is the only change!
+)
+
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that Agree (5-7) with the statement.</strong>"
+
+generate_quarto_elements(list_of_plots_age)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Gender
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_gender <- viz_wave_change3(
+  data = data %>% filter(geslacht != "Other"),
+  vars = c("ADSR2", "ADSRt2_2", "ADSRt3_2"),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "geslacht",
+  y_axis_label = "% of Respondents Agreeing (5–7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_gender)
+
+
+
+
+```
+
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_edu <- viz_wave_change3(
+  data = data ,
+  vars = c("ADSR2", "ADSRt2_2", "ADSRt3_2"),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "oplcat",
+  y_axis_label = "% of Respondents Agreeing (5–7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_edu)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Politics
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_pol <- viz_wave_change3(
+  data = data ,
+  vars = c("ADSR2", "ADSRt2_2", "ADSRt3_2"),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "pol_cat",
+  y_axis_label = "% of Respondents Agreeing (5–7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_pol)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+
+::: 
+
+
+
+
+
+
+
+# March 2024 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels, 
+            categories_dat, data = dat)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat)
+```
+::: 
+
+:::
+
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels, 
+            categories_dat, data = dat2)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat2)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat2)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat2)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat2)
+```
+
+
+::: 
+
+:::
+
+
+
+# May 2025 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels, 
+            categories_dat, data = dat3)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat3)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat3)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat3)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR2", "ADSRt2_2", "ADSRt3_2"), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat3)
+```
+::: 
+
+:::
+
+::: 
+
+
+
+
+# {{< iconify material-symbols-light balance >}} Fairness of AI {.tabset .tabset-fade .tabset-pills .break}
+
+## {{< iconify material-symbols-light balance >}} Fairness of AI {.tabset .tabset-fade .tabset-pills .break}
+
+> In most predictions, automated decision-making will become more common in the future. If so, to what extent do you disagree or agree with the following statements:
+
+<blockquote class="question-text">
+More automatic decision-making in news media/the legal system/healthcare will be **more fair**.
+</blockquote>
+
+
+::: {.panel-tabset}
+
+# Over Time
+
+```{r}
+
+
+categories_dat <- c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)")
+
+var_labels <- c("News Media", "Legal System", "Healthcare")
+
+
+
+```
+
+
+::: {.panel-tabset}
+
+## Overall
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+# data <- data %>% mutate_at(vars(CONF1:CONF8), ~ifelse(.x < 0, NA, .x))
+
+# debugonce(viz_wave_change)
+graphics <- viz_wave_change(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels, 
+            rev(categories_dat),  wavevar = "wave")
+
+# generate_quarto_dropdown(graphics)
+
+generate_quarto_elements(graphics)
+```
+
+::: 
+
+
+## By Age
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_age <- viz_wave_change3(
+  data = data ,
+  vars = c("ADSR3", "ADSRt2_3", "ADSRt3_3"),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "age_groups",
+  y_axis_label = "% of Respondents Agreeing (5–7)",
+  facet_by_group = F # This is the only change!
+)
+
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that Agree (5-7) with the statement.</strong>"
+
+generate_quarto_elements(list_of_plots_age)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Gender
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_gender <- viz_wave_change3(
+  data = data %>% filter(geslacht != "Other"),
+  vars = c("ADSR3", "ADSRt2_3", "ADSRt3_3"),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "geslacht",
+  y_axis_label = "% of Respondents Agreeing (5–7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_gender)
+
+
+
+
+```
+
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_edu <- viz_wave_change3(
+  data = data ,
+  vars = c("ADSR3", "ADSRt2_3", "ADSRt3_3"),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "oplcat",
+  y_axis_label = "% of Respondents Agreeing (5–7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_edu)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Politics
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_pol <- viz_wave_change3(
+  data = data ,
+  vars = c("ADSR3", "ADSRt2_3", "ADSRt3_3"),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "pol_cat",
+  y_axis_label = "% of Respondents Agreeing (5–7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_pol)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+
+::: 
+
+
+
+
+
+
+
+# March 2024 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels, 
+            categories_dat, data = dat)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat)
+```
+::: 
+
+:::
+
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels, 
+            categories_dat, data = dat2)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat2)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat2)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat2)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat2)
+```
+
+
+::: 
+
+:::
+
+
+
+# May 2025 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels, 
+            categories_dat, data = dat3)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat3)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat3)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat3)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(c("ADSR3", "ADSRt2_3", "ADSRt3_3"), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat3)
+```
+::: 
+
+:::
+
+::: 
+
+:::
+
+<br>
+
+<center>
+
+<img src="algosoclogo.png" width="13%">
+
+
+</center>
+
+
+

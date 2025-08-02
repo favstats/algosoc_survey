@@ -1,0 +1,43 @@
+project:
+  type: website
+  output-dir: ../../docs/en
+
+website:
+  favicon: algosoclogo.png
+  title: "AlgoSoc AI Opinion Monitor"
+  navbar:
+    logo: algosoclogo.png
+    href: index.qmd  # This makes the logo a clickable link that directs to the main dashboard
+    left:
+      - href: engagement.qmd
+        text: "{{< iconify ph users-three >}} Engagement"
+      - href: attitudes.qmd
+        text: "{{< iconify ph head-circuit >}} Attitudes"
+      - href: values.qmd
+        text: "{{< iconify ph globe-hemisphere-west >}} Values"
+    right:
+      - href: about.qmd
+        text: "About {{< iconify ph info-thin >}}"
+      - text: "en {{< iconify emojione flag-for-united-states >}}"
+        href: "https://favstats.github.io/algosoc_survey/en"
+      - text: "nl {{< iconify emojione flag-for-netherlands >}}"
+        href: "https://favstats.github.io/algosoc_survey/"
+  page-footer:
+    background: light # or dark
+    left:
+      - "Copyright 2024, AlgoSoc"
+    right:
+      - icon: linkedin
+        href: https://www.linkedin.com/company/algosoc/
+      - icon: twitter
+        href: https://twitter.com/ALGOSOC_
+        
+        
+format:
+  html:
+    theme:
+      - cosmo
+      - custom.scss
+    fontsize: 1.2em
+    include-before-body:
+      file: custom.js

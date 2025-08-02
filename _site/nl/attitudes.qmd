@@ -1,393 +1,1064 @@
 ---
-description-meta: ""
-execute:
-  echo: false
+title: ""
+format:
+  html:
+    theme: lumen
+    page-layout: full
+    self-contained: true
+    code-fold: true
+    code-overflow: wrap
+    html-math-method: mathjax
+    include-after-body:
+      text: |
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+              var toc = document.createElement("div");
+              toc.id = "custom-toc";
+              toc.style.position = "fixed";
+              toc.style.top = "0";
+              toc.style.right = "-300px";  // Start verborgen
+              toc.style.width = "260px";
+              toc.style.height = "100%";
+              toc.style.background = "white";
+              toc.style.padding = "10px";
+              toc.style.boxShadow = "0px 2px 5px rgba(0, 0, 0, 0.2)";
+              toc.style.transition = "right 0.3s ease-in-out";
+              toc.style.overflowY = "auto";
+              var tocTitle = document.createElement("h3");
+              tocTitle.innerText = "Navigatie";
+              toc.appendChild(tocTitle);
+              var headers = document.querySelectorAll("h2, h3, h4");
+              headers.forEach(function (header, index) {
+                  if (!header.id) {
+                      header.id = "section-" + index;
+                  }
+                  var link = document.createElement("a");
+                  link.innerText = header.innerText;
+                  link.href = "#" + header.id;
+                  link.style.display = "block";
+                  link.style.padding = "5px 0";
+                  link.style.color = "#007bff";
+                  link.style.textDecoration = "none";
+                  toc.appendChild(link);
+              });
+              document.body.appendChild(toc);
+              // Maak toggle-knop (📑 icoon)
+              var button = document.createElement("button");
+              button.id = "toggle-toc";
+              button.innerHTML = "📑";
+              button.style.position = "fixed";
+              button.style.top = "15px";
+              button.style.right = "15px";
+              button.style.backgroundColor = "white";
+              button.style.color = "#333";
+              button.style.border = "2px solid #ccc"; // Iets dikkere rand
+              button.style.padding = "10px 12px"; // Verhoogde opvulling
+              button.style.cursor = "pointer";
+              button.style.borderRadius = "8px"; // Meer afgerond
+              button.style.fontSize = "22px"; // Groter icoon
+              button.style.zIndex = "1000";
+              button.style.boxShadow = "0px 3px 6px rgba(0, 0, 0, 0.2)";
+              button.style.width = "50px"; // Verhoog knopgrootte
+              button.style.height = "50px"; // Maak het vierkant
+              document.body.appendChild(button);
+              // Klik-gebeurtenis om de ToC te wisselen
+              button.addEventListener("click", function () {
+                  if (toc.style.right === "0px") {
+                      toc.style.right = "-300px"; // Verberg ToC
+                  } else {
+                      toc.style.right = "0px"; // Toon ToC
+                  }
+              });
+              // Wissel inklapbare inhoud
+              document.querySelectorAll(".collapse-button").forEach(button => {
+                  button.addEventListener("click", function () {
+                      const content = this.nextElementSibling;
+                      const arrow = this.querySelector(".arrow");
+                      const isExpanded = this.getAttribute("aria-expanded") === "true";
+                      content.style.display = isExpanded ? "none" : "block";
+                      this.setAttribute("aria-expanded", !isExpanded);
+                  });
+                  button.setAttribute("aria-expanded", "false");
+              });
+          });
+          document.addEventListener("DOMContentLoaded", function () {
+              document.querySelectorAll("a[href='https://favstats.github.io/de25/']").forEach(function(link) {
+                  link.addEventListener("click", function(event) {
+                      event.preventDefault(); // Voorkom standaardgedrag
+                      window.open(link.href, "_blank"); // Open in een nieuw tabblad/venster
+                  });
+              });
+          });
+        </script>
+    includes:
+      in-header: |
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+        <style>
+          .question-text {
+            position: relative;
+            padding-right: 25px;
+            margin-right: 0;
+          }
+          .collapse-button {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 10;
+            transition: transform 0.3s ease;
+          }
+          .collapse-button .arrow {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 10px solid #4a90e2; /* Verloop basiskleur */
+            transition: transform 0.3s ease, border-bottom-color 0.3s ease;
+            position: relative;
+          }
+          .collapse-button:hover .arrow {
+            border-bottom-color: #9013fe; /* Verloop eindkleur bij hover */
+            box-shadow: 0 0 5px rgba(74, 144, 226, 0.5); /* Gloedeffect */
+            transform: scale(1.1);
+          }
+          .collapse-button[aria-expanded="true"] .arrow {
+            transform: rotate(180deg) scale(1.1);
+          }
+        </style>
 ---
 
 
-
-```{r, echo = F, warning=F, message=F}
-## this is important to keep for some reason ##
-library(tippy)
-tippy_this(
-  elementId = "firstNavItem",
-  tooltip = "Your tooltip text here...",
-  animation = "scale",
-  duration = 1000,
-  placement = "bottom"
-)
-
-```
-
-
-
 ```{r setup, include=FALSE}
-# here::i_am("wtm_gb.Rproj")
-
-
-## Global options
-knitr::opts_chunk$set(
-    cache = F,
-    echo = F,
-    warning = F,
-    message = F,
-    cache.lazy = FALSE
-)
-
-
+# Globale opties en laden van bibliotheken
+knitr::opts_chunk$set(cache = F, echo = F, warning = F, message = F, cache.lazy = FALSE)
 pacman::p_load(htmltools, tidyverse, highcharter, gt, gtExtras, rvest, haven)
-
 options(scipen = 999)
 
+# Dit script gaat ervan uit dat uw gegevens (dat, dat2, dat3) en aangepaste functies
+# via dit utility-script worden geladen.
 source("utils.R")
 ```
+De pagina is verdeeld in verschillende hoofdsecties. Elke sectie stelt u in staat om algemene trends en uitsplitsingen naar tijd, leeftijd, geslacht, opleidingsniveau en politieke voorkeur te onderzoeken.
+
+::: {.panel-tabset .top .button-tabs}
 
 
-De pagina is verdeeld in drie hoofdsecties: 
 
+# {{< iconify fluent-emoji-high-contrast detective >}} Herkennen van door AI gegenereerde inhoud {.tabset .tabset-fade .tabset-pills .break .btn-green}
+## {{< iconify fluent-emoji-high-contrast detective >}} Herkennen van door AI gegenereerde inhoud {.tabset .tabset-fade .tabset-pills .break .btn-green}
+<blockquote class="question-text">
+Hoe zeker bent u ervan dat de volgende groepen het verschil kunnen zien tussen content gemaakt door AI en content gemaakt door mensen?
+<button class="collapse-button" type="button"><span class="arrow"></span></button>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Mensen uit de algemene bevolking</li>
+<li>Item 2: Parlementsleden</li>
+<li>Item 3: Rechters</li>
+<li>Item 4: Journalisten</li>
+<li>Item 5: Politieagenten</li>
+<li>Item 6: Artsen</li>
+<li>Item 7: Vrienden/familie</li>
+<li>Item 8: Uzelf</li></ul></blockquote>
+::: {.panel-tabset}
+# Mei 2025 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Algemeen
+```{r}
+viz_general(vecc("CONF", 1:8), c("Mensen uit de algemene bevolking", "Parlementsleden", "Rechters", "Journalisten", "Politieagenten", "Artsen", "Vrienden/familie", "Uzelf"), c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)"), data = dat3)
+```
+## Naar Leeftijd
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("Mensen uit de algemene bevolking", "Parlementsleden", "Rechters", "Journalisten", "Politieagenten", "Artsen", "Vrienden/familie", "Uzelf"), c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)"), "age_groups", T, data = dat3)
+```
+:::
+## Naar Geslacht
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("Mensen uit de algemene bevolking", "Parlementsleden", "Rechters", "Journalisten", "Politieagenten", "Artsen", "Vrienden/familie", "Uzelf"), c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)"), "geslacht", T, data = dat3)
+```
+:::
+## Naar Opleiding
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("Mensen uit de algemene bevolking", "Parlementsleden", "Rechters", "Journalisten", "Politieagenten", "Artsen", "Vrienden/familie", "Uzelf"), c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)"), "oplcat", T, data = dat3)
+```
+:::
+## Naar Politiek
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("Mensen uit de algemene bevolking", "Parlementsleden", "Rechters", "Journalisten", "Politieagenten", "Artsen", "Vrienden/familie", "Uzelf"), c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)"), "pol_cat", T, data = dat3)
+```
+:::
+:::
 
-```{=html}
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Algemeen
+```{r}
+viz_general(vecc("CONF", 1:8), c("Mensen uit de algemene bevolking", "Parlementsleden", "Rechters", "Journalisten", "Politieagenten", "Artsen", "Vrienden/familie", "Uzelf"), c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)"), data = dat2)
+```
+## Naar Leeftijd
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("Mensen uit de algemene bevolking", "Parlementsleden", "Rechters", "Journalisten", "Politieagenten", "Artsen", "Vrienden/familie", "Uzelf"), c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)"), "age_groups", T, data = dat2)
+```
+:::
+## Naar Geslacht
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("Mensen uit de algemene bevolking", "Parlementsleden", "Rechters", "Journalisten", "Politieagenten", "Artsen", "Vrienden/familie", "Uzelf"), c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)"), "geslacht", T, data = dat2)
+```
+:::
+## Naar Opleiding
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("Mensen uit de algemene bevolking", "Parlementsleden", "Rechters", "Journalisten", "Politieagenten", "Artsen", "Vrienden/familie", "Uzelf"), c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)"), "oplcat", T, data = dat2)
+```
+:::
+## Naar Politiek
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("Mensen uit de algemene bevolking", "Parlementsleden", "Rechters", "Journalisten", "Politieagenten", "Artsen", "Vrienden/familie", "Uzelf"), c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)"), "pol_cat", T, data = dat2)
+```
+:::
+:::
+
+# Maart 2024 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Algemeen
+```{r}
+viz_general(vecc("CONF", 1:8), c("Mensen uit de algemene bevolking", "Parlementsleden", "Rechters", "Journalisten", "Politieagenten", "Artsen", "Vrienden/familie", "Uzelf"), c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)"), data = dat)
+```
+## Naar Leeftijd
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("Mensen uit de algemene bevolking", "Parlementsleden", "Rechters", "Journalisten", "Politieagenten", "Artsen", "Vrienden/familie", "Uzelf"), c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)"), "age_groups", T, data = dat)
+```
+:::
+## Naar Geslacht
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("Mensen uit de algemene bevolking", "Parlementsleden", "Rechters", "Journalisten", "Politieagenten", "Artsen", "Vrienden/familie", "Uzelf"), c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)"), "geslacht", T, data = dat)
+```
+:::
+## Naar Opleiding
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("Mensen uit de algemene bevolking", "Parlementsleden", "Rechters", "Journalisten", "Politieagenten", "Artsen", "Vrienden/familie", "Uzelf"), c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)"), "oplcat", T, data = dat)
+```
+:::
+## Naar Politiek
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("Mensen uit de algemene bevolking", "Parlementsleden", "Rechters", "Journalisten", "Politieagenten", "Artsen", "Vrienden/familie", "Uzelf"), c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)"), "pol_cat", T, data = dat)
+```
+:::
+:::
+
+# Over de tijd
+```{r}
+var_labels <-
+c("Mensen uit de algemene bevolking", "Parlementsleden", "Rechters", "Journalisten", "Politieagenten", "Artsen", "Vrienden/familie", "Uzelf")
+categories_dat <-
+c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)")
+```
+::: {.panel-tabset}
+## Algemeen
+::: {.panel-tabset}
+```{r, results="asis"}
+graphics <- viz_wave_change(vecc("CONF", 1:8), var_labels, rev(categories_dat), wavevar = "wave", range1 = 1:3, range2 = 4, range3 = 5:7)
+generate_quarto_elements(graphics)
+```
+:::
+## Naar Leeftijd
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("CONF", 1:8), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "age_groups", y_axis_label = "% van de respondenten die 'Zeker' (5-7) kozen", facet_by_group = F)
+tiptext <- "U kunt over de legenda zweven of erop klikken om groepen te markeren, te verwijderen of toe te voegen, wat de grafiek beter leesbaar kan maken.<br><strong>Percentage toont degenen die 'Zeker' (5-7) kozen.</strong>"
+generate_quarto_elements(list_of_plots)
+```
+:::
 <center>
-<div class="button-container">
-```
- 
 
+> Tip: `r HTML(tiptext)`
 
-
-  <a href="#iconify-fluent-emoji-high-contrast-detecteren-van-door-ai-gegenereerde-content" class="buttontop">
-    {{< iconify fluent-emoji-high-contrast detective >}} Detecteren van door AI gegenereerde content
-  </a>
-  <a href="#iconify-mingcute-safe-lock-fill-Vertrouwen-in-ai-systemen" class="buttontop">
-    {{< iconify mingcute safe-lock-fill >}} Vertrouwen in AI-systemen
-  </a>
-  <a href="#iconify-game-icons-sands-of-time-toekomst-van-ai-systemen" class="buttontop">
-    {{< iconify game-icons sands-of-time >}} Toekomst van AI-systemen 
-  </a>
-
-```{=html}
-</div>
 </center>
-```
-
-
-Je kunt algemene trends onderzoeken in de verschillende secties, met de mogelijkheid om te differentiëren  naar leeftijd, geslacht, opleidingsniveau en politieke voorkeur.  
-
-
-# {{< iconify fluent-emoji-high-contrast detective >}} Detecteren van door AI gegenereerde content {.tabset .tabset-fade .tabset-pills .break} 
-
-
-
-<blockquote class="question-text">
- Hoe zeker bent u ervan dat de volgende groepen het verschil kunnen zien tussen content gemaakt door AI en content gemaakt door mensen?
-
-</blockquote>
-
+## Naar Geslacht
 ::: {.panel-tabset}
-
-## Algemeen
-
-```{r}
-var_labels <- c(
-  "Mensen uit de algemene bevolking",
-  "Parlementsleden",
-  "Rechters",
-  "Journalisten",
-  "Politieagenten",
-  "Artsen",
-  "Vrienden/familie",
-  "Uzelf"
-)
-
-categories_dat <- c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)")
-
-
-viz_general(vecc("CONF", 1:8), 
-            var_labels, 
-            categories_dat)
-
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data %>% filter(geslacht != "Anders"), vars = vecc("CONF", 1:8), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "geslacht", y_axis_label = "% van de respondenten die 'Zeker' (5-7) kozen", facet_by_group = F)
+tiptext <- "U kunt over de legenda zweven of erop klikken om groepen te markeren, te verwijderen of toe te voegen, wat de grafiek beter leesbaar kan maken.<br><strong>Percentage toont degenen die 'Zeker' (5-7) kozen.</strong>"
+generate_quarto_elements(list_of_plots)
 ```
+:::
+<center>
 
-## Op Leeftijd 
+> Tip: `r HTML(tiptext)`
 
+</center>
+## Naar Opleiding
 ::: {.panel-tabset}
-
-```{r, results='asis'}
-
-viz_general(vecc("CONF", 1:8), 
-            var_labels,
-            categories_dat, 
-            "age_groups",
-            T)
-
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("CONF", 1:8), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "oplcat", y_axis_label = "% van de respondenten die 'Zeker' (5-7) kozen", facet_by_group = F)
+tiptext <- "U kunt over de legenda zweven of erop klikken om groepen te markeren, te verwijderen of toe te voegen, wat de grafiek beter leesbaar kan maken.<br><strong>Percentage toont degenen die 'Zeker' (5-7) kozen.</strong>"
+generate_quarto_elements(list_of_plots)
 ```
+:::
+<center>
 
+> Tip: `r HTML(tiptext)`
 
-
-::: 
-
-## Op Geslacht
-
+</center>
+## Naar Politiek
 ::: {.panel-tabset}
-
-
-```{r, results='asis'}
-
-
-viz_general(vecc("CONF", 1:8), 
-            var_labels,
-            categories_dat, 
-            "geslacht",
-            T)
-
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("CONF", 1:8), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "pol_cat", y_axis_label = "% van de respondenten die 'Zeker' (5-7) kozen", facet_by_group = F)
+tiptext <- "U kunt over de legenda zweven of erop klikken om groepen te markeren, te verwijderen of toe te voegen, wat de grafiek beter leesbaar kan maken.<br><strong>Percentage toont degenen die 'Zeker' (5-7) kozen.</strong>"
+generate_quarto_elements(list_of_plots)
 ```
+:::
+<center>
 
-::: 
+> Tip: `r HTML(tiptext)`
 
-## Op Opleiding
-
-::: {.panel-tabset}
-
-
-```{r, results='asis'}
-
-viz_general(vecc("CONF", 1:8), 
-            var_labels,
-            categories_dat, 
-            "oplcat",
-            T)
-
-```
-
-::: 
-
-## Op Politiek
-
-::: {.panel-tabset}
-
-```{r, results='asis'}
-
-viz_general(vecc("CONF", 1:8), 
-            var_labels,
-            categories_dat, 
-            "pol_cat",
-            T)
-```
-::: 
-
+</center>
+:::
 :::
 
-# {{< iconify mingcute safe-lock-fill >}} Vertrouwen in AI-systemen {.tabset .tabset-fade .tabset-pills .break}
-
-> We stellen u nog een aantal extra vragen over automatische besluitvormingssystemen. Dat zijn computerprogramma's die beslissingen maken die vroeger door mensen werden genomen. Deze beslissingen worden automatisch door computers genomen op basis van gegevens. 
-
-
-
+# {{< iconify mingcute safe-lock-fill >}} Vertrouwen in ADM-systemen {.tabset .tabset-fade .tabset-pills .break .btn-green}
+## {{< iconify mingcute safe-lock-fill >}} Vertrouwen in ADM-systemen {.tabset .tabset-fade .tabset-pills .break .btn-green}
 <blockquote class="question-text">
-Hoeveel vertrouwen hebt u erin dat automatische besluitvormingssystemen goed kunnen bepalen...
-
-</blockquote>
-
+We stellen u nog een aantal vragen over geautomatiseerde beslissingssystemen (ADS). Dit zijn computerprogramma's die beslissingen nemen die voorheen door mensen werden genomen. Deze beslissingen worden automatisch door computers genomen op basis van gegevens.<br><br><b>Hoeveel vertrouwen heeft u erin dat geautomatiseerde beslissingssystemen correct bepalen...</b>
+<button class="collapse-button" type="button"><span class="arrow"></span></button>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Sociale voorzieningen</li>
+<li>Item 2: Het nieuws dat u ziet</li>
+<li>Item 3: Kankerdiagnose</li></ul></blockquote>
 ::: {.panel-tabset}
-
+# Resultaten (Wave 1) {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
 ## Algemeen
-
 ```{r}
-var_labels <- c(
-  "...of iemand in aanmerking komt voor een bijstandsuitkering",
-  "...welke nieuwsberichten aanbevolen worden aan iemand",
-  "...of iemand kanker heeft"
-)
-
-# categories_dat <- c("confident", "neither", "not confident")
-categories_dat <- c("Vertrouwen (5-7)", "Enigszins vertrouwen (4)", "Weinig vertrouwen (1-3)")
-
-
-viz_general(vecc("TADS", 1:3), 
-            var_labels, 
-            categories_dat)
+viz_general(vecc("TADS", 1:3), c("Sociale voorzieningen", "Het nieuws dat u ziet", "Kankerdiagnose"), c("Vertrouwen (5-7)", "Enigszins vertrouwen (4)", "Weinig vertrouwen (1-3)"), data = dat)
 ```
-
-## Op Leeftijd 
-
+## Naar Leeftijd
 ::: {.panel-tabset}
-
-```{r, results='asis'}
-
-viz_general(vecc("TADS", 1:3), 
-            var_labels,
-            categories_dat, 
-            "age_groups",
-            T)
-
+```{r, results="asis"}
+viz_general(vecc("TADS", 1:3), c("Sociale voorzieningen", "Het nieuws dat u ziet", "Kankerdiagnose"), c("Vertrouwen (5-7)", "Enigszins vertrouwen (4)", "Weinig vertrouwen (1-3)"), "age_groups", T, data = dat)
 ```
-
-
-
-::: 
-
-## Op Geslacht
-
+:::
+## Naar Geslacht
 ::: {.panel-tabset}
-
-
-```{r, results='asis'}
-
-
-viz_general(vecc("TADS", 1:3), 
-            var_labels,
-            categories_dat, 
-            "geslacht",
-            T)
-
+```{r, results="asis"}
+viz_general(vecc("TADS", 1:3), c("Sociale voorzieningen", "Het nieuws dat u ziet", "Kankerdiagnose"), c("Vertrouwen (5-7)", "Enigszins vertrouwen (4)", "Weinig vertrouwen (1-3)"), "geslacht", T, data = dat)
 ```
-
-::: 
-
-## Op Opleiding
-
+:::
+## Naar Opleiding
 ::: {.panel-tabset}
-
-
-```{r, results='asis'}
-
-viz_general(vecc("TADS", 1:3), 
-            var_labels,
-            categories_dat, 
-            "oplcat",
-            T)
-
+```{r, results="asis"}
+viz_general(vecc("TADS", 1:3), c("Sociale voorzieningen", "Het nieuws dat u ziet", "Kankerdiagnose"), c("Vertrouwen (5-7)", "Enigszins vertrouwen (4)", "Weinig vertrouwen (1-3)"), "oplcat", T, data = dat)
 ```
-
-::: 
-
-## Op Politiek
-
+:::
+## Naar Politiek
 ::: {.panel-tabset}
-
-```{r, results='asis'}
-
-viz_general(vecc("TADS", 1:3), 
-            var_labels,
-            categories_dat, 
-            "pol_cat",
-            T)
+```{r, results="asis"}
+viz_general(vecc("TADS", 1:3), c("Sociale voorzieningen", "Het nieuws dat u ziet", "Kankerdiagnose"), c("Vertrouwen (5-7)", "Enigszins vertrouwen (4)", "Weinig vertrouwen (1-3)"), "pol_cat", T, data = dat)
 ```
-::: 
-
+:::
 :::
 
 
+:::
 
-# {{< iconify game-icons sands-of-time >}} Toekomst van AI-systemen {.tabset .tabset-fade .tabset-pills .break}
-
-
-
+# {{< iconify game-icons sands-of-time >}} Toekomst van ADM-systemen {.tabset .tabset-fade .tabset-pills .break .btn-green}
+## {{< iconify game-icons sands-of-time >}} Toekomst van ADM-systemen {.tabset .tabset-fade .tabset-pills .break .btn-green}
 <blockquote class="question-text">
-Als geautomatiseerde besluitvorming in de toekomst vaker voorkomt, wat denkt u dan dat er zal gebeuren?
-
-</blockquote>
-
+Als geautomatiseerde besluitvorming (ADS) in de toekomst vaker voorkomt, wat denkt u dan dat er zal gebeuren?
+<button class="collapse-button" type="button"><span class="arrow"></span></button>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Als het nieuws geautomatiseerd wordt, kunnen journalisten zich meer richten op onderzoeksjournalistiek.</li>
+<li>Item 2: Ik krijg alleen nieuwsberichten te zien die mij interesseren.</li>
+<li>Item 3: Het zal de verslaggeving eerlijker en evenwichtiger maken.</li>
+<li>Item 4: Als bepaalde rechtshandhavingstaken worden geautomatiseerd, heeft de politie meer tijd om zich te richten op grote misdrijven.</li>
+<li>Item 5: Het zal de toekenning van sociale voorzieningen eerlijker en evenwichtiger maken.</li></ul></blockquote>
 ::: {.panel-tabset}
-
+# Resultaten (Wave 1) {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
 ## Algemeen
-
 ```{r}
-var_labels <- c(
-  "Als het nieuws wordt geautomatiseerd, zullen journalisten zich meer kunnen richten op onderzoeksjournalistiek.",
-  "Ik zal alleen nog maar nieuwsberichten krijgen die me interesseren.",
-  "Het zal de verslaggeving eerlijker en evenwichtiger maken.",
-  "Als bepaalde taken voor handhaven van de wet worden geautomatiseerd, zal de politie meer
-tijd hebben om zich op grote misdrijven te richten.",
-  "De bepaling van sociale uitkeringen zal er eerlijker en evenwichtiger door worden."
-)
-
-categories_dat <- c("Eens (5-7)", "Noch eens, noch oneens (4)", "Oneens (1-3)")
-
-viz_general(vecc("ADSO", 1:5), 
-            var_labels, 
-            categories_dat)
+viz_general(vecc("ADSO", 1:5), c("Als het nieuws geautomatiseerd wordt, kunnen journalisten zich meer richten op onderzoeksjournalistiek.", "Ik krijg alleen nieuwsberichten te zien die mij interesseren.", "Het zal de verslaggeving eerlijker en evenwichtiger maken.", "Als bepaalde rechtshandhavingstaken worden geautomatiseerd, heeft de politie meer tijd om zich te richten op grote misdrijven.", "Het zal de toekenning van sociale voorzieningen eerlijker en evenwichtiger maken."), c("Eens (5-7)", "Neutraal (4)", "Oneens (1-3)"), data = dat)
 ```
-
-## Op Leeftijd 
-
+## Naar Leeftijd
 ::: {.panel-tabset}
-
-```{r, results='asis'}
-
-viz_general(vecc("ADSO", 1:5), 
-            var_labels,
-            categories_dat, 
-            "age_groups",
-            T)
-
+```{r, results="asis"}
+viz_general(vecc("ADSO", 1:5), c("Als het nieuws geautomatiseerd wordt, kunnen journalisten zich meer richten op onderzoeksjournalistiek.", "Ik krijg alleen nieuwsberichten te zien die mij interesseren.", "Het zal de verslaggeving eerlijker en evenwichtiger maken.", "Als bepaalde rechtshandhavingstaken worden geautomatiseerd, heeft de politie meer tijd om zich te richten op grote misdrijven.", "Het zal de toekenning van sociale voorzieningen eerlijker en evenwichtiger maken."), c("Eens (5-7)", "Neutraal (4)", "Oneens (1-3)"), "age_groups", T, data = dat)
 ```
-
-
-
-::: 
-
-## Op Geslacht
-
+:::
+## Naar Geslacht
 ::: {.panel-tabset}
-
-
-```{r, results='asis'}
-
-
-viz_general(vecc("ADSO", 1:5), 
-            var_labels,
-            categories_dat, 
-            "geslacht",
-            T)
-
+```{r, results="asis"}
+viz_general(vecc("ADSO", 1:5), c("Als het nieuws geautomatiseerd wordt, kunnen journalisten zich meer richten op onderzoeksjournalistiek.", "Ik krijg alleen nieuwsberichten te zien die mij interesseren.", "Het zal de verslaggeving eerlijker en evenwichtiger maken.", "Als bepaalde rechtshandhavingstaken worden geautomatiseerd, heeft de politie meer tijd om zich te richten op grote misdrijven.", "Het zal de toekenning van sociale voorzieningen eerlijker en evenwichtiger maken."), c("Eens (5-7)", "Neutraal (4)", "Oneens (1-3)"), "geslacht", T, data = dat)
 ```
-
-::: 
-
-## Op Opleiding
-
+:::
+## Naar Opleiding
 ::: {.panel-tabset}
-
-
-```{r, results='asis'}
-
-viz_general(vecc("ADSO", 1:5), 
-            var_labels,
-            categories_dat, 
-            "oplcat",
-            T)
-
+```{r, results="asis"}
+viz_general(vecc("ADSO", 1:5), c("Als het nieuws geautomatiseerd wordt, kunnen journalisten zich meer richten op onderzoeksjournalistiek.", "Ik krijg alleen nieuwsberichten te zien die mij interesseren.", "Het zal de verslaggeving eerlijker en evenwichtiger maken.", "Als bepaalde rechtshandhavingstaken worden geautomatiseerd, heeft de politie meer tijd om zich te richten op grote misdrijven.", "Het zal de toekenning van sociale voorzieningen eerlijker en evenwichtiger maken."), c("Eens (5-7)", "Neutraal (4)", "Oneens (1-3)"), "oplcat", T, data = dat)
 ```
-
-::: 
-
-## Op Politiek
-
+:::
+## Naar Politiek
 ::: {.panel-tabset}
-
-```{r, results='asis'}
-
-viz_general(vecc("ADSO", 1:5), 
-            var_labels,
-            categories_dat, 
-            "pol_cat",
-            T)
+```{r, results="asis"}
+viz_general(vecc("ADSO", 1:5), c("Als het nieuws geautomatiseerd wordt, kunnen journalisten zich meer richten op onderzoeksjournalistiek.", "Ik krijg alleen nieuwsberichten te zien die mij interesseren.", "Het zal de verslaggeving eerlijker en evenwichtiger maken.", "Als bepaalde rechtshandhavingstaken worden geautomatiseerd, heeft de politie meer tijd om zich te richten op grote misdrijven.", "Het zal de toekenning van sociale voorzieningen eerlijker en evenwichtiger maken."), c("Eens (5-7)", "Neutraal (4)", "Oneens (1-3)"), "pol_cat", T, data = dat)
 ```
-::: 
-
+:::
 :::
 
 
+:::
 
+# {{< iconify mdi scale-balance >}} Verantwoordelijkheid voor schadelijke AI-inhoud {.tabset .tabset-fade .tabset-pills .break .btn-green}
+## {{< iconify mdi scale-balance >}} Verantwoordelijkheid voor schadelijke AI-inhoud {.tabset .tabset-fade .tabset-pills .break .btn-green}
+<blockquote class="question-text">
+De verantwoordelijkheid voor schadelijke content (bijv. nepnieuws of gemanipuleerde video's) die door Kunstmatige Intelligentie (AI) is gemaakt, ligt vooral bij...
+<button class="collapse-button" type="button"><span class="arrow"></span></button>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: ...het bedrijf achter de AI-technologie.</li>
+<li>Item 2: ...de persoon die de AI heeft gebruikt om de content te maken.</li>
+<li>Item 3: ...de sociale mediaplatforms die de content hebben verspreid.</li>
+<li>Item 4: ...de overheid omdat ze niet genoeg regels heeft opgesteld.</li></ul></blockquote>
+::: {.panel-tabset}
+# Mei 2025 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Algemeen
+```{r}
+viz_general(vecc("HARAI", 1:4), c("...het bedrijf achter de AI-technologie.", "...de persoon die de AI heeft gebruikt om de content te maken.", "...de sociale mediaplatforms die de content hebben verspreid.", "...de overheid omdat ze niet genoeg regels heeft opgesteld."), c("Eens (5-7)", "Neutraal (4)", "Oneens (1-3)"), data = dat3)
+```
+## Naar Leeftijd
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("HARAI", 1:4), c("...het bedrijf achter de AI-technologie.", "...de persoon die de AI heeft gebruikt om de content te maken.", "...de sociale mediaplatforms die de content hebben verspreid.", "...de overheid omdat ze niet genoeg regels heeft opgesteld."), c("Eens (5-7)", "Neutraal (4)", "Oneens (1-3)"), "age_groups", T, data = dat3)
+```
+:::
+## Naar Geslacht
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("HARAI", 1:4), c("...het bedrijf achter de AI-technologie.", "...de persoon die de AI heeft gebruikt om de content te maken.", "...de sociale mediaplatforms die de content hebben verspreid.", "...de overheid omdat ze niet genoeg regels heeft opgesteld."), c("Eens (5-7)", "Neutraal (4)", "Oneens (1-3)"), "geslacht", T, data = dat3)
+```
+:::
+## Naar Opleiding
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("HARAI", 1:4), c("...het bedrijf achter de AI-technologie.", "...de persoon die de AI heeft gebruikt om de content te maken.", "...de sociale mediaplatforms die de content hebben verspreid.", "...de overheid omdat ze niet genoeg regels heeft opgesteld."), c("Eens (5-7)", "Neutraal (4)", "Oneens (1-3)"), "oplcat", T, data = dat3)
+```
+:::
+## Naar Politiek
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("HARAI", 1:4), c("...het bedrijf achter de AI-technologie.", "...de persoon die de AI heeft gebruikt om de content te maken.", "...de sociale mediaplatforms die de content hebben verspreid.", "...de overheid omdat ze niet genoeg regels heeft opgesteld."), c("Eens (5-7)", "Neutraal (4)", "Oneens (1-3)"), "pol_cat", T, data = dat3)
+```
+:::
+:::
 
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Algemeen
+```{r}
+viz_general(vecc("HARAI", 1:4), c("...het bedrijf achter de AI-technologie.", "...de persoon die de AI heeft gebruikt om de content te maken.", "...de sociale mediaplatforms die de content hebben verspreid.", "...de overheid omdat ze niet genoeg regels heeft opgesteld."), c("Eens (5-7)", "Neutraal (4)", "Oneens (1-3)"), data = dat2)
+```
+## Naar Leeftijd
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("HARAI", 1:4), c("...het bedrijf achter de AI-technologie.", "...de persoon die de AI heeft gebruikt om de content te maken.", "...de sociale mediaplatforms die de content hebben verspreid.", "...de overheid omdat ze niet genoeg regels heeft opgesteld."), c("Eens (5-7)", "Neutraal (4)", "Oneens (1-3)"), "age_groups", T, data = dat2)
+```
+:::
+## Naar Geslacht
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("HARAI", 1:4), c("...het bedrijf achter de AI-technologie.", "...de persoon die de AI heeft gebruikt om de content te maken.", "...de sociale mediaplatforms die de content hebben verspreid.", "...de overheid omdat ze niet genoeg regels heeft opgesteld."), c("Eens (5-7)", "Neutraal (4)", "Oneens (1-3)"), "geslacht", T, data = dat2)
+```
+:::
+## Naar Opleiding
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("HARAI", 1:4), c("...het bedrijf achter de AI-technologie.", "...de persoon die de AI heeft gebruikt om de content te maken.", "...de sociale mediaplatforms die de content hebben verspreid.", "...de overheid omdat ze niet genoeg regels heeft opgesteld."), c("Eens (5-7)", "Neutraal (4)", "Oneens (1-3)"), "oplcat", T, data = dat2)
+```
+:::
+## Naar Politiek
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("HARAI", 1:4), c("...het bedrijf achter de AI-technologie.", "...de persoon die de AI heeft gebruikt om de content te maken.", "...de sociale mediaplatforms die de content hebben verspreid.", "...de overheid omdat ze niet genoeg regels heeft opgesteld."), c("Eens (5-7)", "Neutraal (4)", "Oneens (1-3)"), "pol_cat", T, data = dat2)
+```
+:::
+:::
+
+# Over de tijd
+```{r}
+var_labels <-
+c("...het bedrijf achter de AI-technologie.", "...de persoon die de AI heeft gebruikt om de content te maken.", "...de sociale mediaplatforms die de content hebben verspreid.", "...de overheid omdat ze niet genoeg regels heeft opgesteld.")
+categories_dat <-
+c("Eens (5-7)", "Neutraal (4)", "Oneens (1-3)")
+```
+::: {.panel-tabset}
+## Algemeen
+::: {.panel-tabset}
+```{r, results="asis"}
+graphics <- viz_wave_change(vecc("HARAI", 1:4), var_labels, categories_dat, wavevar = "wave", range1 = 1:3, range2 = 4, range3 = 5:7)
+generate_quarto_elements(graphics)
+```
+:::
+## Naar Leeftijd
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("HARAI", 1:4), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "age_groups", y_axis_label = "", facet_by_group = F)
+tiptext <- ""
+generate_quarto_elements(list_of_plots)
+```
+:::
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## Naar Geslacht
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data %>% filter(geslacht != "Anders"), vars = vecc("HARAI", 1:4), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "geslacht", y_axis_label = "", facet_by_group = F)
+tiptext <- ""
+generate_quarto_elements(list_of_plots)
+```
+:::
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## Naar Opleiding
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("HARAI", 1:4), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "oplcat", y_axis_label = "", facet_by_group = F)
+tiptext <- ""
+generate_quarto_elements(list_of_plots)
+```
+:::
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## Naar Politiek
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("HARAI", 1:4), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "pol_cat", y_axis_label = "", facet_by_group = F)
+tiptext <- ""
+generate_quarto_elements(list_of_plots)
+```
+:::
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+:::
+:::
+
+# {{< iconify mdi alert-circle-outline >}} Zorgen over AI {.tabset .tabset-fade .tabset-pills .break .btn-green}
+## {{< iconify mdi alert-circle-outline >}} Zorgen over AI {.tabset .tabset-fade .tabset-pills .break .btn-green}
+<blockquote class="question-text">
+Er wordt veel gesproken over de mogelijke nadelen van Kunstmatige Intelligentie (AI). Verschillende mensen hebben verschillende ideeën over wat een probleem is.<br><br><b>Hoeveel zorgen maakt u zich over de volgende zaken?</b>
+<button class="collapse-button" type="button"><span class="arrow"></span></button>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: AI gebruiken om content te maken die sommige mensen beledigt</li>
+<li>Item 2: AI gebruiken om mensen te misleiden of te manipuleren om iets te kopen</li>
+<li>Item 3: AI gebruiken om mensen te misleiden of te manipuleren voor een politiek doel</li>
+<li>Item 4: Wanneer het niet duidelijk is dat content door AI is gemaakt</li>
+<li>Item 5: AI gebruiken om banen van mensen over te nemen</li></ul></blockquote>
+::: {.panel-tabset}
+# Mei 2025 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Algemeen
+```{r}
+viz_general(vecc("PRAI", 1:5), c("AI gebruiken om content te maken die sommige mensen beledigt", "AI gebruiken om mensen te misleiden of te manipuleren om iets te kopen", "AI gebruiken om mensen te misleiden of te manipuleren voor een politiek doel", "Wanneer het niet duidelijk is dat content door AI is gemaakt", "AI gebruiken om banen van mensen over te nemen"), c("Veel zorgen (5-7)", "Enige zorgen (4)", "Geen zorgen (1-3)"), data = dat3)
+```
+## Naar Leeftijd
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("PRAI", 1:5), c("AI gebruiken om content te maken die sommige mensen beledigt", "AI gebruiken om mensen te misleiden of te manipuleren om iets te kopen", "AI gebruiken om mensen te misleiden of te manipuleren voor een politiek doel", "Wanneer het niet duidelijk is dat content door AI is gemaakt", "AI gebruiken om banen van mensen over te nemen"), c("Veel zorgen (5-7)", "Enige zorgen (4)", "Geen zorgen (1-3)"), "age_groups", T, data = dat3)
+```
+:::
+## Naar Geslacht
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("PRAI", 1:5), c("AI gebruiken om content te maken die sommige mensen beledigt", "AI gebruiken om mensen te misleiden of te manipuleren om iets te kopen", "AI gebruiken om mensen te misleiden of te manipuleren voor een politiek doel", "Wanneer het niet duidelijk is dat content door AI is gemaakt", "AI gebruiken om banen van mensen over te nemen"), c("Veel zorgen (5-7)", "Enige zorgen (4)", "Geen zorgen (1-3)"), "geslacht", T, data = dat3)
+```
+:::
+## Naar Opleiding
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("PRAI", 1:5), c("AI gebruiken om content te maken die sommige mensen beledigt", "AI gebruiken om mensen te misleiden of te manipuleren om iets te kopen", "AI gebruiken om mensen te misleiden of te manipuleren voor een politiek doel", "Wanneer het niet duidelijk is dat content door AI is gemaakt", "AI gebruiken om banen van mensen over te nemen"), c("Veel zorgen (5-7)", "Enige zorgen (4)", "Geen zorgen (1-3)"), "oplcat", T, data = dat3)
+```
+:::
+## Naar Politiek
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("PRAI", 1:5), c("AI gebruiken om content te maken die sommige mensen beledigt", "AI gebruiken om mensen te misleiden of te manipuleren om iets te kopen", "AI gebruiken om mensen te misleiden of te manipuleren voor een politiek doel", "Wanneer het niet duidelijk is dat content door AI is gemaakt", "AI gebruiken om banen van mensen over te nemen"), c("Veel zorgen (5-7)", "Enige zorgen (4)", "Geen zorgen (1-3)"), "pol_cat", T, data = dat3)
+```
+:::
+:::
+
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Algemeen
+```{r}
+viz_general(vecc("PRAI", 1:5), c("AI gebruiken om content te maken die sommige mensen beledigt", "AI gebruiken om mensen te misleiden of te manipuleren om iets te kopen", "AI gebruiken om mensen te misleiden of te manipuleren voor een politiek doel", "Wanneer het niet duidelijk is dat content door AI is gemaakt", "AI gebruiken om banen van mensen over te nemen"), c("Veel zorgen (5-7)", "Enige zorgen (4)", "Geen zorgen (1-3)"), data = dat2)
+```
+## Naar Leeftijd
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("PRAI", 1:5), c("AI gebruiken om content te maken die sommige mensen beledigt", "AI gebruiken om mensen te misleiden of te manipuleren om iets te kopen", "AI gebruiken om mensen te misleiden of te manipuleren voor een politiek doel", "Wanneer het niet duidelijk is dat content door AI is gemaakt", "AI gebruiken om banen van mensen over te nemen"), c("Veel zorgen (5-7)", "Enige zorgen (4)", "Geen zorgen (1-3)"), "age_groups", T, data = dat2)
+```
+:::
+## Naar Geslacht
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("PRAI", 1:5), c("AI gebruiken om content te maken die sommige mensen beledigt", "AI gebruiken om mensen te misleiden of te manipuleren om iets te kopen", "AI gebruiken om mensen te misleiden of te manipuleren voor een politiek doel", "Wanneer het niet duidelijk is dat content door AI is gemaakt", "AI gebruiken om banen van mensen over te nemen"), c("Veel zorgen (5-7)", "Enige zorgen (4)", "Geen zorgen (1-3)"), "geslacht", T, data = dat2)
+```
+:::
+## Naar Opleiding
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("PRAI", 1:5), c("AI gebruiken om content te maken die sommige mensen beledigt", "AI gebruiken om mensen te misleiden of te manipuleren om iets te kopen", "AI gebruiken om mensen te misleiden of te manipuleren voor een politiek doel", "Wanneer het niet duidelijk is dat content door AI is gemaakt", "AI gebruiken om banen van mensen over te nemen"), c("Veel zorgen (5-7)", "Enige zorgen (4)", "Geen zorgen (1-3)"), "oplcat", T, data = dat2)
+```
+:::
+## Naar Politiek
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("PRAI", 1:5), c("AI gebruiken om content te maken die sommige mensen beledigt", "AI gebruiken om mensen te misleiden of te manipuleren om iets te kopen", "AI gebruiken om mensen te misleiden of te manipuleren voor een politiek doel", "Wanneer het niet duidelijk is dat content door AI is gemaakt", "AI gebruiken om banen van mensen over te nemen"), c("Veel zorgen (5-7)", "Enige zorgen (4)", "Geen zorgen (1-3)"), "pol_cat", T, data = dat2)
+```
+:::
+:::
+
+# Over de tijd
+```{r}
+var_labels <-
+c("AI gebruiken om content te maken die sommige mensen beledigt", "AI gebruiken om mensen te misleiden of te manipuleren om iets te kopen", "AI gebruiken om mensen te misleiden of te manipuleren voor een politiek doel", "Wanneer het niet duidelijk is dat content door AI is gemaakt", "AI gebruiken om banen van mensen over te nemen")
+categories_dat <-
+c("Veel zorgen (5-7)", "Enige zorgen (4)", "Geen zorgen (1-3)")
+```
+::: {.panel-tabset}
+## Algemeen
+::: {.panel-tabset}
+```{r, results="asis"}
+graphics <- viz_wave_change(vecc("PRAI", 1:5), var_labels, rev(categories_dat), wavevar = "wave", range1 = 1:3, range2 = 4, range3 = 5:7)
+generate_quarto_elements(graphics)
+```
+:::
+## Naar Leeftijd
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("PRAI", 1:5), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "age_groups", y_axis_label = "% van de respondenten die zich 'Veel zorgen' (5-7) maken", facet_by_group = F)
+tiptext <- "U kunt over de legenda zweven of erop klikken om groepen te markeren, te verwijderen of toe te voegen, wat de grafiek beter leesbaar kan maken.<br><strong>Percentage toont degenen die zich 'Veel zorgen' (5-7) maken.</strong>"
+generate_quarto_elements(list_of_plots)
+```
+:::
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## Naar Geslacht
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data %>% filter(geslacht != "Anders"), vars = vecc("PRAI", 1:5), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "geslacht", y_axis_label = "% van de respondenten die zich 'Veel zorgen' (5-7) maken", facet_by_group = F)
+tiptext <- "U kunt over de legenda zweven of erop klikken om groepen te markeren, te verwijderen of toe te voegen, wat de grafiek beter leesbaar kan maken.<br><strong>Percentage toont degenen die zich 'Veel zorgen' (5-7) maken.</strong>"
+generate_quarto_elements(list_of_plots)
+```
+:::
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## Naar Opleiding
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("PRAI", 1:5), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "oplcat", y_axis_label = "% van de respondenten die zich 'Veel zorgen' (5-7) maken", facet_by_group = F)
+tiptext <- "U kunt over de legenda zweven of erop klikken om groepen te markeren, te verwijderen of toe te voegen, wat de grafiek beter leesbaar kan maken.<br><strong>Percentage toont degenen die zich 'Veel zorgen' (5-7) maken.</strong>"
+generate_quarto_elements(list_of_plots)
+```
+:::
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## Naar Politiek
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("PRAI", 1:5), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "pol_cat", y_axis_label = "% van de respondenten die zich 'Veel zorgen' (5-7) maken", facet_by_group = F)
+tiptext <- "U kunt over de legenda zweven of erop klikken om groepen te markeren, te verwijderen of toe te voegen, wat de grafiek beter leesbaar kan maken.<br><strong>Percentage toont degenen die zich 'Veel zorgen' (5-7) maken.</strong>"
+generate_quarto_elements(list_of_plots)
+```
+:::
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+:::
+:::
+
+# {{< iconify mdi newspaper-variant-outline >}} Aandacht voor AI in het nieuws {.tabset .tabset-fade .tabset-pills .break .btn-green}
+## {{< iconify mdi newspaper-variant-outline >}} Aandacht voor AI in het nieuws {.tabset .tabset-fade .tabset-pills .break .btn-green}
+<blockquote class="question-text">
+Wat vindt u van de hoeveelheid aandacht die wordt besteed aan Kunstmatige Intelligentie (AI) in het nieuws?
+<button class="collapse-button" type="button"><span class="arrow"></span></button>
+<div class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;">Hoeveelheid aandacht voor AI in het nieuws</div></blockquote>
+::: {.panel-tabset}
+# Mei 2025 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Algemeen
+```{r}
+viz_general(c("MC"), c("Hoeveelheid aandacht voor AI in het nieuws"), c("Te veel (5-7)", "Ongeveer goed (4)", "Te weinig (1-3)"), data = dat3)
+```
+## Naar Leeftijd
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Hoeveelheid aandacht voor AI in het nieuws"), c("Te veel (5-7)", "Ongeveer goed (4)", "Te weinig (1-3)"), "age_groups", T, data = dat3)
+```
+
+## Naar Geslacht
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Hoeveelheid aandacht voor AI in het nieuws"), c("Te veel (5-7)", "Ongeveer goed (4)", "Te weinig (1-3)"), "geslacht", T, data = dat3)
+```
+
+## Naar Opleiding
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Hoeveelheid aandacht voor AI in het nieuws"), c("Te veel (5-7)", "Ongeveer goed (4)", "Te weinig (1-3)"), "oplcat", T, data = dat3)
+```
+
+## Naar Politiek
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Hoeveelheid aandacht voor AI in het nieuws"), c("Te veel (5-7)", "Ongeveer goed (4)", "Te weinig (1-3)"), "pol_cat", T, data = dat3)
+```
+
+:::
+
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Algemeen
+```{r}
+viz_general(c("MC"), c("Hoeveelheid aandacht voor AI in het nieuws"), c("Te veel (5-7)", "Ongeveer goed (4)", "Te weinig (1-3)"), data = dat2)
+```
+## Naar Leeftijd
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Hoeveelheid aandacht voor AI in het nieuws"), c("Te veel (5-7)", "Ongeveer goed (4)", "Te weinig (1-3)"), "age_groups", T, data = dat2)
+```
+
+## Naar Geslacht
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Hoeveelheid aandacht voor AI in het nieuws"), c("Te veel (5-7)", "Ongeveer goed (4)", "Te weinig (1-3)"), "geslacht", T, data = dat2)
+```
+
+## Naar Opleiding
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Hoeveelheid aandacht voor AI in het nieuws"), c("Te veel (5-7)", "Ongeveer goed (4)", "Te weinig (1-3)"), "oplcat", T, data = dat2)
+```
+
+## Naar Politiek
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Hoeveelheid aandacht voor AI in het nieuws"), c("Te veel (5-7)", "Ongeveer goed (4)", "Te weinig (1-3)"), "pol_cat", T, data = dat2)
+```
+
+:::
+
+# Maart 2024 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Algemeen
+```{r}
+viz_general(c("MC"), c("Hoeveelheid aandacht voor AI in het nieuws"), c("Te veel (5-7)", "Ongeveer goed (4)", "Te weinig (1-3)"), data = dat)
+```
+## Naar Leeftijd
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Hoeveelheid aandacht voor AI in het nieuws"), c("Te veel (5-7)", "Ongeveer goed (4)", "Te weinig (1-3)"), "age_groups", T, data = dat)
+```
+
+## Naar Geslacht
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Hoeveelheid aandacht voor AI in het nieuws"), c("Te veel (5-7)", "Ongeveer goed (4)", "Te weinig (1-3)"), "geslacht", T, data = dat)
+```
+
+## Naar Opleiding
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Hoeveelheid aandacht voor AI in het nieuws"), c("Te veel (5-7)", "Ongeveer goed (4)", "Te weinig (1-3)"), "oplcat", T, data = dat)
+```
+
+## Naar Politiek
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Hoeveelheid aandacht voor AI in het nieuws"), c("Te veel (5-7)", "Ongeveer goed (4)", "Te weinig (1-3)"), "pol_cat", T, data = dat)
+```
+
+:::
+
+# Over de tijd
+```{r}
+var_labels <-
+c("Hoeveelheid aandacht voor AI in het nieuws")
+categories_dat <-
+c("Te veel (5-7)", "Ongeveer goed (4)", "Te weinig (1-3)")
+```
+::: {.panel-tabset}
+## Algemeen
+
+```{r, results="asis"}
+graphics <- viz_wave_change(c("MC"), var_labels, rev(categories_dat), wavevar = "wave", range1 = 1:3, range2 = 4, range3 = 5:7)
+generate_quarto_elements(graphics)
+```
+
+## Naar Leeftijd
+
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = c("MC"), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "age_groups", y_axis_label = "% van de respondenten die 'Te veel' (5-7) vinden", facet_by_group = F)
+tiptext <- "U kunt over de legenda zweven of erop klikken om groepen te markeren, te verwijderen of toe te voegen, wat de grafiek beter leesbaar kan maken.<br><strong>Percentage toont degenen die 'Te veel' (5-7) kozen.</strong>"
+generate_quarto_elements(list_of_plots)
+```
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## Naar Geslacht
+
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data %>% filter(geslacht != "Anders"), vars = c("MC"), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "geslacht", y_axis_label = "% van de respondenten die 'Te veel' (5-7) vinden", facet_by_group = F)
+tiptext <- "U kunt over de legenda zweven of erop klikken om groepen te markeren, te verwijderen of toe te voegen, wat de grafiek beter leesbaar kan maken.<br><strong>Percentage toont degenen die 'Te veel' (5-7) kozen.</strong>"
+generate_quarto_elements(list_of_plots)
+```
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## Naar Opleiding
+
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = c("MC"), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "oplcat", y_axis_label = "% van de respondenten die 'Te veel' (5-7) vinden", facet_by_group = F)
+tiptext <- "U kunt over de legenda zweven of erop klikken om groepen te markeren, te verwijderen of toe te voegen, wat de grafiek beter leesbaar kan maken.<br><strong>Percentage toont degenen die 'Te veel' (5-7) kozen.</strong>"
+generate_quarto_elements(list_of_plots)
+```
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## Naar Politiek
+
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = c("MC"), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "pol_cat", y_axis_label = "% van de respondenten die 'Te veel' (5-7) vinden", facet_by_group = F)
+tiptext <- "U kunt over de legenda zweven of erop klikken om groepen te markeren, te verwijderen of toe te voegen, wat de grafiek beter leesbaar kan maken.<br><strong>Percentage toont degenen die 'Te veel' (5-7) kozen.</strong>"
+generate_quarto_elements(list_of_plots)
+```
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+:::
+:::
+
+# {{< iconify mdi:movie-open-outline >}} Perceptie van AI in de media {.tabset .tabset-fade .tabset-pills .break .btn-green}
+## {{< iconify mdi:movie-open-outline >}} Perceptie van AI in de media {.tabset .tabset-fade .tabset-pills .break .btn-green}
+<blockquote class="question-text">
+Wat is volgens u het beeld van Kunstmatige Intelligentie (AI) in de media?
+<button class="collapse-button" type="button"><span class="arrow"></span></button>
+<div class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;">Beeldvorming van AI in de media</div></blockquote>
+::: {.panel-tabset}
+# Mei 2025 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Algemeen
+```{r}
+viz_general(c("AI_PERCEP"), c("Beeldvorming van AI in de media"), c("Positief (5-7)", "Neutraal (4)", "Negatief (1-3)"), data = dat3)
+```
+## Naar Leeftijd
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Beeldvorming van AI in de media"), c("Positief (5-7)", "Neutraal (4)", "Negatief (1-3)"), "age_groups", T, data = dat3)
+```
+
+## Naar Geslacht
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Beeldvorming van AI in de media"), c("Positief (5-7)", "Neutraal (4)", "Negatief (1-3)"), "geslacht", T, data = dat3)
+```
+
+## Naar Opleiding
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Beeldvorming van AI in de media"), c("Positief (5-7)", "Neutraal (4)", "Negatief (1-3)"), "oplcat", T, data = dat3)
+```
+
+## Naar Politiek
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Beeldvorming van AI in de media"), c("Positief (5-7)", "Neutraal (4)", "Negatief (1-3)"), "pol_cat", T, data = dat3)
+```
+
+:::
+
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Algemeen
+```{r}
+viz_general(c("AI_PERCEP"), c("Beeldvorming van AI in de media"), c("Positief (5-7)", "Neutraal (4)", "Negatief (1-3)"), data = dat2)
+```
+## Naar Leeftijd
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Beeldvorming van AI in de media"), c("Positief (5-7)", "Neutraal (4)", "Negatief (1-3)"), "age_groups", T, data = dat2)
+```
+
+## Naar Geslacht
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Beeldvorming van AI in de media"), c("Positief (5-7)", "Neutraal (4)", "Negatief (1-3)"), "geslacht", T, data = dat2)
+```
+
+## Naar Opleiding
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Beeldvorming van AI in de media"), c("Positief (5-7)", "Neutraal (4)", "Negatief (1-3)"), "oplcat", T, data = dat2)
+```
+
+## Naar Politiek
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Beeldvorming van AI in de media"), c("Positief (5-7)", "Neutraal (4)", "Negatief (1-3)"), "pol_cat", T, data = dat2)
+```
+
+:::
+
+# Maart 2024 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Algemeen
+```{r}
+viz_general(c("AI_PERCEP"), c("Beeldvorming van AI in de media"), c("Positief (5-7)", "Neutraal (4)", "Negatief (1-3)"), data = dat)
+```
+## Naar Leeftijd
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Beeldvorming van AI in de media"), c("Positief (5-7)", "Neutraal (4)", "Negatief (1-3)"), "age_groups", T, data = dat)
+```
+
+## Naar Geslacht
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Beeldvorming van AI in de media"), c("Positief (5-7)", "Neutraal (4)", "Negatief (1-3)"), "geslacht", T, data = dat)
+```
+
+## Naar Opleiding
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Beeldvorming van AI in de media"), c("Positief (5-7)", "Neutraal (4)", "Negatief (1-3)"), "oplcat", T, data = dat)
+```
+
+## Naar Politiek
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Beeldvorming van AI in de media"), c("Positief (5-7)", "Neutraal (4)", "Negatief (1-3)"), "pol_cat", T, data = dat)
+```
+
+:::
+
+# Over de tijd
+```{r}
+var_labels <-
+c("Beeldvorming van AI in de media")
+categories_dat <-
+c("Positief (5-7)", "Neutraal (4)", "Negatief (1-3)")
+```
+::: {.panel-tabset}
+## Algemeen
+
+```{r, results="asis"}
+graphics <- viz_wave_change(c("AI_PERCEP"), var_labels, rev(categories_dat), wavevar = "wave", range1 = 1:3, range2 = 4, range3 = 5:7)
+generate_quarto_elements(graphics)
+```
+
+## Naar Leeftijd
+
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = c("AI_PERCEP"), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "age_groups", y_axis_label = "% van de respondenten die 'Positief' (5-7) denken", facet_by_group = F)
+tiptext <- "U kunt over de legenda zweven of erop klikken om groepen te markeren, te verwijderen of toe te voegen, wat de grafiek beter leesbaar kan maken.<br><strong>Percentage toont degenen die 'Positief' (5-7) kozen.</strong>"
+generate_quarto_elements(list_of_plots)
+```
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## Naar Geslacht
+
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data %>% filter(geslacht != "Anders"), vars = c("AI_PERCEP"), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "geslacht", y_axis_label = "% van de respondenten die 'Positief' (5-7) denken", facet_by_group = F)
+tiptext <- "U kunt over de legenda zweven of erop klikken om groepen te markeren, te verwijderen of toe te voegen, wat de grafiek beter leesbaar kan maken.<br><strong>Percentage toont degenen die 'Positief' (5-7) kozen.</strong>"
+generate_quarto_elements(list_of_plots)
+```
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## Naar Opleiding
+
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = c("AI_PERCEP"), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "oplcat", y_axis_label = "% van de respondenten die 'Positief' (5-7) denken", facet_by_group = F)
+tiptext <- "U kunt over de legenda zweven of erop klikken om groepen te markeren, te verwijderen of toe te voegen, wat de grafiek beter leesbaar kan maken.<br><strong>Percentage toont degenen die 'Positief' (5-7) kozen.</strong>"
+generate_quarto_elements(list_of_plots)
+```
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## Naar Politiek
+
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = c("AI_PERCEP"), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "pol_cat", y_axis_label = "% van de respondenten die 'Positief' (5-7) denken", facet_by_group = F)
+tiptext <- "U kunt over de legenda zweven of erop klikken om groepen te markeren, te verwijderen of toe te voegen, wat de grafiek beter leesbaar kan maken.<br><strong>Percentage toont degenen die 'Positief' (5-7) kozen.</strong>"
+generate_quarto_elements(list_of_plots)
+```
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+:::
+:::
+
+:::
 <br>
-
 <center>
-
 <img src="algosoclogo.png" width="13%">
-
-
 </center>
-
-
 

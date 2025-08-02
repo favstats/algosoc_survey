@@ -1,6 +1,6 @@
 project:
   type: website
-  output-dir: ../../docs/
+  output-dir: ../../docs
 
 website:
   favicon: algosoclogo.png
@@ -12,9 +12,11 @@ website:
       - href: engagement.qmd
         text: "{{< iconify ph users-three >}} Betrokkenheid"
       - href: attitudes.qmd
-        text: "{{< iconify ph head-circuit >}} Attitudes"
+        text: "{{< iconify ph head-circuit >}} Houdingen"
       - href: values.qmd
         text: "{{< iconify ph globe-hemisphere-west >}} Waarden"
+      - href: socialmedia.qmd
+        text: "{{< iconify ph chat-circle-dots >}} Sociale Media"
     right:
       - href: about.qmd
         text: "Info {{< iconify ph info-thin >}}"
@@ -25,7 +27,7 @@ website:
   page-footer:
     background: light # or dark
     left:
-      - "Copyright 2024, AlgoSoc"
+      - "Copyright 2025, AlgoSoc"
     right:
       - icon: linkedin
         href: https://www.linkedin.com/company/algosoc/

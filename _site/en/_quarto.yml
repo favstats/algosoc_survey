@@ -15,6 +15,8 @@ website:
         text: "{{< iconify ph head-circuit >}} Attitudes"
       - href: values.qmd
         text: "{{< iconify ph globe-hemisphere-west >}} Values"
+      - href: socialmedia.qmd
+        text: "{{< iconify ph chat-circle-dots >}} Social Media"
     right:
       - href: about.qmd
         text: "About {{< iconify ph info-thin >}}"
@@ -25,7 +27,7 @@ website:
   page-footer:
     background: light # or dark
     left:
-      - "Copyright 2024, AlgoSoc"
+      - "Copyright 2025, AlgoSoc"
     right:
       - icon: linkedin
         href: https://www.linkedin.com/company/algosoc/

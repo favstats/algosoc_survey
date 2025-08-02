@@ -1,0 +1,393 @@
+---
+description-meta: ""
+execute:
+  echo: false
+---
+
+
+
+```{r, echo = F, warning=F, message=F}
+## this is important to keep for some reason ##
+library(tippy)
+tippy_this(
+  elementId = "firstNavItem",
+  tooltip = "Your tooltip text here...",
+  animation = "scale",
+  duration = 1000,
+  placement = "bottom"
+)
+
+```
+
+
+
+```{r setup, include=FALSE}
+# here::i_am("wtm_gb.Rproj")
+
+
+## Global options
+knitr::opts_chunk$set(
+    cache = F,
+    echo = F,
+    warning = F,
+    message = F,
+    cache.lazy = FALSE
+)
+
+
+pacman::p_load(htmltools, tidyverse, highcharter, gt, gtExtras, rvest, haven)
+
+options(scipen = 999)
+
+source("utils.R")
+```
+
+
+De pagina is verdeeld in drie hoofdsecties: 
+
+
+```{=html}
+<center>
+<div class="button-container">
+```
+ 
+
+
+
+  <a href="#iconify-fluent-emoji-high-contrast-detecteren-van-door-ai-gegenereerde-content" class="buttontop">
+    {{< iconify fluent-emoji-high-contrast detective >}} Detecteren van door AI gegenereerde content
+  </a>
+  <a href="#iconify-mingcute-safe-lock-fill-Vertrouwen-in-ai-systemen" class="buttontop">
+    {{< iconify mingcute safe-lock-fill >}} Vertrouwen in AI-systemen
+  </a>
+  <a href="#iconify-game-icons-sands-of-time-toekomst-van-ai-systemen" class="buttontop">
+    {{< iconify game-icons sands-of-time >}} Toekomst van AI-systemen 
+  </a>
+
+```{=html}
+</div>
+</center>
+```
+
+
+Je kunt algemene trends onderzoeken in de verschillende secties, met de mogelijkheid om te differentiëren  naar leeftijd, geslacht, opleidingsniveau en politieke voorkeur.  
+
+
+# {{< iconify fluent-emoji-high-contrast detective >}} Detecteren van door AI gegenereerde content {.tabset .tabset-fade .tabset-pills .break} 
+
+
+
+<blockquote class="question-text">
+ Hoe zeker bent u ervan dat de volgende groepen het verschil kunnen zien tussen content gemaakt door AI en content gemaakt door mensen?
+
+</blockquote>
+
+::: {.panel-tabset}
+
+## Algemeen
+
+```{r}
+var_labels <- c(
+  "Mensen uit de algemene bevolking",
+  "Parlementsleden",
+  "Rechters",
+  "Journalisten",
+  "Politieagenten",
+  "Artsen",
+  "Vrienden/familie",
+  "Uzelf"
+)
+
+categories_dat <- c("Zeker (5-7)", "Enigszins zeker (4)", "Niet zeker (1-3)")
+
+
+viz_general(vecc("CONF", 1:8), 
+            var_labels, 
+            categories_dat)
+
+```
+
+## Op Leeftijd 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("CONF", 1:8), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T)
+
+```
+
+
+
+::: 
+
+## Op Geslacht
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(vecc("CONF", 1:8), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T)
+
+```
+
+::: 
+
+## Op Opleiding
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(vecc("CONF", 1:8), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T)
+
+```
+
+::: 
+
+## Op Politiek
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("CONF", 1:8), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T)
+```
+::: 
+
+:::
+
+# {{< iconify mingcute safe-lock-fill >}} Vertrouwen in AI-systemen {.tabset .tabset-fade .tabset-pills .break}
+
+> We stellen u nog een aantal extra vragen over automatische besluitvormingssystemen. Dat zijn computerprogramma's die beslissingen maken die vroeger door mensen werden genomen. Deze beslissingen worden automatisch door computers genomen op basis van gegevens. 
+
+
+
+<blockquote class="question-text">
+Hoeveel vertrouwen hebt u erin dat automatische besluitvormingssystemen goed kunnen bepalen...
+
+</blockquote>
+
+::: {.panel-tabset}
+
+## Algemeen
+
+```{r}
+var_labels <- c(
+  "...of iemand in aanmerking komt voor een bijstandsuitkering",
+  "...welke nieuwsberichten aanbevolen worden aan iemand",
+  "...of iemand kanker heeft"
+)
+
+# categories_dat <- c("confident", "neither", "not confident")
+categories_dat <- c("Vertrouwen (5-7)", "Enigszins vertrouwen (4)", "Weinig vertrouwen (1-3)")
+
+
+viz_general(vecc("TADS", 1:3), 
+            var_labels, 
+            categories_dat)
+```
+
+## Op Leeftijd 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("TADS", 1:3), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T)
+
+```
+
+
+
+::: 
+
+## Op Geslacht
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(vecc("TADS", 1:3), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T)
+
+```
+
+::: 
+
+## Op Opleiding
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(vecc("TADS", 1:3), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T)
+
+```
+
+::: 
+
+## Op Politiek
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("TADS", 1:3), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T)
+```
+::: 
+
+:::
+
+
+
+# {{< iconify game-icons sands-of-time >}} Toekomst van AI-systemen {.tabset .tabset-fade .tabset-pills .break}
+
+
+
+<blockquote class="question-text">
+Als geautomatiseerde besluitvorming in de toekomst vaker voorkomt, wat denkt u dan dat er zal gebeuren?
+
+</blockquote>
+
+::: {.panel-tabset}
+
+## Algemeen
+
+```{r}
+var_labels <- c(
+  "Als het nieuws wordt geautomatiseerd, zullen journalisten zich meer kunnen richten op onderzoeksjournalistiek.",
+  "Ik zal alleen nog maar nieuwsberichten krijgen die me interesseren.",
+  "Het zal de verslaggeving eerlijker en evenwichtiger maken.",
+  "Als bepaalde taken voor handhaven van de wet worden geautomatiseerd, zal de politie meer
+tijd hebben om zich op grote misdrijven te richten.",
+  "De bepaling van sociale uitkeringen zal er eerlijker en evenwichtiger door worden."
+)
+
+categories_dat <- c("Eens (5-7)", "Noch eens, noch oneens (4)", "Oneens (1-3)")
+
+viz_general(vecc("ADSO", 1:5), 
+            var_labels, 
+            categories_dat)
+```
+
+## Op Leeftijd 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("ADSO", 1:5), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T)
+
+```
+
+
+
+::: 
+
+## Op Geslacht
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(vecc("ADSO", 1:5), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T)
+
+```
+
+::: 
+
+## Op Opleiding
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(vecc("ADSO", 1:5), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T)
+
+```
+
+::: 
+
+## Op Politiek
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("ADSO", 1:5), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T)
+```
+::: 
+
+:::
+
+
+
+
+<br>
+
+<center>
+
+<img src="algosoclogo.png" width="13%">
+
+
+</center>
+
+
+

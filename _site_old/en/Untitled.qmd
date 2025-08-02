@@ -1,0 +1,2303 @@
+---
+title: ""
+format:
+  html:
+    theme: lumen
+    page-layout: full
+    self-contained: true
+    code-fold: true
+    code-overflow: wrap
+    html-math-method: mathjax
+    include-after-body:
+      text: |
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+              var toc = document.createElement("div");
+              toc.id = "custom-toc";
+              toc.style.position = "fixed";
+              toc.style.top = "0";
+              toc.style.right = "-300px";  // Start hidden
+              toc.style.width = "260px";
+              toc.style.height = "100%";
+              toc.style.background = "white";
+              toc.style.padding = "10px";
+              toc.style.boxShadow = "0px 2px 5px rgba(0, 0, 0, 0.2)";
+              toc.style.transition = "right 0.3s ease-in-out";
+              toc.style.overflowY = "auto";
+          
+              var tocTitle = document.createElement("h3");
+              tocTitle.innerText = "Navigation";
+              toc.appendChild(tocTitle);
+          
+              var headers = document.querySelectorAll("h2, h3, h4");
+              headers.forEach(function (header, index) {
+                  if (!header.id) {
+                      header.id = "section-" + index;
+                  }
+          
+                  var link = document.createElement("a");
+                  link.innerText = header.innerText;
+                  link.href = "#" + header.id;
+                  link.style.display = "block";
+                  link.style.padding = "5px 0";
+                  link.style.color = "#007bff";
+                  link.style.textDecoration = "none";
+          
+                  toc.appendChild(link);
+              });
+          
+              document.body.appendChild(toc);
+          
+              // Create toggle button (📑 icon)
+              var button = document.createElement("button");
+              button.id = "toggle-toc";
+              button.innerHTML = "📑";
+              button.style.position = "fixed";
+              button.style.top = "15px";
+              button.style.right = "15px";
+              button.style.backgroundColor = "white";
+              button.style.color = "#333";
+              button.style.border = "2px solid #ccc"; // Slightly thicker border
+              button.style.padding = "10px 12px"; // Increased padding
+              button.style.cursor = "pointer";
+              button.style.borderRadius = "8px"; // More rounded
+              button.style.fontSize = "22px"; // Larger icon
+              button.style.zIndex = "1000";
+              button.style.boxShadow = "0px 3px 6px rgba(0, 0, 0, 0.2)";
+              button.style.width = "50px"; // Increase button size
+              button.style.height = "50px"; // Make it square
+          
+              document.body.appendChild(button);
+          
+              // Click event to toggle the ToC
+              button.addEventListener("click", function () {
+                  if (toc.style.right === "0px") {
+                      toc.style.right = "-300px"; // Hide ToC
+                  } else {
+                      toc.style.right = "0px"; // Show ToC
+                  }
+              });
+          });
+          document.addEventListener("DOMContentLoaded", function () {
+              document.querySelectorAll("a[href='https://favstats.github.io/de25/']").forEach(function(link) {
+                  link.addEventListener("click", function(event) {
+                      event.preventDefault(); // Prevent default behavior
+                      window.open(link.href, "_blank"); // Open in a new tab/window
+                  });
+              });
+          });
+        </script>
+    includes:
+      in-header: |
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+---
+
+```{r, echo = F, warning=F, message=F}
+## this is important to keep for some reason ##
+library(tippy)
+# Make sure you have these libraries loaded
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(highcharter)
+library(forcats)
+library(forcats)
+library(htmltools)
+tippy_this(
+  elementId = "firstNavItem",
+  tooltip = "Your tooltip text here...",
+  animation = "scale",
+  duration = 1000,
+  placement = "bottom"
+)
+```
+
+The page is divided into four main sections: 
+
+
+```{=html}
+<center>
+<div class="button-container">
+```
+ 
+
+  <a href="#iconify-fluent-text-grammar-settings-20-regular-ability-to-recognize-and-influence-ai" class="buttontop">
+    {{< iconify fluent text-grammar-settings-20-regular >}} Ability to Recognize and Influence AI
+  </a>
+
+  <a href="#iconify-material-symbols-light-interactive-space-outline-rounded-usage-of-ai-systems" class="buttontop">
+    {{< iconify material-symbols-light interactive-space-outline-rounded >}} Usage of AI Systems 
+  </a>
+  <a href="#iconify-lets-icons-view-light-exposure-to-ai" class="buttontop">
+    {{< iconify lets-icons view-light >}} Exposure to AI
+  </a>
+  <a href="#iconify-carbon-ibm-watson-knowledge-studio-familiarity-with-ai-terms" class="buttontop">
+    {{< iconify carbon ibm-watson-knowledge-studio >}} Familiarity with AI terms
+  </a>
+    
+
+```{=html}
+</div>
+</center>
+```
+
+
+Each section allows you to examine overall trends as well as breakdowns by age, gender, education level, and political leaning.  
+
+```{r setup, include=FALSE}
+# here::i_am("wtm_gb.Rproj")
+
+
+## Global options
+knitr::opts_chunk$set(
+    cache = F,
+    echo = F,
+    warning = F,
+    message = F,
+    cache.lazy = FALSE
+)
+
+
+pacman::p_load(htmltools, tidyverse, highcharter, gt, gtExtras, rvest, haven)
+
+options(scipen = 999)
+
+source("utils.R")
+
+data <- dat %>% 
+  mutate(wave = 1) %>% 
+  bind_rows(dat2 %>% 
+              mutate(wave = 2))  %>% 
+  bind_rows(dat3 %>% 
+              mutate(wave = 3)) 
+
+```
+
+
+```{r}
+# Load necessary libraries
+# Make sure you have glue and knitr installed: install.packages(c("glue", "knitr"))
+library(glue)
+library(knitr)
+
+# Function to generate Quarto elements for an item battery
+generate_battery_section <- function(
+  var_prefix,               # e.g., "ADM", "DIGIQ"
+  var_indices,              # e.g., 1:2 for ADM1, ADM2
+  var_labels,               # Vector of variable labels
+  categories_dat,           # Response categories
+  section_title,            # Section title
+  iconify_tag,              # Iconify tag for header
+  question_text,            # Question text for blockquote
+  y_axis_label,             # Y-axis label for plots
+  reverse_categories = FALSE, # Whether to reverse categories
+  data_cleanup = NULL       # Optional data cleanup expression
+) {
+  # --- Prepare variables for embedding into code chunks ---
+  vars_string <- paste0('c("', paste(paste0(var_prefix, var_indices), collapse = '", "'), '")')
+  var_labels_string <- paste0('c("', paste(var_labels, collapse = '", "'), '")')
+  
+  # Determine the final category order and create the string for code chunks
+  final_categories <- if (reverse_categories) rev(categories_dat) else categories_dat
+  categories_string <- paste0('c("', paste(final_categories, collapse = '", "'), '")')
+  
+  # Dynamically create tip text based on the first category
+  tip_category <- final_categories[1]
+  dynamic_tiptext <- glue("Tip: You can hover over or click the legend to highlight specific groups. Percentages show respondents who chose '{tip_category}'.")
+
+  # --- Build the Quarto markdown string ---
+  output_parts <- list()
+
+  # Main Header and Tabset Start
+  output_parts[[1]] <- glue(
+    '# {{< iconify {iconify_tag} >}} {section_title}',
+    '<blockquote class="question-text">{question_text}</blockquote>',
+    '::: {{.panel-tabset}}', # Main tabset for "Over Time", "March 2024", etc.
+    .sep = '\n\n'
+  )
+
+  # --- Over Time Section ---
+  over_time_parts <- list()
+  over_time_parts[[1]] <- glue(
+    '## Over Time {{.tabset .tabset-fade .tabset-pills .break}}',
+    '::: {{.panel-tabset}}', # Sub-tabset for "Overall", "By Age", etc.
+    .sep = '\n\n'
+  )
+
+  # Overall (Over Time)
+  over_time_parts[[2]] <- glue(
+    '### Overall',
+    '```{{r, results="asis"}}',
+    'graphics <- viz_wave_change(vars = {vars_string}, var_labels = {var_labels_string}, categories_dat = {categories_string}, wavevar = "wave")',
+    'generate_quarto_elements(graphics)',
+    '```',
+    .sep = '\n'
+  )
+
+  # Breakdowns (Over Time)
+  breakdowns <- list(
+    list(name = "By Age", group_var = "age_groups", filter = NULL),
+    list(name = "By Gender", group_var = "geslacht", filter = ' |> dplyr::filter(geslacht != "Other")'),
+    list(name = "By Education", group_var = "oplcat", filter = NULL),
+    list(name = "By Politics", group_var = "pol_cat", filter = NULL)
+  )
+
+  for (b in breakdowns) {
+    over_time_parts[[length(over_time_parts) + 1]] <- glue(
+      '### {b$name}',
+      '```{{r, results="asis"}}',
+      'plots_list <- viz_wave_change3(data = data{b$filter}, vars = {vars_string}, range3 = 5:7, display_range = 5:7, var_labels = {var_labels_string}, categories_dat = {categories_string}, wave_var = "wave", group_by_var = "{b$group_var}", y_axis_label = "{y_axis_label}", facet_by_group = FALSE)',
+      'generate_quarto_elements(plots_list)',
+      '```',
+      '> {dynamic_tiptext}',
+      .sep = '\n'
+    )
+  }
+  over_time_parts[[length(over_time_parts) + 1]] <- ':::' # End "Over Time" sub-tabset
+  output_parts[[2]] <- paste(over_time_parts, collapse='\n\n')
+
+  # --- Individual Time Periods Sections ---
+  time_periods <- list(
+    list(title = "March 2024", data = "dat"),
+    list(title = "December 2024", data = "dat2"),
+    list(title = "April 2025", data = "dat3")
+  )
+
+  for (tp in time_periods) {
+    period_parts <- list()
+    period_parts[[1]] <- glue(
+      '## {tp$title} {{.tabset .tabset-fade .tabset-pills .break}}',
+      '::: {{.panel-tabset}}',
+      .sep = '\n\n'
+    )
+    
+    cleanup_code <- if (!is.null(data_cleanup) && tp$title == "April 2025") data_cleanup else ""
+
+    # Overall (for individual time period)
+    period_parts[[2]] <- glue(
+      '### Overall',
+      '```{{r}}',
+      '{cleanup_code}',
+      'viz_general(vars = {vars_string}, var_labels = {var_labels_string}, categories_dat = {categories_string}, data = {tp$data})',
+      '```',
+      .sep = '\n'
+    )
+    
+    # Breakdowns (for individual time period)
+    for (b in breakdowns) {
+      period_parts[[length(period_parts) + 1]] <- glue(
+        '### {b$name}',
+        '```{{r}}',
+        'viz_general(vars = {vars_string}, var_labels = {var_labels_string}, categories_dat = {categories_string}, group_by = "{b$group_var}", group = TRUE, data = {tp$data})',
+        '```',
+        .sep = '\n'
+      )
+    }
+    period_parts[[length(period_parts) + 1]] <- ':::' # End time period sub-tabset
+    output_parts[[length(output_parts) + 1]] <- paste(period_parts, collapse='\n\n')
+  }
+
+  output_parts[[length(output_parts) + 1]] <- ':::' # End main tabset
+
+  # --- Final Output ---
+  # Combine all parts and use asis_output to render the markdown
+  final_quarto_string <- paste(output_parts, collapse = '\n\n')
+  knitr::asis_output(final_quarto_string)
+}
+```
+
+
+```{r, results='asis'}
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that Agree (5-7) with the statement.</strong>"
+
+
+var_labels <- c(
+  "I recognize it when a website or app uses AI to adapt the content to me.",
+  "I recognize it when specific content is recommended to me by AI.",
+  "I know where to find the settings to change or disable AI personalization.",
+  "I know how to access the data that AI systems use to tailor content to me.",
+  "I know how I can influence what content is recommended to me by AI."
+)
+thevarlabs <- var_labels
+
+categories_dat <- c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)") %>% rev()
+
+```{r, results='asis'}
+# The corrected function generate_battery_section() must be defined before this chunk.
+
+# Call the function to generate the entire section
+generate_battery_section(
+  var_prefix = "DIGIQ",
+  var_indices = 1:5,
+  var_labels = c(
+    "I recognize it when a website or app uses AI to adapt the content to me.",
+    "I recognize it when specific content is recommended to me by AI.",
+    "I know where to find the settings to change or disable AI personalization.",
+    "I know how to access the data that AI systems use to tailor content to me.",
+    "I know how I can influence what content is recommended to me by AI."
+  ),
+  # Note: The function now handles category reversal with the 'reverse_categories' argument.
+  # Pass the categories in their natural order.
+  categories_dat = c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)"),
+  reverse_categories = TRUE, # Set to TRUE to match the `%>% rev()` from your original code
+  section_title = "Ability to Recognize and Influence AI",
+  iconify_tag = "fluent:text-grammar-settings-20-regular",
+  question_text = "To what extent do you agree or disagree with the following statements?",
+  y_axis_label = "% of Respondents Agreeing (5–7)"
+)
+```
+
+
+# something elese
+
+
+
+
+::: 
+
+
+## By Age
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_age <- viz_wave_change3(
+  data = data ,
+  vars = vecc("DIGIQ", 1:5),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "age_groups",
+  y_axis_label = "% of Respondents Agreeing (5–7)",
+  facet_by_group = F # This is the only change!
+)
+
+
+generate_quarto_elements(list_of_plots_age)
+
+
+
+
+```
+
+
+
+
+::: 
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+
+## By Gender
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_gender <- viz_wave_change3(
+  data = data %>% filter(geslacht != "Other"),
+  vars = vecc("DIGIQ", 1:5),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "geslacht",
+  y_axis_label = "% of Respondents Agreeing (5–7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_gender)
+
+
+
+
+```
+
+
+
+
+
+::: 
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_edu <- viz_wave_change3(
+  data = data ,
+  vars = vecc("DIGIQ", 1:5),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "oplcat",
+  y_axis_label = "% of Respondents Agreeing (5–7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_edu)
+
+
+
+
+```
+
+
+
+
+::: 
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Politics
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_pol <- viz_wave_change3(
+  data = data ,
+  vars = vecc("DIGIQ", 1:5),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "pol_cat",
+  y_axis_label = "% of Respondents Agreeing (5–7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_pol)
+
+
+
+
+```
+
+
+
+
+::: 
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+
+::: 
+
+
+
+
+
+
+
+# March 2024 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels, 
+            categories_dat, data = dat)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat)
+```
+::: 
+
+:::
+
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+var_labels <- c(
+  "I recognize it when a website or app uses AI to adapt the content to me.",
+  "I recognize it when specific content is recommended to me by AI.",
+  "I know where to find the settings to change or disable AI personalization.",
+  "I know how to access the data that AI systems use to tailor content to me.",
+  "I know how I can influence what content is recommended to me by AI."
+)
+thevarlabs <- var_labels
+
+categories_dat <- c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)")
+
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels, 
+            categories_dat, data = dat2)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat2)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat2)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat2)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat2)
+```
+
+
+::: 
+
+:::
+
+
+
+# April 2025 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+var_labels <- c(
+  "I recognize it when a website or app uses AI to adapt the content to me.",
+  "I recognize it when specific content is recommended to me by AI.",
+  "I know where to find the settings to change or disable AI personalization.",
+  "I know how to access the data that AI systems use to tailor content to me.",
+  "I know how I can influence what content is recommended to me by AI."
+)
+thevarlabs <- var_labels
+
+categories_dat <- c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)")
+
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels, 
+            categories_dat, data = dat3)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat3)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat3)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat3)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("DIGIQ", 1:5), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat3)
+```
+::: 
+
+:::
+
+::: 
+
+
+
+
+# {{< iconify material-symbols-light interactive-space-outline-rounded >}} Usage of AI Systems {.tabset .tabset-fade .tabset-pills .break}
+
+<blockquote class="question-text">
+  How often in the past year did you use...
+</blockquote>
+
+::: {.panel-tabset}
+
+# Over Time
+
+```{r}
+
+var_labels <- c("...text generators like ChatGPT?", 
+                    "...image generators like Midjourney?")
+
+categories_dat <- c("Often (5-7)","Sometimes (4)","Rare (1-3)")
+
+thevarlabs <- var_labels
+
+
+```
+
+
+::: {.panel-tabset}
+
+## Overall
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+# debugonce(viz_general)
+graphics <- viz_wave_change(vecc("ADM", 1:2), 
+            var_labels, 
+            rev(categories_dat),  wavevar = "wave")
+
+# generate_quarto_dropdown(graphics)
+
+generate_quarto_elements(graphics)
+```
+
+::: 
+
+
+## By Age
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_age <- viz_wave_change3(
+  data = data ,
+  vars = vecc("ADM", 1:2),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "age_groups",
+  y_axis_label = "% of Respondents who chose Often (5-7)",
+  facet_by_group = F # This is the only change!
+)
+
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that chose Often (5-7).</strong>"
+
+generate_quarto_elements(list_of_plots_age)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Gender
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_gender <- viz_wave_change3(
+  data = data %>% filter(geslacht != "Other"),
+  vars = vecc("ADM", 1:2),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "geslacht",
+  y_axis_label = "% of Respondents who chose Often (5-7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_gender)
+
+
+
+
+```
+
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_edu <- viz_wave_change3(
+  data = data ,
+  vars = vecc("ADM", 1:2),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "oplcat",
+  y_axis_label = "% of Respondents who chose Often (5-7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_edu)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Politics
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_pol <- viz_wave_change3(
+  data = data ,
+  vars = vecc("ADM", 1:2),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "pol_cat",
+  y_axis_label = "% of Respondents who chose Often (5-7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_pol)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+
+::: 
+
+
+
+
+
+
+
+# March 2024 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels, 
+            categories_dat, data = dat)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat)
+```
+::: 
+
+:::
+
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels, 
+            categories_dat, data = dat2)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat2)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat2)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat2)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat2)
+```
+
+
+::: 
+
+:::
+
+
+
+# April 2025 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels, 
+            categories_dat, data = dat3)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat3)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat3)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat3)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("ADM", 1:2), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat3)
+```
+::: 
+
+:::
+
+::: 
+
+
+
+
+# {{< iconify lets-icons view-light >}} Exposure to AI {.tabset .tabset-fade .tabset-pills .break}
+
+> Artificial Intelligence (AI) can be used to create artificial content such as text, images and videos.
+
+<blockquote class="question-text">
+  How often do you think you have come across the following things on social media in the past year?
+</blockquote>
+
+::: {.panel-tabset}
+
+# Over Time
+
+```{r}
+
+
+var_labels <- c(
+  "Texts made by AI",
+  "Photos or images made by AI",
+  "Videos made by AI"
+)
+
+thevarlabs <- var_labels
+
+
+```
+
+
+::: {.panel-tabset}
+
+## Overall
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+# debugonce(viz_general)
+graphics <- viz_wave_change(vecc("EXPO", 1:3), 
+            var_labels, 
+            rev(categories_dat),  wavevar = "wave")
+
+# generate_quarto_dropdown(graphics)
+
+generate_quarto_elements(graphics)
+```
+
+::: 
+
+
+## By Age
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_age <- viz_wave_change3(
+  data = data ,
+  vars = vecc("EXPO", 1:3),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "age_groups",
+  y_axis_label = "% of Respondents who chose Often (5-7)",
+  facet_by_group = F # This is the only change!
+)
+
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that chose Often (5-7).</strong>"
+
+generate_quarto_elements(list_of_plots_age)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Gender
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_gender <- viz_wave_change3(
+  data = data %>% filter(geslacht != "Other"),
+  vars = vecc("EXPO", 1:3),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "geslacht",
+  y_axis_label = "% of Respondents who chose Often (5-7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_gender)
+
+
+
+
+```
+
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_edu <- viz_wave_change3(
+  data = data ,
+  vars = vecc("EXPO", 1:3),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "oplcat",
+  y_axis_label = "% of Respondents who chose Often (5-7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_edu)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Politics
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_pol <- viz_wave_change3(
+  data = data ,
+  vars = vecc("EXPO", 1:3),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "pol_cat",
+  y_axis_label = "% of Respondents who chose Often (5-7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_pol)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+
+::: 
+
+
+
+
+
+
+
+# March 2024 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels, 
+            categories_dat, data = dat)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat)
+```
+::: 
+
+:::
+
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels, 
+            categories_dat, data = dat2)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat2)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat2)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat2)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat2)
+```
+
+
+::: 
+
+:::
+
+
+
+# April 2025 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+dat3 <- dat3 %>% mutate_at(vars(EXPO1, EXPO2, EXPO3), ~ifelse(.x < 0, NA, .x)) %>% drop_na(EXPO1, EXPO2, EXPO3)
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels, 
+            categories_dat, data = dat3)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat3)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat3)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat3)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("EXPO", 1:3), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat3)
+```
+::: 
+
+:::
+
+::: 
+
+
+
+
+# {{< iconify carbon ibm-watson-knowledge-studio >}} Familiarity with AI terms {.tabset .tabset-fade .tabset-pills .break}
+
+<blockquote class="question-text">
+  How familiar are you with the following terms?
+
+</blockquote>
+
+::: {.panel-tabset}
+
+# Over Time
+
+```{r}
+
+
+categories_dat <- c("Familiar (5-7)","Somewhat familiar (4)","Unfamiliar (1-3)")
+
+var_labels <- c(
+  "Generative AI",
+  "ChatGPT",
+  "Deepfakes",
+  "Algorithms",
+  "Chatbots"
+)
+
+
+
+```
+
+
+::: {.panel-tabset}
+
+## Overall
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+# debugonce(viz_general)
+graphics <- viz_wave_change(vecc("KAI", 1:5), 
+            var_labels, 
+            rev(categories_dat),  wavevar = "wave")
+
+# generate_quarto_dropdown(graphics)
+
+generate_quarto_elements(graphics)
+```
+
+::: 
+
+
+## By Age
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_age <- viz_wave_change3(
+  data = data ,
+  vars = vecc("KAI", 1:5),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "age_groups",
+  y_axis_label = "% of Respondents who chose Familiar (5-7)",
+  facet_by_group = F # This is the only change!
+)
+
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that chose Familiar (5-7).</strong>"
+
+generate_quarto_elements(list_of_plots_age)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Gender
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_gender <- viz_wave_change3(
+  data = data %>% filter(geslacht != "Other"),
+  vars = vecc("KAI", 1:5),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "geslacht",
+  y_axis_label = "% of Respondents who chose Familiar (5-7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_gender)
+
+
+
+
+```
+
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_edu <- viz_wave_change3(
+  data = data ,
+  vars = vecc("KAI", 1:5),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "oplcat",
+  y_axis_label = "% of Respondents who chose Familiar (5-7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_edu)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+## By Politics
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+# debugonce(viz_wave_change2)
+list_of_plots_pol <- viz_wave_change3(
+  data = data ,
+  vars = vecc("KAI", 1:5),
+  range3 = 5:7,
+  display_range = 5:7,
+  var_labels = var_labels,
+  categories_dat = categories_dat,
+  wave_var = "wave",
+  group_by_var = "pol_cat",
+  y_axis_label = "% of Respondents who chose Familiar (5-7)",
+  facet_by_group = F # This is the only change!
+)
+
+generate_quarto_elements(list_of_plots_pol)
+
+
+
+
+```
+
+
+
+
+::: 
+
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+
+
+::: 
+
+
+
+
+
+
+
+# March 2024 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels, 
+            categories_dat, data = dat)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat)
+```
+::: 
+
+:::
+
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels, 
+            categories_dat, data = dat2)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat2)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat2)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat2)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat2)
+```
+
+
+::: 
+
+:::
+
+
+
+# April 2025 {.tabset .tabset-fade .tabset-pills .break}
+
+
+::: {.panel-tabset}
+
+## Overall
+
+```{r}
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels, 
+            categories_dat, data = dat3)
+
+```
+
+
+
+## By Age 
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "age_groups",
+            T, data = dat3)
+
+```
+
+
+
+::: 
+
+## By Gender
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "geslacht",
+            T, data = dat3)
+
+```
+
+::: 
+
+## By Education
+
+::: {.panel-tabset}
+
+
+```{r, results='asis'}
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "oplcat",
+            T, data = dat3)
+
+```
+
+::: 
+
+## By Politics
+
+::: {.panel-tabset}
+
+```{r, results='asis'}
+
+viz_general(vecc("KAI", 1:5), 
+            var_labels,
+            categories_dat, 
+            "pol_cat",
+            T, data = dat3)
+```
+::: 
+
+:::
+
+::: 
+
+
+
+
+<br>
+
+<center>
+
+<img src="algosoclogo.png" width="13%">
+
+
+</center>
+
+

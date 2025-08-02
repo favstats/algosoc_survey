@@ -1,0 +1,101 @@
+---
+description-meta: ""
+execute:
+  echo: false
+---
+
+```{=html}
+<style>
+.justify {
+  text-align: justify
+}
+
+
+</style>
+
+
+
+```
+
+::: justify
+
+
+<blockquote class="highlightit">
+Welcome to the AlgoSoc *AI Opinion Monitor*, providing insights into public perceptions and experiences with artificial intelligence (AI) and automated decision making (ADM) systems in society! We asked around *4,000 respondents* in the Netherlands what they think about this topic.
+</blockquote>
+
+
+![](banner.png)
+
+
+
+```{r, echo = F, warning=F, message=F}
+## this is important to keep for some reason ##
+library(tippy)
+tippy_this(
+  elementId = "firstNavItem",
+  tooltip = "Your tooltip text here...",
+  animation = "scale",
+  duration = 1000,
+  placement = "bottom"
+)
+
+```
+
+
+
+
+
+
+
+
+
+
+This dashboard aggregates data collected via the <a href="https://algosoc.org/" target="_blank">AlgoSoc Consortium</a> to show how citizens think and feel about AI in society. The dashboard is divided into three main pages. 
+
+
+Click on any of the buttons below for quick navigation:
+
+:::
+
+
+```{=html}
+<center>
+<div class="button-container">
+```
+
+
+  <a href="engagement.html" class="buttontop">
+    {{< iconify ph users-three >}} Engagement
+  </a>
+  <a href="attitudes.html" class="buttontop">
+    {{< iconify ph head-circuit >}} Attitudes
+  </a>
+  <a href="values.html" class="buttontop">
+    {{< iconify ph globe-hemisphere-west >}} Values
+  </a>
+    
+
+```{=html}
+</div>
+</center>
+```
+
+
+
+::: justify
+
+If you want to know more about AlgoSoc and our work on AI, visit us on <a href="https://algosoc.org/" target="_blank">algosoc.org</a>!
+
+
+:::
+
+<br>
+
+<center>
+
+<img src="algosoclogo.png" width="13%">
+
+
+</center>
+

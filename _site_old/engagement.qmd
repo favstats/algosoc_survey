@@ -1,0 +1,453 @@
+---
+description-meta: ""
+execute:
+  echo: false
+---
+
+
+
+```{r, echo = F, warning=F, message=F}
+## this is important to keep for some reason ##
+library(tippy)
+tippy_this(
+  elementId = "firstNavItem",
+  tooltip = "Your tooltip text here...",
+  animation = "scale",
+  duration = 1000,
+  placement = "bottom"
+)
+
+```
+
+
+
+De pagina is verdeeld in vier hoofdsecties:
+
+
+
+```{=html}
+<center>
+<div class="button-container">
+```
+ 
+
+<a href="#iconify-fluent-text-grammar-settings-20-regular-ability-to-recognize-and-influence-ai" class="buttontop">
+  {{< iconify fluent text-grammar-settings-20-regular >}} Vermogen om AI te herkennen en te beïnvloeden
+</a>
+<a href="#iconify-material-symbols-light-interactive-space-outline-rounded-usage-of-ai-systems" class="buttontop">
+  {{< iconify material-symbols-light interactive-space-outline-rounded >}} Gebruik van AI-systemen
+</a>
+<a href="#iconify-lets-icons-view-light-exposure-to-ai" class="buttontop">
+  {{< iconify lets-icons view-light >}} Contact met AI
+</a>
+<a href="#iconify-carbon-ibm-watson-knowledge-studio-familiarity-with-ai-terms" class="buttontop">
+  {{< iconify carbon ibm-watson-knowledge-studio >}} Bekendheid met AI-termen
+</a>
+
+
+```{=html}
+</div>
+</center>
+```
+
+
+Elke sectie stelt je in staat om algemene trends te onderzoeken, evenals uitsplitsingen naar leeftijd, geslacht, opleidingsniveau en politieke voorkeur.
+    
+```{r setup, include=FALSE}
+# here::i_am("wtm_gb.Rproj")
+
+
+## Global options
+knitr::opts_chunk$set(
+    cache = F,
+    echo = F,
+    warning = F,
+    message = F,
+    cache.lazy = FALSE
+)
+
+
+pacman::p_load(htmltools, tidyverse, highcharter, gt, gtExtras, rvest, haven)
+
+options(scipen = 999)
+
+source("utils.R")
+```
+
+
+
+
+```{r include=FALSE}
+# print(getwd())
+# here::here("")
+# prCint(getwd())
+# hcoptslang <- getOption("highcharter.lang")
+# 
+# hcoptslang$shortMonths <- c("Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec")
+# 
+# options(highcharter.lang = hcoptslang)
+
+polvals <- read_sav("../../cv23o_EN_1.0p.sav") %>% 
+  mutate(left_right = cv23o101) #%>% 
+  # mutate(left_right = ifelse(is.na(left_right), "99", left_right))
+
+data <- read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
+  mutate(age_groups = case_when(
+    leeftijd %in% 16:17 ~ "16-17",
+    leeftijd %in% 18:24 ~ "18-24",
+    leeftijd %in% 25:34 ~ "25-34",
+    leeftijd %in% 35:44 ~ "35-44",
+    leeftijd %in% 45:54 ~ "45-54",
+    leeftijd %in% 55:64 ~ "55-64",
+    leeftijd %in% 65:150 ~ "65+",
+  )) %>% 
+  left_join(polvals %>% select(nomem_encr, left_right)) %>% 
+  mutate(pol_cat = case_when(
+    left_right %in% 0:3 ~ "links",
+    left_right %in% 4:6 ~ "centrum",
+    left_right %in% 7:10 ~ "rechts"
+    ))
+
+
+std.error <- function(x) sd(x, na.rm =T)/sqrt(length(x))
+
+
+# read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
+#   mutate(age_groups = case_when(
+#     leeftijd %in% 16:17 ~ "16-17",
+#     leeftijd %in% 18:24 ~ "18-24",
+#     leeftijd %in% 25:34 ~ "25-34",
+#     leeftijd %in% 35:44 ~ "35-44",
+#     leeftijd %in% 45:54 ~ "45-54",
+#     leeftijd %in% 55:64 ~ "55-64",
+#     leeftijd %in% 65:150 ~ "65+",
+#   )) %>% drop_na(ADSR1)
+
+# fin <-wtm_weighted %>% 
+#   select(nomem_encr, weight) %>% 
+#   left_join(data)
+# 
+# fin
+# 
+# lm(DIGIQ1 ~ 1, data = fin, weights = fin$weight)
+# 
+# mean(fin$DIGIQ1, na.rm = T)
+# 
+# weighted.mean(fin$DIGIQ1, w = fin$weight, na.rm = T)
+```
+
+
+
+# {{< iconify fluent text-grammar-settings-20-regular >}} Vermogen om AI te herkennen en te beïnvloeden {.tabset .tabset-fade .tabset-pills .break}
+
+> Met kunstmatige intelligentie (AI) kunnen computerprogramma’s zelf taken uitvoeren en ook zelf leren. AI wordt steeds meer gebruikt in de samenleving, en ook in de online media. Veel websites gebruiken AI om je meer inhoud en advertenties te laten zien die je leuk vindt. De volgende vragen gaan over het aanbod (zoals artikelen, films of liedjes) dat aan jou getoond wordt op websites en apps voor nieuws en entertainment (bijv. Netflix of Spotify).
+
+<blockquote class="question-text">
+    In welke mate bent u het eens of oneens met de volgende uitspraken?
+</blockquote>
+
+::: {.panel-tabset}
+
+## Algemeen
+
+```{r}
+var_labels <- c(
+  "Ik herken het als een website of app AI gebruikt om de content aan mij aan te passen.",
+  "Ik herken het als specifieke content mij wordt aanbevolen door AI.",
+  "Ik weet waar ik de instellingen kan vinden om personalisatie door AI te wijzigen of uit te zetten.",
+  "Ik weet hoe ik bij de gegevens kan komen die AI-systemen gebruiken om content aan mij aan te passen.",
+  "Ik weet hoe ik invloed kan uitoefenen op welke content mij door AI wordt aanbevolen."
+)
+
+data %>% 
+  generate_general("DIGIQ1", "DIGIQ5", var_labels,
+                   "<- 1: helemaal mee oneens   -    7: helemaal mee eens ->")
+```
+
+## Op Leeftijd
+
+```{r}
+data %>% 
+  by_age("DIGIQ1", "DIGIQ5", var_labels,
+                   "<- 1: helemaal mee oneens   -    7: helemaal mee eens ->")
+```
+
+
+## Op Geslacht
+
+```{r}
+data %>% 
+  by_gender("DIGIQ1", "DIGIQ5", var_labels,
+                   "<- 1: helemaal mee oneens   -    7: helemaal mee eens ->")
+```
+
+
+## Op Opleiding
+
+
+
+```{r}
+data %>% 
+  by_edu("DIGIQ1", "DIGIQ5", var_labels,
+                   "<- 1: helemaal mee oneens   -    7: helemaal mee eens ->")
+```
+
+
+## Op Politiek
+
+```{r}
+data %>% 
+  by_pol("DIGIQ1", "DIGIQ5", var_labels,
+                   "<- 1: helemaal mee oneens   -    7: helemaal mee eens ->")
+```
+
+:::
+
+
+
+# {{< iconify material-symbols-light interactive-space-outline-rounded >}} Gebruik van AI-systemen {.tabset .tabset-fade .tabset-pills .break}
+
+<blockquote class="question-text">
+  Hoe vaak gebruikte u in het afgelopen jaar...
+</blockquote>
+
+
+::: {.panel-tabset}
+
+
+## Algemeen
+
+
+```{r}
+
+
+data %>% 
+  generate_general("ADM1", "ADM2", 
+                  c("...tekst-generatoren zoals ChatGPT?", 
+                    "...afbeelding-generatoren zoals Midjourney?"))
+
+
+```
+
+
+<!-- </div> -->
+
+<!-- <div id="Tab2a" class="tab tab-content"> -->
+
+## Op Leeftijd
+
+
+```{r}
+
+
+
+data %>% 
+  by_age("ADM1", "ADM2", 
+                  c("...tekst-generatoren zoals ChatGPT?", 
+                    "...afbeelding-generatoren zoals Midjourney?"))
+```
+
+<!-- </div> -->
+
+<!-- <div id="Tab3a" class="tab tab-content"> -->
+
+## Op Geslacht
+
+
+```{r}
+
+
+data %>% 
+  by_gender("ADM1", "ADM2", 
+                  c("...tekst-generatoren zoals ChatGPT?", 
+                    "...afbeelding-generatoren zoals Midjourney?"))
+```
+
+
+<!-- </div> -->
+
+<!-- <div id="Tab4a" class="tab tab-content"> -->
+
+## Op Opleiding
+
+```{r}
+
+
+data %>% 
+  by_edu("ADM1", "ADM2", 
+                  c("...tekst-generatoren zoals ChatGPT?", 
+                    "...afbeelding-generatoren zoals Midjourney?"))
+```
+
+<!-- </div> -->
+
+<!-- <div id="Tab5a" class="tab tab-content"> -->
+
+## Op Politiek
+
+```{r}
+
+
+data %>% 
+  by_pol("ADM1", "ADM2", 
+                  c("...tekst-generatoren zoals ChatGPT?", 
+                    "...afbeelding-generatoren zoals Midjourney?"))
+```
+
+<!-- </div> -->
+
+:::
+
+
+# {{< iconify lets-icons view-light >}} Contact met AI {.tabset .tabset-fade .tabset-pills .break}
+
+> Kunstmatige Intelligentie (AI) kan worden gebruikt om kunstmatige inhoud te maken, zoals tekst,
+afbeeldingen en video's.
+
+
+<blockquote class="question-text">
+  Hoe vaak denkt u dat u in het afgelopen jaar de volgende dingen op sociale media bent tegengekomen?
+</blockquote>
+
+
+
+```{r}
+var_labels <- c(
+  "Teksten gemaakt door AI",
+  "Foto's of afbeeldingen gemaakt door AI",
+  "Video’s gemaakt door AI"
+)
+```
+
+
+::: {.panel-tabset}
+
+## Algemeen
+
+```{r}
+data %>% 
+  generate_general("EXPO1", "EXPO3", var_labels,
+                   thelabel = "<- 1: helemaal niet    -    7: heel vaak ->")
+```
+
+## Op Leeftijd
+
+
+```{r}
+data %>% 
+  by_age("EXPO1", "EXPO3", var_labels,
+                   thelabel = "<- 1: helemaal niet    -    7: heel vaak ->")
+```
+
+
+## Op Geslacht
+
+```{r}
+data %>% 
+  by_gender("EXPO1", "EXPO3", var_labels,
+                   thelabel = "<- 1: helemaal niet    -    7: heel vaak ->")
+```
+
+
+
+## Op Opleiding
+
+```{r}
+data %>% 
+  by_edu("EXPO1", "EXPO3", var_labels,
+                   thelabel = "<- 1: helemaal niet    -    7: heel vaak ->")
+```
+
+## Op Politiek
+
+```{r}
+data %>% 
+  by_pol("EXPO1", "EXPO3", var_labels,
+                   thelabel = "<- 1: helemaal niet    -    7: heel vaak ->")
+```
+
+:::
+
+# {{< iconify carbon ibm-watson-knowledge-studio >}} Bekendheid met AI-termen {.tabset .tabset-fade .tabset-pills .break}
+
+<blockquote class="question-text">
+  Hoe bekend bent u met de volgende zaken?
+
+</blockquote>
+
+```{r}
+var_labels <- c(
+  "Generatieve AI",
+  "ChatGPT",
+  "Deepfakes",
+  "Algoritmen",
+  "Chatbots"
+)
+```
+
+
+
+::: {.panel-tabset}
+
+## Algemeen
+
+```{r}
+data %>% 
+  generate_general("KAI1", "KAI5", var_labels,
+                   "<- 1: helemaal niet bekend mee    -    7: zeer bekend mee ->")
+```
+
+
+## Op Leeftijd
+
+```{r}
+data %>% 
+  by_age("KAI1", "KAI5", var_labels,
+                   "<- 1: helemaal niet bekend mee    -    7: zeer bekend mee ->")
+```
+
+
+
+## Op Geslacht
+
+```{r}
+data %>% 
+  by_gender("KAI1", "KAI5", var_labels,
+                   "<- 1: helemaal niet bekend mee    -    7: zeer bekend mee ->")
+```
+
+
+
+## Op Opleiding
+
+```{r}
+data %>% 
+  by_edu("KAI1", "KAI5", var_labels,
+                   "<- 1: helemaal niet bekend mee    -    7: zeer bekend mee ->")
+```
+
+
+## Op Politiek
+
+```{r}
+data %>% 
+  by_pol("KAI1", "KAI5", var_labels,
+                   "<- 1: helemaal niet bekend mee    -    7: zeer bekend mee ->")
+```
+
+
+:::
+
+
+
+
+<br>
+
+<center>
+
+<img src="algosoclogo.png" width="13%">
+
+
+</center>
+
+

@@ -1,0 +1,78 @@
+---
+description-meta: ""
+execute:
+  echo: false
+---
+
+```{=html}
+<style>
+.justify {
+  text-align: justify
+}
+
+
+</style>
+```
+
+::: justify
+
+<blockquote class="highlightit">
+Welkom bij de *AlgoSoc AI Opinie Monitor*. De Opinie Motor biedt inzichten in publieke percepties van en ervaringen met kunstmatige intelligentie (AI) en geautomatiseerde beslissystemen in de samenleving! We vroegen ongeveer *4,000 respondenten* in Nederland wat ze van dit onderwerp vinden.
+</blockquote>
+
+![](banner.png)
+
+```{r, echo = F, warning=F, message=F}
+## this is important to keep for some reason ##
+library(tippy)
+tippy_this(
+  elementId = "firstNavItem",
+  tooltip = "Your tooltip text here...",
+  animation = "scale",
+  duration = 1000,
+  placement = "bottom"
+)
+
+```
+
+
+Dit dashboard toont gegevens die zijn verzameld via het <a href="https://algosoc.org/" target="_blank">AlgoSoc Consortium</a> om te laten zien hoe burgers denken en voelen over AI in de samenleving. Het dashboard is verdeeld in drie hoofdpagina's.
+
+Klik op een van de knoppen hieronder voor snelle navigatie:
+
+
+:::
+
+```{=html}
+
+<center>
+<div class="button-container">
+```
+
+  <a href="engagement.html" class="buttontop">
+    {{< iconify ph users-three >}} Betrokkenheid
+  </a>
+  <a href="attitudes.html" class="buttontop">
+    {{< iconify ph head-circuit >}} Houdingen
+  </a>
+  <a href="values.html" class="buttontop">
+    {{< iconify ph globe-hemisphere-west >}} Waarden
+  </a>
+
+  
+```{=html}
+
+</div>
+</center>
+```
+
+::: justify
+
+Als je meer wilt weten over AlgoSoc en ons werk op het gebied van AI, bezoek ons dan op <a href="https://algosoc.org/" target="_blank">algosoc.org</a>!
+
+:::
+
+<br>
+<center>
+<img src="algosoclogo.png" width="13%">
+</center>

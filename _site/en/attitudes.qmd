@@ -1,392 +1,1073 @@
 ---
-description-meta: ""
-execute:
-  echo: false
+title: ""
+format:
+  html:
+    theme: lumen
+    page-layout: full
+    self-contained: true
+    code-fold: true
+    code-overflow: wrap
+    html-math-method: mathjax
+    include-after-body:
+      text: |
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+              var toc = document.createElement("div");
+              toc.id = "custom-toc";
+              toc.style.position = "fixed";
+              toc.style.top = "0";
+              toc.style.right = "-300px";  // Start hidden
+              toc.style.width = "260px";
+              toc.style.height = "100%";
+              toc.style.background = "white";
+              toc.style.padding = "10px";
+              toc.style.boxShadow = "0px 2px 5px rgba(0, 0, 0, 0.2)";
+              toc.style.transition = "right 0.3s ease-in-out";
+              toc.style.overflowY = "auto";
+
+              var tocTitle = document.createElement("h3");
+              tocTitle.innerText = "Navigation";
+              toc.appendChild(tocTitle);
+
+              var headers = document.querySelectorAll("h2, h3, h4");
+              headers.forEach(function (header, index) {
+                  if (!header.id) {
+                      header.id = "section-" + index;
+                  }
+
+                  var link = document.createElement("a");
+                  link.innerText = header.innerText;
+                  link.href = "#" + header.id;
+                  link.style.display = "block";
+                  link.style.padding = "5px 0";
+                  link.style.color = "#007bff";
+                  link.style.textDecoration = "none";
+
+                  toc.appendChild(link);
+              });
+
+              document.body.appendChild(toc);
+
+              // Create toggle button (📑 icon)
+              var button = document.createElement("button");
+              button.id = "toggle-toc";
+              button.innerHTML = "📑";
+              button.style.position = "fixed";
+              button.style.top = "15px";
+              button.style.right = "15px";
+              button.style.backgroundColor = "white";
+              button.style.color = "#333";
+              button.style.border = "2px solid #ccc"; // Slightly thicker border
+              button.style.padding = "10px 12px"; // Increased padding
+              button.style.cursor = "pointer";
+              button.style.borderRadius = "8px"; // More rounded
+              button.style.fontSize = "22px"; // Larger icon
+              button.style.zIndex = "1000";
+              button.style.boxShadow = "0px 3px 6px rgba(0, 0, 0, 0.2)";
+              button.style.width = "50px"; // Increase button size
+              button.style.height = "50px"; // Make it square
+
+              document.body.appendChild(button);
+
+              // Click event to toggle the ToC
+              button.addEventListener("click", function () {
+                  if (toc.style.right === "0px") {
+                      toc.style.right = "-300px"; // Hide ToC
+                  } else {
+                      toc.style.right = "0px"; // Show ToC
+                  }
+              });
+
+              // Toggle collapsible content
+              document.querySelectorAll(".collapse-button").forEach(button => {
+                  button.addEventListener("click", function () {
+                      const content = this.nextElementSibling;
+                      const arrow = this.querySelector(".arrow");
+                      const isExpanded = this.getAttribute("aria-expanded") === "true";
+                      content.style.display = isExpanded ? "none" : "block";
+                      this.setAttribute("aria-expanded", !isExpanded);
+                  });
+                  button.setAttribute("aria-expanded", "false");
+              });
+          });
+          document.addEventListener("DOMContentLoaded", function () {
+              document.querySelectorAll("a[href='https://favstats.github.io/de25/']").forEach(function(link) {
+                  link.addEventListener("click", function(event) {
+                      event.preventDefault(); // Prevent default behavior
+                      window.open(link.href, "_blank"); // Open in a new tab/window
+                  });
+              });
+          });
+        </script>
+    includes:
+      in-header: |
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+        <style>
+          .question-text {
+            position: relative;
+            padding-right: 25px;
+            margin-right: 0;
+          }
+          .collapse-button {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 10;
+            transition: transform 0.3s ease;
+          }
+          .collapse-button .arrow {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 10px solid #4a90e2; /* Gradient base color */
+            transition: transform 0.3s ease, border-bottom-color 0.3s ease;
+            position: relative;
+          }
+          .collapse-button:hover .arrow {
+            border-bottom-color: #9013fe; /* Gradient end color on hover */
+            box-shadow: 0 0 5px rgba(74, 144, 226, 0.5); /* Glow effect */
+            transform: scale(1.1);
+          }
+          .collapse-button[aria-expanded="true"] .arrow {
+            transform: rotate(180deg) scale(1.1);
+          }
+        </style>
 ---
 
 
-
-```{r, echo = F, warning=F, message=F}
-## this is important to keep for some reason ##
-library(tippy)
-tippy_this(
-  elementId = "firstNavItem",
-  tooltip = "Your tooltip text here...",
-  animation = "scale",
-  duration = 1000,
-  placement = "bottom"
-)
-
-```
-
-
-
 ```{r setup, include=FALSE}
-# here::i_am("wtm_gb.Rproj")
-
-
-## Global options
-knitr::opts_chunk$set(
-    cache = F,
-    echo = F,
-    warning = F,
-    message = F,
-    cache.lazy = FALSE
-)
-
-
+# Global options and library loading
+knitr::opts_chunk$set(cache = F, echo = F, warning = F, message = F, cache.lazy = FALSE)
 pacman::p_load(htmltools, tidyverse, highcharter, gt, gtExtras, rvest, haven)
-
 options(scipen = 999)
 
+# This script assumes your data (dat, dat2, dat3) and custom functions
+# are loaded via this utility script.
 source("utils.R")
 ```
+The page is divided into several main sections. Each section allows you to examine overall trends as well as breakdowns by time, age, gender, education level, and political leaning.
+
+::: {.panel-tabset .top .button-tabs}
 
 
-The page is divided into three main sections: 
+# {{< iconify fluent-emoji-high-contrast detective >}} Detecting AI-Generated Content {.tabset .tabset-fade .tabset-pills .break .btn-green}
+## {{< iconify fluent-emoji-high-contrast detective >}} Detecting AI-Generated Content {.tabset .tabset-fade .tabset-pills .break .btn-green}
+<blockquote class="question-text">
+How confident are you that the following groups can tell the difference between content created by AI and content created by people?
+<button class="collapse-button" type="button"><span class="arrow"></span></button>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: People from the general population</li>
+<li>Item 2: Members of Parliament</li>
+<li>Item 3: Judges</li>
+<li>Item 4: Journalists</li>
+<li>Item 5: Police officers</li>
+<li>Item 6: Doctors</li>
+<li>Item 7: Friends/family</li>
+<li>Item 8: Yourself</li></ul></blockquote>
+::: {.panel-tabset}
+# May 2025 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Overall
+```{r}
+viz_general(vecc("CONF", 1:8), c("People from the general population", "Members of Parliament", "Judges", "Journalists", "Police officers", "Doctors", "Friends/family", "Yourself"), c("Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)"), data = dat3)
+```
+## By Age
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("People from the general population", "Members of Parliament", "Judges", "Journalists", "Police officers", "Doctors", "Friends/family", "Yourself"), c("Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)"), "age_groups", T, data = dat3)
+```
+:::
+## By Gender
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("People from the general population", "Members of Parliament", "Judges", "Journalists", "Police officers", "Doctors", "Friends/family", "Yourself"), c("Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)"), "geslacht", T, data = dat3)
+```
+:::
+## By Education
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("People from the general population", "Members of Parliament", "Judges", "Journalists", "Police officers", "Doctors", "Friends/family", "Yourself"), c("Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)"), "oplcat", T, data = dat3)
+```
+:::
+## By Politics
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("People from the general population", "Members of Parliament", "Judges", "Journalists", "Police officers", "Doctors", "Friends/family", "Yourself"), c("Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)"), "pol_cat", T, data = dat3)
+```
+:::
+:::
 
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Overall
+```{r}
+viz_general(vecc("CONF", 1:8), c("People from the general population", "Members of Parliament", "Judges", "Journalists", "Police officers", "Doctors", "Friends/family", "Yourself"), c("Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)"), data = dat2)
+```
+## By Age
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("People from the general population", "Members of Parliament", "Judges", "Journalists", "Police officers", "Doctors", "Friends/family", "Yourself"), c("Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)"), "age_groups", T, data = dat2)
+```
+:::
+## By Gender
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("People from the general population", "Members of Parliament", "Judges", "Journalists", "Police officers", "Doctors", "Friends/family", "Yourself"), c("Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)"), "geslacht", T, data = dat2)
+```
+:::
+## By Education
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("People from the general population", "Members of Parliament", "Judges", "Journalists", "Police officers", "Doctors", "Friends/family", "Yourself"), c("Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)"), "oplcat", T, data = dat2)
+```
+:::
+## By Politics
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("People from the general population", "Members of Parliament", "Judges", "Journalists", "Police officers", "Doctors", "Friends/family", "Yourself"), c("Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)"), "pol_cat", T, data = dat2)
+```
+:::
+:::
 
-```{=html}
+# March 2024 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Overall
+```{r}
+viz_general(vecc("CONF", 1:8), c("People from the general population", "Members of Parliament", "Judges", "Journalists", "Police officers", "Doctors", "Friends/family", "Yourself"), c("Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)"), data = dat)
+```
+## By Age
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("People from the general population", "Members of Parliament", "Judges", "Journalists", "Police officers", "Doctors", "Friends/family", "Yourself"), c("Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)"), "age_groups", T, data = dat)
+```
+:::
+## By Gender
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("People from the general population", "Members of Parliament", "Judges", "Journalists", "Police officers", "Doctors", "Friends/family", "Yourself"), c("Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)"), "geslacht", T, data = dat)
+```
+:::
+## By Education
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("People from the general population", "Members of Parliament", "Judges", "Journalists", "Police officers", "Doctors", "Friends/family", "Yourself"), c("Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)"), "oplcat", T, data = dat)
+```
+:::
+## By Politics
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("CONF", 1:8), c("People from the general population", "Members of Parliament", "Judges", "Journalists", "Police officers", "Doctors", "Friends/family", "Yourself"), c("Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)"), "pol_cat", T, data = dat)
+```
+:::
+:::
+
+# Over Time
+```{r}
+var_labels <-
+c("People from the general population", "Members of Parliament", "Judges", "Journalists", "Police officers", "Doctors", "Friends/family", "Yourself")
+categories_dat <-
+c("Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)")
+```
+::: {.panel-tabset}
+## Overall
+::: {.panel-tabset}
+```{r, results="asis"}
+graphics <- viz_wave_change(vecc("CONF", 1:8), var_labels, rev(categories_dat), wavevar = "wave", range1 = 1:3, range2 = 4, range3 = 5:7)
+generate_quarto_elements(graphics)
+```
+:::
+## By Age
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("CONF", 1:8), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "age_groups", y_axis_label = "% of Respondents who chose Confident (5-7)", facet_by_group = F)
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that chose Confident (5-7).</strong>"
+generate_quarto_elements(list_of_plots)
+```
+:::
 <center>
-<div class="button-container">
-```
- 
 
+> Tip: `r HTML(tiptext)`
 
-
-  <a href="#iconify-fluent-emoji-high-contrast-detective-detecting-ai-generated-content" class="buttontop">
-    {{< iconify fluent-emoji-high-contrast detective >}} Detecting AI-Generated Content
-  </a>
-  <a href="#iconify-mingcute-safe-lock-fill-trust-in-adm-systems" class="buttontop">
-    {{< iconify mingcute safe-lock-fill >}} Trust in ADM Systems
-  </a>
-  <a href="#iconify-game-icons-sands-of-time-future-of-adm-systems" class="buttontop">
-    {{< iconify game-icons sands-of-time >}} Future of ADM Systems 
-  </a>
-
-```{=html}
-</div>
 </center>
-```
-
-
-Each section allows you to examine overall trends as well as breakdowns by age, gender, education level, and political leaning.  
-
-
-# {{< iconify fluent-emoji-high-contrast detective >}} Detecting AI-Generated Content {.tabset .tabset-fade .tabset-pills .break} 
-
-
-
-<blockquote class="question-text">
- How confident are you that the following groups can tell the difference between content created by AI and content created by people?
-
-</blockquote>
-
-::: {.panel-tabset}
-
-## Overall
-
-```{r}
-var_labels <- c(
-  "People from the general population",
-  "Members of Parliament",
-  "Judges",
-  "Journalists",
-  "Police officers",
-  "Doctors",
-  "Friends/family",
-  "Yourself"
-)
-
-categories_dat <- c("Confident (5-7)", "Somewhat confident (4)", "Not confident (1-3)")
-
-
-viz_general(vecc("CONF", 1:8), 
-            var_labels, 
-            categories_dat)
-
-```
-
-## By Age 
-
-::: {.panel-tabset}
-
-```{r, results='asis'}
-
-viz_general(vecc("CONF", 1:8), 
-            var_labels,
-            categories_dat, 
-            "age_groups",
-            T)
-
-```
-
-
-
-::: 
-
 ## By Gender
-
 ::: {.panel-tabset}
-
-
-```{r, results='asis'}
-
-
-viz_general(vecc("CONF", 1:8), 
-            var_labels,
-            categories_dat, 
-            "geslacht",
-            T)
-
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data %>% filter(geslacht != "Other"), vars = vecc("CONF", 1:8), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "geslacht", y_axis_label = "% of Respondents who chose Confident (5-7)", facet_by_group = F)
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that chose Confident (5-7).</strong>"
+generate_quarto_elements(list_of_plots)
 ```
+:::
+<center>
 
-::: 
+> Tip: `r HTML(tiptext)`
 
+</center>
 ## By Education
-
 ::: {.panel-tabset}
-
-
-```{r, results='asis'}
-
-viz_general(vecc("CONF", 1:8), 
-            var_labels,
-            categories_dat, 
-            "oplcat",
-            T)
-
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("CONF", 1:8), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "oplcat", y_axis_label = "% of Respondents who chose Confident (5-7)", facet_by_group = F)
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that chose Confident (5-7).</strong>"
+generate_quarto_elements(list_of_plots)
 ```
+:::
+<center>
 
-::: 
+> Tip: `r HTML(tiptext)`
 
+</center>
 ## By Politics
-
 ::: {.panel-tabset}
-
-```{r, results='asis'}
-
-viz_general(vecc("CONF", 1:8), 
-            var_labels,
-            categories_dat, 
-            "pol_cat",
-            T)
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("CONF", 1:8), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "pol_cat", y_axis_label = "% of Respondents who chose Confident (5-7)", facet_by_group = F)
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that chose Confident (5-7).</strong>"
+generate_quarto_elements(list_of_plots)
 ```
-::: 
+:::
+<center>
 
+> Tip: `r HTML(tiptext)`
+
+</center>
+:::
 :::
 
-# {{< iconify mingcute safe-lock-fill >}} Trust in ADM Systems {.tabset .tabset-fade .tabset-pills .break}
-
-> We ask you a number of additional questions about automatic decision-making (ADM) systems. These are computer programs that make decisions that used to be made by people. These decisions are made automatically by computers based on data. 
-
-
-
+# {{< iconify mingcute safe-lock-fill >}} Trust in ADM Systems {.tabset .tabset-fade .tabset-pills .break .btn-green}
+## {{< iconify mingcute safe-lock-fill >}} Trust in ADM Systems {.tabset .tabset-fade .tabset-pills .break .btn-green}
 <blockquote class="question-text">
-How much do you trust automated decision-making systems to properly determine...
-
-</blockquote>
-
+We ask you a number of additional questions about automatic decision-making (ADM) systems. These are computer programs that make decisions that used to be made by people. These decisions are made automatically by computers based on data.<br><br><b>How much do you trust automated decision-making systems to properly determine...</b>
+<button class="collapse-button" type="button"><span class="arrow"></span></button>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Social Welfare</li>
+<li>Item 2: The News You See</li>
+<li>Item 3: Cancer Diagnosis</li></ul></blockquote>
 ::: {.panel-tabset}
-
+# Results (Wave 1) {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
 ## Overall
-
 ```{r}
-var_labels <- c(
-  "Social Welfare",
-  "The News You See",
-  "Cancer Diagnosis"
-)
-
-# categories_dat <- c("confident", "neither", "not confident")
-categories_dat <- c("Trust (5-7)", "Somewhat trust (4)", "Little trust (1-3)")
-
-
-viz_general(vecc("TADS", 1:3), 
-            var_labels, 
-            categories_dat)
+viz_general(vecc("TADS", 1:3), c("Social Welfare", "The News You See", "Cancer Diagnosis"), c("Trust (5-7)", "Somewhat trust (4)", "Little trust (1-3)"), data = dat)
 ```
-
-## By Age 
-
+## By Age
 ::: {.panel-tabset}
-
-```{r, results='asis'}
-
-viz_general(vecc("TADS", 1:3), 
-            var_labels,
-            categories_dat, 
-            "age_groups",
-            T)
-
+```{r, results="asis"}
+viz_general(vecc("TADS", 1:3), c("Social Welfare", "The News You See", "Cancer Diagnosis"), c("Trust (5-7)", "Somewhat trust (4)", "Little trust (1-3)"), "age_groups", T, data = dat)
 ```
-
-
-
-::: 
-
+:::
 ## By Gender
-
 ::: {.panel-tabset}
-
-
-```{r, results='asis'}
-
-
-viz_general(vecc("TADS", 1:3), 
-            var_labels,
-            categories_dat, 
-            "geslacht",
-            T)
-
+```{r, results="asis"}
+viz_general(vecc("TADS", 1:3), c("Social Welfare", "The News You See", "Cancer Diagnosis"), c("Trust (5-7)", "Somewhat trust (4)", "Little trust (1-3)"), "geslacht", T, data = dat)
 ```
-
-::: 
-
+:::
 ## By Education
-
 ::: {.panel-tabset}
-
-
-```{r, results='asis'}
-
-viz_general(vecc("TADS", 1:3), 
-            var_labels,
-            categories_dat, 
-            "oplcat",
-            T)
-
+```{r, results="asis"}
+viz_general(vecc("TADS", 1:3), c("Social Welfare", "The News You See", "Cancer Diagnosis"), c("Trust (5-7)", "Somewhat trust (4)", "Little trust (1-3)"), "oplcat", T, data = dat)
 ```
-
-::: 
-
+:::
 ## By Politics
-
 ::: {.panel-tabset}
-
-```{r, results='asis'}
-
-viz_general(vecc("TADS", 1:3), 
-            var_labels,
-            categories_dat, 
-            "pol_cat",
-            T)
+```{r, results="asis"}
+viz_general(vecc("TADS", 1:3), c("Social Welfare", "The News You See", "Cancer Diagnosis"), c("Trust (5-7)", "Somewhat trust (4)", "Little trust (1-3)"), "pol_cat", T, data = dat)
 ```
-::: 
-
+:::
 :::
 
 
+:::
 
-# {{< iconify game-icons sands-of-time >}} Future of ADM Systems {.tabset .tabset-fade .tabset-pills .break}
-
-
-
+# {{< iconify game-icons sands-of-time >}} Future of ADM Systems {.tabset .tabset-fade .tabset-pills .break .btn-green}
+## {{< iconify game-icons sands-of-time >}} Future of ADM Systems {.tabset .tabset-fade .tabset-pills .break .btn-green}
 <blockquote class="question-text">
 If automated decision-making (ADM) becomes more common in the future, what do you think will happen?
-
-</blockquote>
-
+<button class="collapse-button" type="button"><span class="arrow"></span></button>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: If the news is automated, journalists will be able to focus more on investigative journalism.</li>
+<li>Item 2: I will only get news items that interest me.</li>
+<li>Item 3: It will make reporting fairer and more balanced.</li>
+<li>Item 4: If certain law enforcement tasks are automated, the police will have more time to focus on major crimes.</li>
+<li>Item 5: It will make the determination of social benefits fairer and more balanced.</li></ul></blockquote>
 ::: {.panel-tabset}
-
+# Results (Wave 1) {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
 ## Overall
-
 ```{r}
-var_labels <- c(
-  "If the news is automated, journalists will be able to focus more on investigative journalism.",
-  "I will only get news items that interest me.",
-  "It will make reporting fairer and more balanced.",
-  "If certain law enforcement tasks are automated, the police will have more time to focus on major crimes.",
-  "It will make the determination of social benefits fairer and more balanced."
-)
-
-categories_dat <- c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)")
-
-viz_general(vecc("ADSO", 1:5), 
-            var_labels, 
-            categories_dat)
+viz_general(vecc("ADSO", 1:5), c("If the news is automated, journalists will be able to focus more on investigative journalism.", "I will only get news items that interest me.", "It will make reporting fairer and more balanced.", "If certain law enforcement tasks are automated, the police will have more time to focus on major crimes.", "It will make the determination of social benefits fairer and more balanced."), c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)"), data = dat)
 ```
-
-## By Age 
-
+## By Age
 ::: {.panel-tabset}
-
-```{r, results='asis'}
-
-viz_general(vecc("ADSO", 1:5), 
-            var_labels,
-            categories_dat, 
-            "age_groups",
-            T)
-
+```{r, results="asis"}
+viz_general(vecc("ADSO", 1:5), c("If the news is automated, journalists will be able to focus more on investigative journalism.", "I will only get news items that interest me.", "It will make reporting fairer and more balanced.", "If certain law enforcement tasks are automated, the police will have more time to focus on major crimes.", "It will make the determination of social benefits fairer and more balanced."), c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)"), "age_groups", T, data = dat)
 ```
-
-
-
-::: 
-
+:::
 ## By Gender
-
 ::: {.panel-tabset}
-
-
-```{r, results='asis'}
-
-
-viz_general(vecc("ADSO", 1:5), 
-            var_labels,
-            categories_dat, 
-            "geslacht",
-            T)
-
+```{r, results="asis"}
+viz_general(vecc("ADSO", 1:5), c("If the news is automated, journalists will be able to focus more on investigative journalism.", "I will only get news items that interest me.", "It will make reporting fairer and more balanced.", "If certain law enforcement tasks are automated, the police will have more time to focus on major crimes.", "It will make the determination of social benefits fairer and more balanced."), c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)"), "geslacht", T, data = dat)
 ```
-
-::: 
-
+:::
 ## By Education
-
 ::: {.panel-tabset}
-
-
-```{r, results='asis'}
-
-viz_general(vecc("ADSO", 1:5), 
-            var_labels,
-            categories_dat, 
-            "oplcat",
-            T)
-
+```{r, results="asis"}
+viz_general(vecc("ADSO", 1:5), c("If the news is automated, journalists will be able to focus more on investigative journalism.", "I will only get news items that interest me.", "It will make reporting fairer and more balanced.", "If certain law enforcement tasks are automated, the police will have more time to focus on major crimes.", "It will make the determination of social benefits fairer and more balanced."), c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)"), "oplcat", T, data = dat)
 ```
-
-::: 
-
+:::
 ## By Politics
-
 ::: {.panel-tabset}
-
-```{r, results='asis'}
-
-viz_general(vecc("ADSO", 1:5), 
-            var_labels,
-            categories_dat, 
-            "pol_cat",
-            T)
+```{r, results="asis"}
+viz_general(vecc("ADSO", 1:5), c("If the news is automated, journalists will be able to focus more on investigative journalism.", "I will only get news items that interest me.", "It will make reporting fairer and more balanced.", "If certain law enforcement tasks are automated, the police will have more time to focus on major crimes.", "It will make the determination of social benefits fairer and more balanced."), c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)"), "pol_cat", T, data = dat)
 ```
-::: 
-
+:::
 :::
 
 
+:::
 
+# {{< iconify mdi scale-balance >}} Responsibility for Harmful AI Content {.tabset .tabset-fade .tabset-pills .break .btn-green}
+## {{< iconify mdi scale-balance >}} Responsibility for Harmful AI Content {.tabset .tabset-fade .tabset-pills .break .btn-green}
+<blockquote class="question-text">
+The responsibility for harmful content (e.g., fake news or manipulated videos) created by Artificial Intelligence (AI) lies primarily with...
+<button class="collapse-button" type="button"><span class="arrow"></span></button>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: ...the company behind the AI technology.</li>
+<li>Item 2: ...the person who used the AI to create the content.</li>
+<li>Item 3: ...the social media platforms that spread the content.</li>
+<li>Item 4: ...the government for not creating enough rules.</li></ul></blockquote>
+::: {.panel-tabset}
+# May 2025 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Overall
+```{r}
+viz_general(vecc("HARAI", 1:4), c("...the company behind the AI technology.", "...the person who used the AI to create the content.", "...the social media platforms that spread the content.", "...the government for not creating enough rules."), c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)"), data = dat3)
+```
+## By Age
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("HARAI", 1:4), c("...the company behind the AI technology.", "...the person who used the AI to create the content.", "...the social media platforms that spread the content.", "...the government for not creating enough rules."), c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)"), "age_groups", T, data = dat3)
+```
+:::
+## By Gender
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("HARAI", 1:4), c("...the company behind the AI technology.", "...the person who used the AI to create the content.", "...the social media platforms that spread the content.", "...the government for not creating enough rules."), c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)"), "geslacht", T, data = dat3)
+```
+:::
+## By Education
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("HARAI", 1:4), c("...the company behind the AI technology.", "...the person who used the AI to create the content.", "...the social media platforms that spread the content.", "...the government for not creating enough rules."), c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)"), "oplcat", T, data = dat3)
+```
+:::
+## By Politics
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("HARAI", 1:4), c("...the company behind the AI technology.", "...the person who used the AI to create the content.", "...the social media platforms that spread the content.", "...the government for not creating enough rules."), c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)"), "pol_cat", T, data = dat3)
+```
+:::
+:::
 
-<br>
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Overall
+```{r}
+viz_general(vecc("HARAI", 1:4), c("...the company behind the AI technology.", "...the person who used the AI to create the content.", "...the social media platforms that spread the content.", "...the government for not creating enough rules."), c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)"), data = dat2)
+```
+## By Age
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("HARAI", 1:4), c("...the company behind the AI technology.", "...the person who used the AI to create the content.", "...the social media platforms that spread the content.", "...the government for not creating enough rules."), c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)"), "age_groups", T, data = dat2)
+```
+:::
+## By Gender
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("HARAI", 1:4), c("...the company behind the AI technology.", "...the person who used the AI to create the content.", "...the social media platforms that spread the content.", "...the government for not creating enough rules."), c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)"), "geslacht", T, data = dat2)
+```
+:::
+## By Education
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("HARAI", 1:4), c("...the company behind the AI technology.", "...the person who used the AI to create the content.", "...the social media platforms that spread the content.", "...the government for not creating enough rules."), c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)"), "oplcat", T, data = dat2)
+```
+:::
+## By Politics
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("HARAI", 1:4), c("...the company behind the AI technology.", "...the person who used the AI to create the content.", "...the social media platforms that spread the content.", "...the government for not creating enough rules."), c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)"), "pol_cat", T, data = dat2)
+```
+:::
+:::
+
+# Over Time
+```{r}
+var_labels <-
+c("...the company behind the AI technology.", "...the person who used the AI to create the content.", "...the social media platforms that spread the content.", "...the government for not creating enough rules.")
+categories_dat <-
+c("Agree (5-7)", "Neither agree or disagree (4)", "Disagree (1-3)")
+```
+::: {.panel-tabset}
+## Overall
+::: {.panel-tabset}
+```{r, results="asis"}
+graphics <- viz_wave_change(vecc("HARAI", 1:4), var_labels, categories_dat, wavevar = "wave", range1 = 1:3, range2 = 4, range3 = 5:7)
+generate_quarto_elements(graphics)
+```
+:::
+## By Age
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("HARAI", 1:4), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "age_groups", y_axis_label = "", facet_by_group = F)
+tiptext <- ""
+generate_quarto_elements(list_of_plots)
+```
+:::
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## By Gender
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data %>% filter(geslacht != "Other"), vars = vecc("HARAI", 1:4), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "geslacht", y_axis_label = "", facet_by_group = F)
+tiptext <- ""
+generate_quarto_elements(list_of_plots)
+```
+:::
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## By Education
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("HARAI", 1:4), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "oplcat", y_axis_label = "", facet_by_group = F)
+tiptext <- ""
+generate_quarto_elements(list_of_plots)
+```
+:::
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## By Politics
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("HARAI", 1:4), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "pol_cat", y_axis_label = "", facet_by_group = F)
+tiptext <- ""
+generate_quarto_elements(list_of_plots)
+```
+:::
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+:::
+:::
+
+# {{< iconify mdi alert-circle-outline >}} Concerns About AI {.tabset .tabset-fade .tabset-pills .break .btn-green}
+## {{< iconify mdi alert-circle-outline >}} Concerns About AI {.tabset .tabset-fade .tabset-pills .break .btn-green}
+<blockquote class="question-text">
+There is a lot of talk about the potential disadvantages of Artificial Intelligence (AI). Different people have different ideas about what constitutes a problem.<br><br><b>How worried are you about the following issues?</b>
+<button class="collapse-button" type="button"><span class="arrow"></span></button>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Using AI to create content that offends some people</li>
+<li>Item 2: Using AI to mislead or manipulate people into buying something</li>
+<li>Item 3: Using AI to mislead or manipulate people for a political purpose</li>
+<li>Item 4: When it is not clear that content was created by AI</li>
+<li>Item 5: Using AI to take over people's jobs</li></ul></blockquote>
+::: {.panel-tabset}
+# May 2025 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Overall
+```{r}
+viz_general(vecc("PRAI", 1:5), c("Using AI to create content that offends some people", "Using AI to mislead or manipulate people into buying something", "Using AI to mislead or manipulate people for a political purpose", "When it is not clear that content was created by AI", "Using AI to take over people's jobs"), c("Very worried (5-7)", "Somewhat worried (4)", "Not worried (1-3)"), data = dat3)
+```
+## By Age
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("PRAI", 1:5), c("Using AI to create content that offends some people", "Using AI to mislead or manipulate people into buying something", "Using AI to mislead or manipulate people for a political purpose", "When it is not clear that content was created by AI", "Using AI to take over people's jobs"), c("Very worried (5-7)", "Somewhat worried (4)", "Not worried (1-3)"), "age_groups", T, data = dat3)
+```
+:::
+## By Gender
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("PRAI", 1:5), c("Using AI to create content that offends some people", "Using AI to mislead or manipulate people into buying something", "Using AI to mislead or manipulate people for a political purpose", "When it is not clear that content was created by AI", "Using AI to take over people's jobs"), c("Very worried (5-7)", "Somewhat worried (4)", "Not worried (1-3)"), "geslacht", T, data = dat3)
+```
+:::
+## By Education
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("PRAI", 1:5), c("Using AI to create content that offends some people", "Using AI to mislead or manipulate people into buying something", "Using AI to mislead or manipulate people for a political purpose", "When it is not clear that content was created by AI", "Using AI to take over people's jobs"), c("Very worried (5-7)", "Somewhat worried (4)", "Not worried (1-3)"), "oplcat", T, data = dat3)
+```
+:::
+## By Politics
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("PRAI", 1:5), c("Using AI to create content that offends some people", "Using AI to mislead or manipulate people into buying something", "Using AI to mislead or manipulate people for a political purpose", "When it is not clear that content was created by AI", "Using AI to take over people's jobs"), c("Very worried (5-7)", "Somewhat worried (4)", "Not worried (1-3)"), "pol_cat", T, data = dat3)
+```
+:::
+:::
+
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Overall
+```{r}
+viz_general(vecc("PRAI", 1:5), c("Using AI to create content that offends some people", "Using AI to mislead or manipulate people into buying something", "Using AI to mislead or manipulate people for a political purpose", "When it is not clear that content was created by AI", "Using AI to take over people's jobs"), c("Very worried (5-7)", "Somewhat worried (4)", "Not worried (1-3)"), data = dat2)
+```
+## By Age
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("PRAI", 1:5), c("Using AI to create content that offends some people", "Using AI to mislead or manipulate people into buying something", "Using AI to mislead or manipulate people for a political purpose", "When it is not clear that content was created by AI", "Using AI to take over people's jobs"), c("Very worried (5-7)", "Somewhat worried (4)", "Not worried (1-3)"), "age_groups", T, data = dat2)
+```
+:::
+## By Gender
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("PRAI", 1:5), c("Using AI to create content that offends some people", "Using AI to mislead or manipulate people into buying something", "Using AI to mislead or manipulate people for a political purpose", "When it is not clear that content was created by AI", "Using AI to take over people's jobs"), c("Very worried (5-7)", "Somewhat worried (4)", "Not worried (1-3)"), "geslacht", T, data = dat2)
+```
+:::
+## By Education
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("PRAI", 1:5), c("Using AI to create content that offends some people", "Using AI to mislead or manipulate people into buying something", "Using AI to mislead or manipulate people for a political purpose", "When it is not clear that content was created by AI", "Using AI to take over people's jobs"), c("Very worried (5-7)", "Somewhat worried (4)", "Not worried (1-3)"), "oplcat", T, data = dat2)
+```
+:::
+## By Politics
+::: {.panel-tabset}
+```{r, results="asis"}
+viz_general(vecc("PRAI", 1:5), c("Using AI to create content that offends some people", "Using AI to mislead or manipulate people into buying something", "Using AI to mislead or manipulate people for a political purpose", "When it is not clear that content was created by AI", "Using AI to take over people's jobs"), c("Very worried (5-7)", "Somewhat worried (4)", "Not worried (1-3)"), "pol_cat", T, data = dat2)
+```
+:::
+:::
+
+# Over Time
+```{r}
+var_labels <-
+c("Using AI to create content that offends some people", "Using AI to mislead or manipulate people into buying something", "Using AI to mislead or manipulate people for a political purpose", "When it is not clear that content was created by AI", "Using AI to take over people's jobs")
+categories_dat <-
+c("Very worried (5-7)", "Somewhat worried (4)", "Not worried (1-3)")
+```
+::: {.panel-tabset}
+## Overall
+::: {.panel-tabset}
+```{r, results="asis"}
+graphics <- viz_wave_change(vecc("PRAI", 1:5), var_labels, rev(categories_dat), wavevar = "wave", range1 = 1:3, range2 = 4, range3 = 5:7)
+generate_quarto_elements(graphics)
+```
+:::
+## By Age
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("PRAI", 1:5), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "age_groups", y_axis_label = "% of Respondents who are Very worried (5-7)", facet_by_group = F)
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that are Very worried (5-7).</strong>"
+generate_quarto_elements(list_of_plots)
+```
+:::
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## By Gender
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data %>% filter(geslacht != "Other"), vars = vecc("PRAI", 1:5), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "geslacht", y_axis_label = "% of Respondents who are Very worried (5-7)", facet_by_group = F)
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that are Very worried (5-7).</strong>"
+generate_quarto_elements(list_of_plots)
+```
+:::
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## By Education
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("PRAI", 1:5), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "oplcat", y_axis_label = "% of Respondents who are Very worried (5-7)", facet_by_group = F)
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that are Very worried (5-7).</strong>"
+generate_quarto_elements(list_of_plots)
+```
+:::
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## By Politics
+::: {.panel-tabset}
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = vecc("PRAI", 1:5), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "pol_cat", y_axis_label = "% of Respondents who are Very worried (5-7)", facet_by_group = F)
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that are Very worried (5-7).</strong>"
+generate_quarto_elements(list_of_plots)
+```
+:::
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+:::
+:::
+
+# {{< iconify mdi newspaper-variant-outline >}} Attention to AI in the News {.tabset .tabset-fade .tabset-pills .break .btn-green}
+## {{< iconify mdi newspaper-variant-outline >}} Attention to AI in the News {.tabset .tabset-fade .tabset-pills .break .btn-green}
+<blockquote class="question-text">
+What do you think of the amount of attention paid to Artificial Intelligence (AI) in the news?
+<button class="collapse-button" type="button"><span class="arrow"></span></button>
+<div class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;">Amount of Attention to AI in News</div></blockquote>
+::: {.panel-tabset}
+# May 2025 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Overall
+```{r}
+viz_general(c("MC"), c("Amount of Attention to AI in News"), c("Too much (5-7)", "About right (4)", "Too little (1-3)"), data = dat3)
+```
+## By Age
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Amount of Attention to AI in News"), c("Too much (5-7)", "About right (4)", "Too little (1-3)"), "age_groups", T, data = dat3)
+```
+
+## By Gender
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Amount of Attention to AI in News"), c("Too much (5-7)", "About right (4)", "Too little (1-3)"), "geslacht", T, data = dat3)
+```
+
+## By Education
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Amount of Attention to AI in News"), c("Too much (5-7)", "About right (4)", "Too little (1-3)"), "oplcat", T, data = dat3)
+```
+
+## By Politics
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Amount of Attention to AI in News"), c("Too much (5-7)", "About right (4)", "Too little (1-3)"), "pol_cat", T, data = dat3)
+```
+
+:::
+
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Overall
+```{r}
+viz_general(c("MC"), c("Amount of Attention to AI in News"), c("Too much (5-7)", "About right (4)", "Too little (1-3)"), data = dat2)
+```
+## By Age
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Amount of Attention to AI in News"), c("Too much (5-7)", "About right (4)", "Too little (1-3)"), "age_groups", T, data = dat2)
+```
+
+## By Gender
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Amount of Attention to AI in News"), c("Too much (5-7)", "About right (4)", "Too little (1-3)"), "geslacht", T, data = dat2)
+```
+
+## By Education
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Amount of Attention to AI in News"), c("Too much (5-7)", "About right (4)", "Too little (1-3)"), "oplcat", T, data = dat2)
+```
+
+## By Politics
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Amount of Attention to AI in News"), c("Too much (5-7)", "About right (4)", "Too little (1-3)"), "pol_cat", T, data = dat2)
+```
+
+:::
+
+# March 2024 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Overall
+```{r}
+viz_general(c("MC"), c("Amount of Attention to AI in News"), c("Too much (5-7)", "About right (4)", "Too little (1-3)"), data = dat)
+```
+## By Age
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Amount of Attention to AI in News"), c("Too much (5-7)", "About right (4)", "Too little (1-3)"), "age_groups", T, data = dat)
+```
+
+## By Gender
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Amount of Attention to AI in News"), c("Too much (5-7)", "About right (4)", "Too little (1-3)"), "geslacht", T, data = dat)
+```
+
+## By Education
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Amount of Attention to AI in News"), c("Too much (5-7)", "About right (4)", "Too little (1-3)"), "oplcat", T, data = dat)
+```
+
+## By Politics
+
+```{r, results="asis"}
+viz_general(c("MC"), c("Amount of Attention to AI in News"), c("Too much (5-7)", "About right (4)", "Too little (1-3)"), "pol_cat", T, data = dat)
+```
+
+:::
+
+# Over Time
+```{r}
+var_labels <-
+c("Amount of Attention to AI in News")
+categories_dat <-
+c("Too much (5-7)", "About right (4)", "Too little (1-3)")
+```
+::: {.panel-tabset}
+## Overall
+
+```{r, results="asis"}
+graphics <- viz_wave_change(c("MC"), var_labels, rev(categories_dat), wavevar = "wave", range1 = 1:3, range2 = 4, range3 = 5:7)
+generate_quarto_elements(graphics)
+```
+
+## By Age
+
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = c("MC"), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "age_groups", y_axis_label = "% of Respondents who think it is Too much (5-7)", facet_by_group = F)
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that chose Too much (5-7).</strong>"
+generate_quarto_elements(list_of_plots)
+```
 
 <center>
 
-<img src="algosoclogo.png" width="13%">
-
+> Tip: `r HTML(tiptext)`
 
 </center>
+## By Gender
 
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data %>% filter(geslacht != "Other"), vars = c("MC"), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "geslacht", y_axis_label = "% of Respondents who think it is Too much (5-7)", facet_by_group = F)
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that chose Too much (5-7).</strong>"
+generate_quarto_elements(list_of_plots)
+```
 
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## By Education
+
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = c("MC"), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "oplcat", y_axis_label = "% of Respondents who think it is Too much (5-7)", facet_by_group = F)
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that chose Too much (5-7).</strong>"
+generate_quarto_elements(list_of_plots)
+```
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## By Politics
+
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = c("MC"), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "pol_cat", y_axis_label = "% of Respondents who think it is Too much (5-7)", facet_by_group = F)
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that chose Too much (5-7).</strong>"
+generate_quarto_elements(list_of_plots)
+```
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+:::
+:::
+
+# {{< iconify mdi movie-open-outline >}} Perception of AI in the Media {.tabset .tabset-fade .tabset-pills .break .btn-green}
+## {{< iconify mdi movie-open-outline >}} Perception of AI in the Media {.tabset .tabset-fade .tabset-pills .break .btn-green}
+<blockquote class="question-text">
+In your opinion, what is the image of Artificial Intelligence (AI) in the media?
+<button class="collapse-button" type="button"><span class="arrow"></span></button>
+<div class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;">Portrayal of AI in the Media</div></blockquote>
+::: {.panel-tabset}
+# May 2025 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Overall
+```{r}
+viz_general(c("AI_PERCEP"), c("Portrayal of AI in the Media"), c("Positive (5-7)", "Neutral (4)", "Negative (1-3)"), data = dat3)
+```
+## By Age
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Portrayal of AI in the Media"), c("Positive (5-7)", "Neutral (4)", "Negative (1-3)"), "age_groups", T, data = dat3)
+```
+
+## By Gender
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Portrayal of AI in the Media"), c("Positive (5-7)", "Neutral (4)", "Negative (1-3)"), "geslacht", T, data = dat3)
+```
+
+## By Education
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Portrayal of AI in the Media"), c("Positive (5-7)", "Neutral (4)", "Negative (1-3)"), "oplcat", T, data = dat3)
+```
+
+## By Politics
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Portrayal of AI in the Media"), c("Positive (5-7)", "Neutral (4)", "Negative (1-3)"), "pol_cat", T, data = dat3)
+```
+
+:::
+
+# December 2024 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Overall
+```{r}
+viz_general(c("AI_PERCEP"), c("Portrayal of AI in the Media"), c("Positive (5-7)", "Neutral (4)", "Negative (1-3)"), data = dat2)
+```
+## By Age
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Portrayal of AI in the Media"), c("Positive (5-7)", "Neutral (4)", "Negative (1-3)"), "age_groups", T, data = dat2)
+```
+
+## By Gender
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Portrayal of AI in the Media"), c("Positive (5-7)", "Neutral (4)", "Negative (1-3)"), "geslacht", T, data = dat2)
+```
+
+## By Education
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Portrayal of AI in the Media"), c("Positive (5-7)", "Neutral (4)", "Negative (1-3)"), "oplcat", T, data = dat2)
+```
+
+## By Politics
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Portrayal of AI in the Media"), c("Positive (5-7)", "Neutral (4)", "Negative (1-3)"), "pol_cat", T, data = dat2)
+```
+
+:::
+
+# March 2024 {.tabset .tabset-fade .tabset-pills .break}
+::: {.panel-tabset}
+## Overall
+```{r}
+viz_general(c("AI_PERCEP"), c("Portrayal of AI in the Media"), c("Positive (5-7)", "Neutral (4)", "Negative (1-3)"), data = dat)
+```
+## By Age
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Portrayal of AI in the Media"), c("Positive (5-7)", "Neutral (4)", "Negative (1-3)"), "age_groups", T, data = dat)
+```
+
+## By Gender
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Portrayal of AI in the Media"), c("Positive (5-7)", "Neutral (4)", "Negative (1-3)"), "geslacht", T, data = dat)
+```
+
+## By Education
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Portrayal of AI in the Media"), c("Positive (5-7)", "Neutral (4)", "Negative (1-3)"), "oplcat", T, data = dat)
+```
+
+## By Politics
+
+```{r, results="asis"}
+viz_general(c("AI_PERCEP"), c("Portrayal of AI in the Media"), c("Positive (5-7)", "Neutral (4)", "Negative (1-3)"), "pol_cat", T, data = dat)
+```
+
+:::
+
+# Over Time
+```{r}
+var_labels <-
+c("Portrayal of AI in the Media")
+categories_dat <-
+c("Positive (5-7)", "Neutral (4)", "Negative (1-3)")
+```
+::: {.panel-tabset}
+## Overall
+
+```{r, results="asis"}
+graphics <- viz_wave_change(c("AI_PERCEP"), var_labels, rev(categories_dat), wavevar = "wave", range1 = 1:3, range2 = 4, range3 = 5:7)
+generate_quarto_elements(graphics)
+```
+
+## By Age
+
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = c("AI_PERCEP"), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "age_groups", y_axis_label = "% of Respondents who think Positively (5-7)", facet_by_group = F)
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that chose Positive (5-7).</strong>"
+generate_quarto_elements(list_of_plots)
+```
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## By Gender
+
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data %>% filter(geslacht != "Other"), vars = c("AI_PERCEP"), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "geslacht", y_axis_label = "% of Respondents who think Positively (5-7)", facet_by_group = F)
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that chose Positive (5-7).</strong>"
+generate_quarto_elements(list_of_plots)
+```
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## By Education
+
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = c("AI_PERCEP"), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "oplcat", y_axis_label = "% of Respondents who think Positively (5-7)", facet_by_group = F)
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that chose Positive (5-7).</strong>"
+generate_quarto_elements(list_of_plots)
+```
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+## By Politics
+
+```{r, results="asis"}
+list_of_plots <- viz_wave_change3(data = data, vars = c("AI_PERCEP"), range3 = 5:7, display_range = 5:7, var_labels = var_labels, categories_dat = categories_dat, wave_var = "wave", group_by_var = "pol_cat", y_axis_label = "% of Respondents who think Positively (5-7)", facet_by_group = F)
+tiptext <- "You can hover or click on the legend to highlight, remove or add groups, which can make the chart easier to read.<br><strong>Percentage shows those that chose Positive (5-7).</strong>"
+generate_quarto_elements(list_of_plots)
+```
+
+<center>
+
+> Tip: `r HTML(tiptext)`
+
+</center>
+:::
+:::
+
+:::
+
+<br>
+<center>
+<img src="algosoclogo.png" width="13%">
+</center>
 
