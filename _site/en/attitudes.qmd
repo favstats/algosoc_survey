@@ -164,14 +164,14 @@ The page is divided into several main sections. Each section allows you to exami
 <blockquote class="question-text">
 How confident are you that the following groups can tell the difference between content created by AI and content created by people?
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: People from the general population</li>
-<li>Item 2: Members of Parliament</li>
-<li>Item 3: Judges</li>
-<li>Item 4: Journalists</li>
-<li>Item 5: Police officers</li>
-<li>Item 6: Doctors</li>
-<li>Item 7: Friends/family</li>
-<li>Item 8: Yourself</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Topic1: People from the general population</li>
+<li>Topic2: Members of Parliament</li>
+<li>Topic3: Judges</li>
+<li>Topic4: Journalists</li>
+<li>Topic5: Police officers</li>
+<li>Topic6: Doctors</li>
+<li>Topic7: Friends/family</li>
+<li>Topic8: Yourself</li></ul></blockquote>
 ::: {.panel-tabset}
 # May 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -344,9 +344,9 @@ generate_quarto_elements(list_of_plots)
 <blockquote class="question-text">
 We ask you a number of additional questions about automatic decision-making (ADM) systems. These are computer programs that make decisions that used to be made by people. These decisions are made automatically by computers based on data.<br><br><b>How much do you trust automated decision-making systems to properly determine...</b>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Social Welfare</li>
-<li>Item 2: The News You See</li>
-<li>Item 3: Cancer Diagnosis</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Topic1: Social Welfare</li>
+<li>Topic2: The News You See</li>
+<li>Topic3: Cancer Diagnosis</li></ul></blockquote>
 ::: {.panel-tabset}
 # Results (Wave 1) {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -388,11 +388,11 @@ viz_general(vecc("TADS", 1:3), c("Social Welfare", "The News You See", "Cancer D
 <blockquote class="question-text">
 If automated decision-making (ADM) becomes more common in the future, what do you think will happen?
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: If the news is automated, journalists will be able to focus more on investigative journalism.</li>
-<li>Item 2: I will only get news items that interest me.</li>
-<li>Item 3: It will make reporting fairer and more balanced.</li>
-<li>Item 4: If certain law enforcement tasks are automated, the police will have more time to focus on major crimes.</li>
-<li>Item 5: It will make the determination of social benefits fairer and more balanced.</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Topic1: If the news is automated, journalists will be able to focus more on investigative journalism.</li>
+<li>Topic2: I will only get news items that interest me.</li>
+<li>Topic3: It will make reporting fairer and more balanced.</li>
+<li>Topic4: If certain law enforcement tasks are automated, the police will have more time to focus on major crimes.</li>
+<li>Topic5: It will make the determination of social benefits fairer and more balanced.</li></ul></blockquote>
 ::: {.panel-tabset}
 # Results (Wave 1) {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -434,10 +434,10 @@ viz_general(vecc("ADSO", 1:5), c("If the news is automated, journalists will be 
 <blockquote class="question-text">
 The responsibility for harmful content (e.g., fake news or manipulated videos) created by Artificial Intelligence (AI) lies primarily with...
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: ...the company behind the AI technology.</li>
-<li>Item 2: ...the person who used the AI to create the content.</li>
-<li>Item 3: ...the social media platforms that spread the content.</li>
-<li>Item 4: ...the government for not creating enough rules.</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Topic1: ...the company behind the AI technology.</li>
+<li>Topic2: ...the person who used the AI to create the content.</li>
+<li>Topic3: ...the social media platforms that spread the content.</li>
+<li>Topic4: ...the government for not creating enough rules.</li></ul></blockquote>
 ::: {.panel-tabset}
 # May 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -578,11 +578,11 @@ generate_quarto_elements(list_of_plots)
 <blockquote class="question-text">
 There is a lot of talk about the potential disadvantages of Artificial Intelligence (AI). Different people have different ideas about what constitutes a problem.<br><br><b>How worried are you about the following issues?</b>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Using AI to create content that offends some people</li>
-<li>Item 2: Using AI to mislead or manipulate people into buying something</li>
-<li>Item 3: Using AI to mislead or manipulate people for a political purpose</li>
-<li>Item 4: When it is not clear that content was created by AI</li>
-<li>Item 5: Using AI to take over people's jobs</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Topic1: Using AI to create content that offends some people</li>
+<li>Topic2: Using AI to mislead or manipulate people into buying something</li>
+<li>Topic3: Using AI to mislead or manipulate people for a political purpose</li>
+<li>Topic4: When it is not clear that content was created by AI</li>
+<li>Topic5: Using AI to take over people's jobs</li></ul></blockquote>
 ::: {.panel-tabset}
 # May 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}

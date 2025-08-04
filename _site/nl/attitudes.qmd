@@ -156,14 +156,14 @@ De pagina is verdeeld in verschillende hoofdsecties. Elke sectie stelt u in staa
 <blockquote class="question-text">
 Hoe zeker bent u ervan dat de volgende groepen het verschil kunnen zien tussen content gemaakt door AI en content gemaakt door mensen?
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Mensen uit de algemene bevolking</li>
-<li>Item 2: Parlementsleden</li>
-<li>Item 3: Rechters</li>
-<li>Item 4: Journalisten</li>
-<li>Item 5: Politieagenten</li>
-<li>Item 6: Artsen</li>
-<li>Item 7: Vrienden/familie</li>
-<li>Item 8: Uzelf</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Vraag 1: Mensen uit de algemene bevolking</li>
+<li>Vraag 2: Parlementsleden</li>
+<li>Vraag 3: Rechters</li>
+<li>Vraag 4: Journalisten</li>
+<li>Vraag 5: Politieagenten</li>
+<li>Vraag 6: Artsen</li>
+<li>Vraag 7: Vrienden/familie</li>
+<li>Vraag 8: Uzelf</li></ul></blockquote>
 ::: {.panel-tabset}
 # Mei 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -336,9 +336,9 @@ generate_quarto_elements(list_of_plots)
 <blockquote class="question-text">
 We stellen u nog een aantal vragen over geautomatiseerde beslissingssystemen (ADS). Dit zijn computerprogramma's die beslissingen nemen die voorheen door mensen werden genomen. Deze beslissingen worden automatisch door computers genomen op basis van gegevens.<br><br><b>Hoeveel vertrouwen heeft u erin dat geautomatiseerde beslissingssystemen correct bepalen...</b>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Sociale voorzieningen</li>
-<li>Item 2: Het nieuws dat u ziet</li>
-<li>Item 3: Kankerdiagnose</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Vraag 1: Sociale voorzieningen</li>
+<li>Vraag 2: Het nieuws dat u ziet</li>
+<li>Vraag 3: Kankerdiagnose</li></ul></blockquote>
 ::: {.panel-tabset}
 # Resultaten (Wave 1) {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -380,11 +380,11 @@ viz_general(vecc("TADS", 1:3), c("Sociale voorzieningen", "Het nieuws dat u ziet
 <blockquote class="question-text">
 Als geautomatiseerde besluitvorming (ADS) in de toekomst vaker voorkomt, wat denkt u dan dat er zal gebeuren?
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Als het nieuws geautomatiseerd wordt, kunnen journalisten zich meer richten op onderzoeksjournalistiek.</li>
-<li>Item 2: Ik krijg alleen nieuwsberichten te zien die mij interesseren.</li>
-<li>Item 3: Het zal de verslaggeving eerlijker en evenwichtiger maken.</li>
-<li>Item 4: Als bepaalde rechtshandhavingstaken worden geautomatiseerd, heeft de politie meer tijd om zich te richten op grote misdrijven.</li>
-<li>Item 5: Het zal de toekenning van sociale voorzieningen eerlijker en evenwichtiger maken.</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Vraag 1: Als het nieuws geautomatiseerd wordt, kunnen journalisten zich meer richten op onderzoeksjournalistiek.</li>
+<li>Vraag 2: Ik krijg alleen nieuwsberichten te zien die mij interesseren.</li>
+<li>Vraag 3: Het zal de verslaggeving eerlijker en evenwichtiger maken.</li>
+<li>Vraag 4: Als bepaalde rechtshandhavingstaken worden geautomatiseerd, heeft de politie meer tijd om zich te richten op grote misdrijven.</li>
+<li>Vraag 5: Het zal de toekenning van sociale voorzieningen eerlijker en evenwichtiger maken.</li></ul></blockquote>
 ::: {.panel-tabset}
 # Resultaten (Wave 1) {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -426,10 +426,10 @@ viz_general(vecc("ADSO", 1:5), c("Als het nieuws geautomatiseerd wordt, kunnen j
 <blockquote class="question-text">
 De verantwoordelijkheid voor schadelijke content (bijv. nepnieuws of gemanipuleerde video's) die door Kunstmatige Intelligentie (AI) is gemaakt, ligt vooral bij...
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: ...het bedrijf achter de AI-technologie.</li>
-<li>Item 2: ...de persoon die de AI heeft gebruikt om de content te maken.</li>
-<li>Item 3: ...de sociale mediaplatforms die de content hebben verspreid.</li>
-<li>Item 4: ...de overheid omdat ze niet genoeg regels heeft opgesteld.</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Vraag 1: ...het bedrijf achter de AI-technologie.</li>
+<li>Vraag 2: ...de persoon die de AI heeft gebruikt om de content te maken.</li>
+<li>Vraag 3: ...de sociale mediaplatforms die de content hebben verspreid.</li>
+<li>Vraag 4: ...de overheid omdat ze niet genoeg regels heeft opgesteld.</li></ul></blockquote>
 ::: {.panel-tabset}
 # Mei 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -570,11 +570,11 @@ generate_quarto_elements(list_of_plots)
 <blockquote class="question-text">
 Er wordt veel gesproken over de mogelijke nadelen van Kunstmatige Intelligentie (AI). Verschillende mensen hebben verschillende ideeën over wat een probleem is.<br><br><b>Hoeveel zorgen maakt u zich over de volgende zaken?</b>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: AI gebruiken om content te maken die sommige mensen beledigt</li>
-<li>Item 2: AI gebruiken om mensen te misleiden of te manipuleren om iets te kopen</li>
-<li>Item 3: AI gebruiken om mensen te misleiden of te manipuleren voor een politiek doel</li>
-<li>Item 4: Wanneer het niet duidelijk is dat content door AI is gemaakt</li>
-<li>Item 5: AI gebruiken om banen van mensen over te nemen</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Vraag 1: AI gebruiken om content te maken die sommige mensen beledigt</li>
+<li>Vraag 2: AI gebruiken om mensen te misleiden of te manipuleren om iets te kopen</li>
+<li>Vraag 3: AI gebruiken om mensen te misleiden of te manipuleren voor een politiek doel</li>
+<li>Vraag 4: Wanneer het niet duidelijk is dat content door AI is gemaakt</li>
+<li>Vraag 5: AI gebruiken om banen van mensen over te nemen</li></ul></blockquote>
 ::: {.panel-tabset}
 # Mei 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}

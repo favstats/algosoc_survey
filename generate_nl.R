@@ -56,7 +56,7 @@ create_report_section <- function(section_title, section_icon, question_text, va
       function(label) {
         counter <<- counter + 1
         safe_label <- htmltools::htmlEscape(label)
-        stringr::str_glue('<li>Item {counter}: {safe_label}</li>')
+        stringr::str_glue('<li>Vraag {counter}: {safe_label}</li>')
       },
       var_labels
     )

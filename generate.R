@@ -56,7 +56,7 @@ create_report_section <- function(section_title, section_icon, question_text, va
       function(label) {
         counter <<- counter + 1
         safe_label <- htmltools::htmlEscape(label)
-        stringr::str_glue('<li>Item {counter}: {safe_label}</li>')
+        stringr::str_glue('<li>Topic{counter}: {safe_label}</li>')
       },
       var_labels
     )
@@ -909,36 +909,11 @@ beepr::beep(21)
 
 source("generate_nl.R")
 
-# dat3 %>% select(pol_cat, left_right) %>% View()
-# 
-# dat3 %>% 
-#   drop_na(DIGIQ1) %>% 
-#   select(DIGIQ1, age_groups) %>% 
-#   mutate(DIGIQ1 = case_when(
-#     DIGIQ1 %in% 1:3 ~ "Low",
-#     DIGIQ1 %in% 4 ~ "Mid",
-#     DIGIQ1 %in% 5:7 ~ "Hi"
-#   )) %>% 
-#   group_by(age_groups) %>% 
-#   count(DIGIQ1) %>% 
-#   mutate(perc = n/sum(n)*100)
-# 
-# fin %>% 
-#   # filter(wave == 3)
-#   drop_na(DIGIQ1) %>% 
-#   select(DIGIQ1, age_groups, wave)%>% 
-#   mutate(DIGIQ1 = case_when(
-#     DIGIQ1 %in% 1:3 ~ "Low",
-#     DIGIQ1 %in% 4 ~ "Mid",
-#     DIGIQ1 %in% 5:7 ~ "Hi"
-#   )) %>% 
-#   group_by(age_groups, wave) %>% 
-#   count(DIGIQ1) %>% 
-#   mutate(perc = n/sum(n)*100) %>% 
-#   ungroup() %>% 
-#   arrange(age_groups, DIGIQ1, wave) %>% 
-#   View()
-#   
-#   ggplot(aes(wave, perc, color = DIGIQ1)) +
-#   geom_line() +
-#   facet_wrap(~age_groups)
+quarto::quarto_render("_site/en/about.qmd")
+quarto::quarto_render("_site/en/index.qmd")
+quarto::quarto_render("_site/nl/about.qmd")
+quarto::quarto_render("_site/nl/index.qmd")
+
+gert::git_add(".")
+gert::git_commit("update")
+gert::git_push()

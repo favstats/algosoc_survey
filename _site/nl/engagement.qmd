@@ -156,11 +156,11 @@ De pagina is verdeeld in verschillende hoofdsecties. Elke sectie stelt u in staa
 <blockquote class="question-text">
 Met kunstmatige intelligentie (AI) kunnen computerprogramma's zelfstandig taken uitvoeren en ook zelf leren. AI wordt steeds vaker gebruikt in de samenleving, en ook in online media. Veel websites gebruiken AI om u meer content en advertenties te laten zien die u leuk vindt. De volgende vragen gaan over het aanbod (zoals artikelen, films of liedjes) dat u te zien krijgt op websites en apps voor nieuws en entertainment (bijv. Netflix of Spotify).<br><br><b>In welke mate bent u het eens of oneens met de volgende stellingen?</b>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Ik herken het als een website of app AI gebruikt om de content aan mij aan te passen.</li>
-<li>Item 2: Ik herken het als specifieke content mij wordt aanbevolen door AI.</li>
-<li>Item 3: Ik weet waar ik de instellingen kan vinden om personalisatie door AI te wijzigen of uit te schakelen.</li>
-<li>Item 4: Ik weet hoe ik toegang kan krijgen tot de gegevens die AI-systemen gebruiken om content op mij af te stemmen.</li>
-<li>Item 5: Ik weet hoe ik kan beïnvloeden welke content mij door AI wordt aanbevolen.</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Vraag 1: Ik herken het als een website of app AI gebruikt om de content aan mij aan te passen.</li>
+<li>Vraag 2: Ik herken het als specifieke content mij wordt aanbevolen door AI.</li>
+<li>Vraag 3: Ik weet waar ik de instellingen kan vinden om personalisatie door AI te wijzigen of uit te schakelen.</li>
+<li>Vraag 4: Ik weet hoe ik toegang kan krijgen tot de gegevens die AI-systemen gebruiken om content op mij af te stemmen.</li>
+<li>Vraag 5: Ik weet hoe ik kan beïnvloeden welke content mij door AI wordt aanbevolen.</li></ul></blockquote>
 ::: {.panel-tabset}
 # Mei 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -333,8 +333,8 @@ generate_quarto_elements(list_of_plots)
 <blockquote class="question-text">
 <b>Hoe vaak heeft u in het afgelopen jaar gebruik gemaakt van...</b>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: ...tekstgeneratoren zoals ChatGPT?</li>
-<li>Item 2: ...beeldgeneratoren zoals Midjourney?</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Vraag 1: ...tekstgeneratoren zoals ChatGPT?</li>
+<li>Vraag 2: ...beeldgeneratoren zoals Midjourney?</li></ul></blockquote>
 ::: {.panel-tabset}
 # Mei 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -507,9 +507,9 @@ generate_quarto_elements(list_of_plots)
 <blockquote class="question-text">
 Kunstmatige Intelligentie (AI) kan worden gebruikt om kunstmatige inhoud te maken zoals tekst, afbeeldingen en video's.<br><br><b>Hoe vaak denkt u dat u de volgende dingen het afgelopen jaar op sociale media bent tegengekomen?</b>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Teksten gemaakt door AI</li>
-<li>Item 2: Foto's of afbeeldingen gemaakt door AI</li>
-<li>Item 3: Video's gemaakt door AI</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Vraag 1: Teksten gemaakt door AI</li>
+<li>Vraag 2: Foto's of afbeeldingen gemaakt door AI</li>
+<li>Vraag 3: Video's gemaakt door AI</li></ul></blockquote>
 ::: {.panel-tabset}
 # Mei 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -682,11 +682,11 @@ generate_quarto_elements(list_of_plots)
 <blockquote class="question-text">
 <b>Hoe bekend bent u met de volgende termen?</b>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Generatieve AI</li>
-<li>Item 2: ChatGPT</li>
-<li>Item 3: Deepfakes</li>
-<li>Item 4: Algoritmen</li>
-<li>Item 5: Chatbots</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Vraag 1: Generatieve AI</li>
+<li>Vraag 2: ChatGPT</li>
+<li>Vraag 3: Deepfakes</li>
+<li>Vraag 4: Algoritmen</li>
+<li>Vraag 5: Chatbots</li></ul></blockquote>
 ::: {.panel-tabset}
 # Mei 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}

@@ -69,7 +69,7 @@ generate_quarto_elements <- function(list_of_plots, plots_per_page = 2) {
     list_of_plots %>% 
       walk(~{
         page <<- page + 1
-        cat(paste0("### Item ", page, "\n"))
+        cat(paste0("### Vraag ", page, "\n"))
         cat(plot_to_html(.x))
       })
   }

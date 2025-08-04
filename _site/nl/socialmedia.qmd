@@ -156,12 +156,12 @@ De pagina is verdeeld in verschillende hoofdsecties. Elke sectie stelt u in staa
 <blockquote class="question-text">
 Socialemediabedrijven doen vaak aan 'contentmoderatie', zoals het verwijderen van content die niet aan de regels voldoet. Nieuwsorganisaties worden soms beschuldigd van het verspreiden van desinformatie, waardoor socialemediabedrijven hun nieuwsberichten verwijderen.<br><br><b>In welke mate bent u het eens met de volgende uitspraken?</b>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Ik vertrouw erop dat een socialemediaplatform kan bepalen of iets desinformatie is of niet.</li>
-<li>Item 2: Socialemediaplatforms moeten content die zij als desinformatie beschouwen, beperken of verwijderen, zelfs als deze afkomstig is van nieuwsorganisaties.</li>
-<li>Item 3: Socialemediaplatforms mogen alleen nieuwsinhoud beperken of verwijderen als ze de nieuwsorganisaties vooraf op de hoogte stellen.</li>
-<li>Item 4: De vrijheid van nieuwsorganisaties wordt bedreigd door de contentmoderatie van socialemediaplatforms.</li>
-<li>Item 5: Nieuwsorganisaties moeten de mogelijkheid hebben om beslissingen over contentmoderatie van socialemediaplatforms aan te vechten.</li>
-<li>Item 6: Bepaalde nieuwsorganisaties zouden door socialemediabedrijven meer gemodereerd moeten worden dan andere.</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Vraag 1: Ik vertrouw erop dat een socialemediaplatform kan bepalen of iets desinformatie is of niet.</li>
+<li>Vraag 2: Socialemediaplatforms moeten content die zij als desinformatie beschouwen, beperken of verwijderen, zelfs als deze afkomstig is van nieuwsorganisaties.</li>
+<li>Vraag 3: Socialemediaplatforms mogen alleen nieuwsinhoud beperken of verwijderen als ze de nieuwsorganisaties vooraf op de hoogte stellen.</li>
+<li>Vraag 4: De vrijheid van nieuwsorganisaties wordt bedreigd door de contentmoderatie van socialemediaplatforms.</li>
+<li>Vraag 5: Nieuwsorganisaties moeten de mogelijkheid hebben om beslissingen over contentmoderatie van socialemediaplatforms aan te vechten.</li>
+<li>Vraag 6: Bepaalde nieuwsorganisaties zouden door socialemediabedrijven meer gemodereerd moeten worden dan andere.</li></ul></blockquote>
 ::: {.panel-tabset}
 # Mei 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -302,9 +302,9 @@ generate_quarto_elements(list_of_plots)
 <blockquote class="question-text">
 We stellen u nu enkele vragen over politieke advertenties op sociale media.<br><br><b>Deze stellingen gaan over uw eigen mening of gevoel:</b>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Ik heb het altijd door als ik beïnvloed word door politieke advertenties op sociale media.</li>
-<li>Item 2: Het is mij eerder overkomen dat ik een politieke partij leuker vond na het zien van hun advertenties op sociale media.</li>
-<li>Item 3: Ik steun eerder een kandidaat die wordt aanbevolen door influencers die ik volg.</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Vraag 1: Ik heb het altijd door als ik beïnvloed word door politieke advertenties op sociale media.</li>
+<li>Vraag 2: Het is mij eerder overkomen dat ik een politieke partij leuker vond na het zien van hun advertenties op sociale media.</li>
+<li>Vraag 3: Ik steun eerder een kandidaat die wordt aanbevolen door influencers die ik volg.</li></ul></blockquote>
 ::: {.panel-tabset}
 # Mei 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -445,9 +445,9 @@ generate_quarto_elements(list_of_plots)
 <blockquote class="question-text">
 Deze stellingen gaan over uw mening over andere mensen:
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Anderen hebben het altijd door als ze beïnvloed worden door politieke advertenties op sociale media.</li>
-<li>Item 2: Ik denk dat anderen een politieke partij leuker gaan vinden na het zien van hun advertenties op sociale media.</li>
-<li>Item 3: Ik geloof dat anderen eerder een kandidaat steunen die wordt aanbevolen door influencers die ze volgen.</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Vraag 1: Anderen hebben het altijd door als ze beïnvloed worden door politieke advertenties op sociale media.</li>
+<li>Vraag 2: Ik denk dat anderen een politieke partij leuker gaan vinden na het zien van hun advertenties op sociale media.</li>
+<li>Vraag 3: Ik geloof dat anderen eerder een kandidaat steunen die wordt aanbevolen door influencers die ze volgen.</li></ul></blockquote>
 ::: {.panel-tabset}
 # Mei 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}

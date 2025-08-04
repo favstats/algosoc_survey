@@ -69,7 +69,7 @@ generate_quarto_elements <- function(list_of_plots, plots_per_page = 2) {
     list_of_plots %>% 
       walk(~{
         page <<- page + 1
-        cat(paste0("### Item ", page, "\n"))
+        cat(paste0("### Question ", page, "\n"))
         cat(plot_to_html(.x))
       })
   }
@@ -430,6 +430,7 @@ dat <- read_sav("../../L_AlgoSoc_wave1_1.0p.sav") %>% #table()
   mutate(geslacht = fct_relevel(geslacht, c("Man", "Woman", "Other"))) %>% 
   arrange(geslacht)  %>% 
   mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
+  mutate(oplcat2 = oplcat) %>% 
   left_join(education_levels) %>%
   mutate(oplcat = eng) %>%
   # mutate(oplcat = fct_relevel(oplcat, c("Primary (basisonderwijs)",
@@ -538,6 +539,7 @@ dat3 <- read_sav("../../L_AlgoSoc_wave3_1.0p.sav") %>% #table()
   mutate(geslacht = fct_relevel(geslacht, c("Man", "Woman", "Other"))) %>% 
   arrange(geslacht)  %>% 
   mutate(oplcat = sjmisc::to_label(oplcat)) %>% 
+  mutate(oplcat2 = oplcat) %>% 
   left_join(education_levels) %>%
   mutate(oplcat = eng) %>%
   # mutate(oplcat = fct_relevel(oplcat, c("Primary (basisonderwijs)",

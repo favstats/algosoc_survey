@@ -284,9 +284,9 @@ plots <- viz_values_over_time(data = data, issue_var = "important1", wave_var_ra
 
 <blockquote class='question-text'>Meer automatische besluitvorming in de nieuwsmedia/het rechtssysteem/de gezondheidszorg zal **nuttig** zijn.</blockquote>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Nieuwsmedia</li>
-<li>Item 2: Rechtssysteem</li>
-<li>Item 3: Gezondheidszorg</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Vraag 1: Nieuwsmedia</li>
+<li>Vraag 2: Rechtssysteem</li>
+<li>Vraag 3: Gezondheidszorg</li></ul></blockquote>
 ::: {.panel-tabset}
 # Over de tijd
 ```{r}
@@ -461,9 +461,9 @@ In de meeste voorspellingen zal geautomatiseerde besluitvorming in de toekomst v
 
 <blockquote class='question-text'>Meer automatische besluitvorming in de nieuwsmedia/het rechtssysteem/de gezondheidszorg zal **riskant** zijn.</blockquote>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Nieuwsmedia</li>
-<li>Item 2: Rechtssysteem</li>
-<li>Item 3: Gezondheidszorg</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Vraag 1: Nieuwsmedia</li>
+<li>Vraag 2: Rechtssysteem</li>
+<li>Vraag 3: Gezondheidszorg</li></ul></blockquote>
 ::: {.panel-tabset}
 # Over de tijd
 ```{r}
@@ -638,9 +638,9 @@ In de meeste voorspellingen zal geautomatiseerde besluitvorming in de toekomst v
 
 <blockquote class='question-text'>Meer automatische besluitvorming in de nieuwsmedia/het rechtssysteem/de gezondheidszorg zal **eerlijker** zijn.</blockquote>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: Nieuwsmedia</li>
-<li>Item 2: Rechtssysteem</li>
-<li>Item 3: Gezondheidszorg</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Vraag 1: Nieuwsmedia</li>
+<li>Vraag 2: Rechtssysteem</li>
+<li>Vraag 3: Gezondheidszorg</li></ul></blockquote>
 ::: {.panel-tabset}
 # Over de tijd
 ```{r}

@@ -292,9 +292,9 @@ plots <- viz_values_over_time(data = data, issue_var = "important1", wave_var_ra
 
 <blockquote class='question-text'>More automatic decision-making in news media/the legal system/healthcare will be **useful**.</blockquote>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: News Media</li>
-<li>Item 2: Legal System</li>
-<li>Item 3: Healthcare</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Topic1: News Media</li>
+<li>Topic2: Legal System</li>
+<li>Topic3: Healthcare</li></ul></blockquote>
 ::: {.panel-tabset}
 # Over Time
 ```{r}
@@ -469,9 +469,9 @@ In most predictions, automated decision-making will become more common in the fu
 
 <blockquote class='question-text'>More automatic decision-making in news media/the legal system/healthcare will be **risky**.</blockquote>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: News Media</li>
-<li>Item 2: Legal System</li>
-<li>Item 3: Healthcare</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Topic1: News Media</li>
+<li>Topic2: Legal System</li>
+<li>Topic3: Healthcare</li></ul></blockquote>
 ::: {.panel-tabset}
 # Over Time
 ```{r}
@@ -646,9 +646,9 @@ In most predictions, automated decision-making will become more common in the fu
 
 <blockquote class='question-text'>More automatic decision-making in news media/the legal system/healthcare will be **more fair**.</blockquote>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Item 1: News Media</li>
-<li>Item 2: Legal System</li>
-<li>Item 3: Healthcare</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Topic1: News Media</li>
+<li>Topic2: Legal System</li>
+<li>Topic3: Healthcare</li></ul></blockquote>
 ::: {.panel-tabset}
 # Over Time
 ```{r}
