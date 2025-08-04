@@ -56,7 +56,7 @@ create_report_section <- function(section_title, section_icon, question_text, va
       function(label) {
         counter <<- counter + 1
         safe_label <- htmltools::htmlEscape(label)
-        stringr::str_glue('<li>Topic{counter}: {safe_label}</li>')
+        stringr::str_glue('<li>Question {counter}: {safe_label}</li>')
       },
       var_labels
     )
@@ -905,7 +905,7 @@ cat(paste("\n✅ Success! The report has been generated at:", normalizePath(outp
 # Optional: Render the report immediately
 quarto::quarto_render(output_file)
 
-beepr::beep(21)
+# beepr::beep(21)
 
 source("generate_nl.R")
 

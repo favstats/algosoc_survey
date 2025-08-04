@@ -164,11 +164,11 @@ The page is divided into several main sections. Each section allows you to exami
 <blockquote class="question-text">
 With artificial intelligence (AI), computer programs can perform tasks themselves and also learn themselves. AI is increasingly used in society, and also in online media. Many websites use AI to show you more content and ads you like. The following questions are about the offers (such as articles, films or songs) that are shown to you on websites and apps for news and entertainment (e.g. Netflix or Spotify).<br><br><b>To what extent do you agree or disagree with the following statements?</b>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Topic1: I recognize it when a website or app uses AI to adapt the content to me.</li>
-<li>Topic2: I recognize it when specific content is recommended to me by AI.</li>
-<li>Topic3: I know where to find the settings to change or disable AI personalization.</li>
-<li>Topic4: I know how to access the data that AI systems use to tailor content to me.</li>
-<li>Topic5: I know how I can influence what content is recommended to me by AI.</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Question 1: I recognize it when a website or app uses AI to adapt the content to me.</li>
+<li>Question 2: I recognize it when specific content is recommended to me by AI.</li>
+<li>Question 3: I know where to find the settings to change or disable AI personalization.</li>
+<li>Question 4: I know how to access the data that AI systems use to tailor content to me.</li>
+<li>Question 5: I know how I can influence what content is recommended to me by AI.</li></ul></blockquote>
 ::: {.panel-tabset}
 # May 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -341,8 +341,8 @@ generate_quarto_elements(list_of_plots)
 <blockquote class="question-text">
 <b>How often in the past year did you use...</b>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Topic1: ...text generators like ChatGPT?</li>
-<li>Topic2: ...image generators like Midjourney?</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Question 1: ...text generators like ChatGPT?</li>
+<li>Question 2: ...image generators like Midjourney?</li></ul></blockquote>
 ::: {.panel-tabset}
 # May 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -515,9 +515,9 @@ generate_quarto_elements(list_of_plots)
 <blockquote class="question-text">
 Artificial Intelligence (AI) can be used to create artificial content such as text, images and videos.<br><br><b>How often do you think you have come across the following things on social media in the past year?</b>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Topic1: Texts made by AI</li>
-<li>Topic2: Photos or images made by AI</li>
-<li>Topic3: Videos made by AI</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Question 1: Texts made by AI</li>
+<li>Question 2: Photos or images made by AI</li>
+<li>Question 3: Videos made by AI</li></ul></blockquote>
 ::: {.panel-tabset}
 # May 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -690,11 +690,11 @@ generate_quarto_elements(list_of_plots)
 <blockquote class="question-text">
 <b>How familiar are you with the following terms?</b>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Topic1: Generative AI</li>
-<li>Topic2: ChatGPT</li>
-<li>Topic3: Deepfakes</li>
-<li>Topic4: Algorithms</li>
-<li>Topic5: Chatbots</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Question 1: Generative AI</li>
+<li>Question 2: ChatGPT</li>
+<li>Question 3: Deepfakes</li>
+<li>Question 4: Algorithms</li>
+<li>Question 5: Chatbots</li></ul></blockquote>
 ::: {.panel-tabset}
 # May 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}

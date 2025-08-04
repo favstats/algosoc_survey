@@ -164,12 +164,12 @@ The page is divided into several main sections. Each section allows you to exami
 <blockquote class="question-text">
 Social media companies often engage in 'content moderation', such as removing content that does not comply with the rules. News organizations are sometimes accused of spreading misinformation (disinformation), causing social media companies to remove their news stories.<br><br><b>To what extent do you agree with the following statements?</b>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Topic1: I trust that a social media platform can determine whether something is disinformation or not.</li>
-<li>Topic2: Social media platforms should restrict or remove content they deem disinformation, even if it comes from news organizations.</li>
-<li>Topic3: Social media platforms should only restrict or remove news content if they notify the news organizations in advance.</li>
-<li>Topic4: The freedom of news organizations is threatened by the content moderation of social media platforms.</li>
-<li>Topic5: News organizations should have the ability to challenge content moderation decisions made by social media platforms.</li>
-<li>Topic6: Certain news organizations should be moderated more than others by social media companies. </li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Question 1: I trust that a social media platform can determine whether something is disinformation or not.</li>
+<li>Question 2: Social media platforms should restrict or remove content they deem disinformation, even if it comes from news organizations.</li>
+<li>Question 3: Social media platforms should only restrict or remove news content if they notify the news organizations in advance.</li>
+<li>Question 4: The freedom of news organizations is threatened by the content moderation of social media platforms.</li>
+<li>Question 5: News organizations should have the ability to challenge content moderation decisions made by social media platforms.</li>
+<li>Question 6: Certain news organizations should be moderated more than others by social media companies. </li></ul></blockquote>
 ::: {.panel-tabset}
 # May 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -310,9 +310,9 @@ generate_quarto_elements(list_of_plots)
 <blockquote class="question-text">
 We will now ask you questions about political advertisements on social media.<br><br><b>These questions are about your own opinion or feeling:</b>
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Topic1: I always notice when I am being influenced by political ads on social media.</li>
-<li>Topic2: I have liked a political party more after seeing their ads on social media.</li>
-<li>Topic3: I am more likely to support a candidate recommended by influencers I follow.</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Question 1: I always notice when I am being influenced by political ads on social media.</li>
+<li>Question 2: I have liked a political party more after seeing their ads on social media.</li>
+<li>Question 3: I am more likely to support a candidate recommended by influencers I follow.</li></ul></blockquote>
 ::: {.panel-tabset}
 # May 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
@@ -453,9 +453,9 @@ generate_quarto_elements(list_of_plots)
 <blockquote class="question-text">
 These questions are about your opinion of other people:
 <button class="collapse-button" type="button"><span class="arrow"></span></button>
-<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Topic1: Other people always notice when they are being influenced by political ads on social media.</li>
-<li>Topic2: I think other people will like a political party more after seeing their ads on social media.</li>
-<li>Topic3: I believe others are more likely to support a candidate recommended by influencers they follow.</li></ul></blockquote>
+<ul class="details-content" style="margin-top: 1em; padding-left: 20px; display: none;"><li>Question 1: Other people always notice when they are being influenced by political ads on social media.</li>
+<li>Question 2: I think other people will like a political party more after seeing their ads on social media.</li>
+<li>Question 3: I believe others are more likely to support a candidate recommended by influencers they follow.</li></ul></blockquote>
 ::: {.panel-tabset}
 # May 2025 {.tabset .tabset-fade .tabset-pills .break}
 ::: {.panel-tabset}
